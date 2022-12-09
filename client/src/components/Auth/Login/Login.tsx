@@ -2,10 +2,11 @@ import { Form, Button, Input, Typography } from "antd";
 import { FC } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import "../index.css";
+
+const { Title } = Typography;
 
 const Login: FC = () => {
-    const { Title } = Typography;
     const navigate = useNavigate();
 
     //TODO: onFinish logic
@@ -39,7 +40,7 @@ const Login: FC = () => {
                     <Button block type="primary" htmlType="submit">
                         Login
                     </Button>
-                    <Button className="login-button" type="link" onClick={() => navigate("/register")}>
+                    <Button className="auth-button" type="link" onClick={() => navigate("/register")}>
                         Or create an account!
                     </Button>
                 </Form.Item>
