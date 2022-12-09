@@ -6,7 +6,7 @@ import "../index.css";
 
 const { Title } = Typography;
 
-const Login: FC = () => {
+export const Login: FC = () => {
     const navigate = useNavigate();
 
     //TODO: onFinish logic
@@ -48,5 +48,3 @@ const Login: FC = () => {
         </>
     );
 };
-
-export default Login;
