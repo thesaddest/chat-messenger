@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { IAuthValues } from "../interfaces";
 import "../index.css";
+import { AUTH_RULES } from "../auth.constants";
 
 const { Title } = Typography;
 
@@ -28,25 +29,11 @@ export const Login: FC = () => {
         <>
             <Title level={2}>Log In</Title>
             <Form form={form} name="login-form" initialValues={{ remember: true }} onFinish={onFinish}>
-                <Form.Item
-                    name="email"
-                    rules={[
-                        { required: true, message: "Please input your email" },
-                        { type: "email", message: "Please enter a valid email" },
-                    ]}
-                    hasFeedback
-                >
+                <Form.Item name="email" rules={AUTH_RULES.EMAIL} hasFeedback>
                     <Input prefix={<UserOutlined />} placeholder="Email" />
                 </Form.Item>
 
-                <Form.Item
-                    name="password"
-                    rules={[
-                        { required: true, message: "Please input your password" },
-                        { min: 6, message: "Password must be at least 6 characters" },
-                    ]}
-                    hasFeedback
-                >
+                <Form.Item name="password" rules={AUTH_RULES.PASSWORD} hasFeedback>
                     <Input.Password prefix={<LockOutlined />} type="password" placeholder="Password" />
                 </Form.Item>
 
