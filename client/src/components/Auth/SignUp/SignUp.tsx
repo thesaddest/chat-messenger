@@ -2,18 +2,33 @@ import { Form, Button, Input, Typography } from "antd";
 import { FC } from "react";
 import { LockOutlined, UserOutlined, LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+
+import { IAuthValues } from "../interfaces";
 import "../index.css";
 
 const { Title } = Typography;
 
 export const SignUp: FC = () => {
     const navigate = useNavigate();
+    const [form] = Form.useForm();
+
+    const onFinish = (values: IAuthValues) => {
+        form.resetFields();
+        fetch("http://localhost:4000/api/register", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+        }).then((data) => console.log(data));
+    };
 
     //TODO: onFinish logic
     return (
         <>
             <Title level={2}>Sign Up</Title>
-            <Form name="login-form" initialValues={{ remember: true }}>
+            <Form form={form} name="login-form" initialValues={{ remember: true }} onFinish={onFinish}>
                 <Form.Item
                     name="email"
                     rules={[

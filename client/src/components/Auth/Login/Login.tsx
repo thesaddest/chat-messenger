@@ -14,7 +14,7 @@ export const Login: FC = () => {
 
     const onFinish = (values: IAuthValues) => {
         form.resetFields();
-        fetch("http://localhost:4000/auth/login", {
+        fetch("http://localhost:4000/api/login", {
             method: "POST",
             credentials: "include",
             headers: {

@@ -1,7 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToOne, JoinColumn, Relation } from "typeorm";
+import { Token } from "../auth/token.entity.js";
 
 @Entity()
 export class User extends BaseEntity {
+    constructor(user: Partial<User>) {
+        super();
+
+        Object.assign(this, user);
+    }
+
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -10,4 +17,8 @@ export class User extends BaseEntity {
 
     @Column({ nullable: false })
     password: string;
+
+    @OneToOne(() => Token, (token) => token.user)
+    @JoinColumn()
+    token: Relation<Token>;
 }

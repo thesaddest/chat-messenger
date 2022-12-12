@@ -1,11 +1,12 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import helmet from "helmet";
 import http from "http";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
 import * as dotenv from "dotenv";
-import { authRouter } from "./auth/auth.controller.js";
 import { AppDataSource } from "./db/database.js";
+import { router } from "./router/index.js";
 dotenv.config();
 
 const app = express();
@@ -24,11 +25,8 @@ app.use(
     }),
 );
 app.use(express.json());
-app.use("/auth", authRouter);
-
-app.get("/", (req: Request, res: Response) => {
-    res.json("hi");
-});
+app.use(cookieParser());
+app.use("/api", router);
 
 AppDataSource.initialize();
 
