@@ -4,8 +4,8 @@ import { LockOutlined, UserOutlined, LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 import { IAuthValues } from "../interfaces";
-import "../index.css";
 import { AUTH_RULES } from "../auth.constants";
+import { StyledAuthButton } from "../StyledAuthButton";
 
 const { Title } = Typography;
 
@@ -25,7 +25,6 @@ export const SignUp: FC = () => {
         }).then((data) => console.log(data));
     };
 
-    //TODO: onFinish logic
     return (
         <>
             <Title level={2}>Sign Up</Title>
@@ -51,9 +50,14 @@ export const SignUp: FC = () => {
                     <Button block type="primary" htmlType="submit">
                         Create Account
                     </Button>
-                    <Button icon={<LeftOutlined />} className="auth-button" type="link" onClick={() => navigate("/")}>
+                    <StyledAuthButton
+                        icon={<LeftOutlined />}
+                        className="auth-button"
+                        type="link"
+                        onClick={() => navigate("/")}
+                    >
                         Back
-                    </Button>
+                    </StyledAuthButton>
                 </Form.Item>
             </Form>
         </>

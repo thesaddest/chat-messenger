@@ -4,8 +4,8 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 import { IAuthValues } from "../interfaces";
-import "../index.css";
 import { AUTH_RULES } from "../auth.constants";
+import { StyledAuthButton } from "../StyledAuthButton";
 
 const { Title } = Typography;
 
@@ -24,7 +24,7 @@ export const Login: FC = () => {
             body: JSON.stringify(values),
         }).then((data) => console.log(data));
     };
-    //TODO: onFinish logic
+
     return (
         <>
             <Title level={2}>Log In</Title>
@@ -41,9 +41,9 @@ export const Login: FC = () => {
                     <Button block type="primary" htmlType="submit">
                         Login
                     </Button>
-                    <Button className="auth-button" type="link" onClick={() => navigate("/register")}>
+                    <StyledAuthButton className="auth-button" type="link" onClick={() => navigate("/register")}>
                         Or create an account!
-                    </Button>
+                    </StyledAuthButton>
                 </Form.Item>
             </Form>
         </>

@@ -1,11 +1,20 @@
+import styled from "styled-components";
+
 import Pages from "./components/Pages";
-import "./App.css";
+
+const AppWrapper = styled.div`
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+`;
 
 function App() {
     return (
-        <div className="app-container">
+        <AppWrapper>
             <Pages />
-        </div>
+        </AppWrapper>
     );
 }
 
