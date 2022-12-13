@@ -10,10 +10,10 @@ class UserService {
         return user;
     }
 
-    async getUserByEmail(email: string) {
+    async getUserByEmail(email: string): Promise<User> {
         const userRepository = AppDataSource.getRepository(User);
 
-        return userRepository.findOne({ where: { email } });
+        return await userRepository.findOne({ where: { email } });
     }
 }
 

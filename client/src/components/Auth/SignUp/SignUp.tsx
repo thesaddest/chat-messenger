@@ -22,7 +22,7 @@ export const SignUp: FC = () => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(values),
-        }).then((data) => console.log(data));
+        }).then(async (data) => console.log(await data.json()));
     };
 
     return (

@@ -1,19 +1,20 @@
+import { UserDto } from "./../user/user.dto.js";
 import { IRegisteredUser } from "./interfaces.js";
 import { userService } from "./../user/user.service.js";
 import bcrypt from "bcrypt";
 import { jwtService } from "./jwt.service.js";
 
 class AuthService {
-    async register(email: string, password: string): Promise<IRegisteredUser> {
-        const candidate = await userService.getUserByEmail(email);
+    async register(userDto: UserDto): Promise<IRegisteredUser> {
+        const candidate = await userService.getUserByEmail(userDto.email);
 
         if (candidate) {
-            throw new Error(`User with email: ${email} already registered`);
+            throw new Error(`User with email: ${userDto.email} already registered`);
         }
 
-        const hashedPassword = await this.createHashedPassword(password);
+        const hashedPassword = await this.createHashedPassword(userDto.password);
 
-        const user = await userService.createUser(email, hashedPassword);
+        const user = await userService.createUser(userDto.email, hashedPassword);
 
         const tokens = await jwtService.generateTokens(user);
         await jwtService.saveRefreshToken(user, tokens.refreshToken);
