@@ -18,7 +18,6 @@ class AuthService {
         const user = await userService.createUser(userDto.email, hashedPassword);
 
         const tokens = await jwtService.generateTokens(user);
-        await jwtService.saveRefreshToken(user, tokens.refreshToken);
 
         return {
             id: user.id,
@@ -30,6 +29,7 @@ class AuthService {
 
     async login(userDto: UserDto): Promise<IRegisteredUser> {
         const user = await userService.getUserByEmail(userDto.email);
+
         if (!user) {
             throw ErrorException.BadRequest(`User with email: ${userDto.email} was not found`);
         }

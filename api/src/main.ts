@@ -2,7 +2,6 @@ import express from "express";
 import helmet from "helmet";
 import http from "http";
 import cors from "cors";
-import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
 import * as dotenv from "dotenv";
 import { AppDataSource } from "./db/database.js";
@@ -25,7 +24,6 @@ app.use(
         credentials: true,
     }),
 );
-app.use(cookieParser());
 app.use("/api", router);
 app.use(errorMiddleware);
 

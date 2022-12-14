@@ -1,5 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToOne, JoinColumn, Relation } from "typeorm";
-import { Token } from "../auth/token.entity.js";
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
 
 @Entity()
 export class User extends BaseEntity {
@@ -17,8 +16,4 @@ export class User extends BaseEntity {
 
     @Column({ nullable: false })
     password: string;
-
-    @OneToOne(() => Token, (token) => token.user)
-    @JoinColumn()
-    token: Relation<Token>;
 }
