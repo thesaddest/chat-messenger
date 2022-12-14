@@ -7,6 +7,7 @@ import { Server } from "socket.io";
 import * as dotenv from "dotenv";
 import { AppDataSource } from "./db/database.js";
 import { router } from "./router/index.js";
+import { errorMiddleware } from "./error-handler/error.middleware.js";
 dotenv.config();
 
 const app = express();
@@ -16,7 +17,7 @@ const io = new Server(server, { cors: { origin: process.env.SOCKET_IO_ORIGIN_URL
 io.on("connect", (socket) => {
     console.log(socket);
 });
-
+app.use(express.json());
 app.use(helmet());
 app.use(
     cors({
@@ -24,9 +25,9 @@ app.use(
         credentials: true,
     }),
 );
-app.use(express.json());
 app.use(cookieParser());
 app.use("/api", router);
+app.use(errorMiddleware);
 
 AppDataSource.initialize();
 

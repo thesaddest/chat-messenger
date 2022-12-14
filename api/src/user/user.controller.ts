@@ -3,6 +3,7 @@ import { IAuthValues } from "./../auth/interfaces.js";
 import { authService } from "../auth/auth.service.js";
 import { NextFunction, Request, Response } from "express";
 import { validate } from "class-validator";
+import { ErrorException } from "../error-handler/error-exception.js";
 
 interface IRegisterRequest<T> extends Request {
     body: T;
@@ -19,14 +20,14 @@ class UserController {
             const errors = await validate(newUser);
 
             if (errors.length) {
-                return next(new Error("Email or password validation error"));
+                return next(ErrorException.BadRequest("Email or password validation error", errors));
             }
 
             const registeredUser = await authService.register(newUser);
 
             return res.json(registeredUser);
         } catch (e) {
-            console.log(e);
+            next(e);
         }
     }
 }

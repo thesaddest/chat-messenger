@@ -3,13 +3,14 @@ import { IRegisteredUser } from "./interfaces.js";
 import { userService } from "./../user/user.service.js";
 import bcrypt from "bcrypt";
 import { jwtService } from "./jwt.service.js";
+import { ErrorException } from "../error-handler/error-exception.js";
 
 class AuthService {
     async register(userDto: UserDto): Promise<IRegisteredUser> {
         const candidate = await userService.getUserByEmail(userDto.email);
 
         if (candidate) {
-            throw new Error(`User with email: ${userDto.email} already registered`);
+            throw ErrorException.BadRequest(`User with email: ${userDto.email} already registered`);
         }
 
         const hashedPassword = await this.createHashedPassword(userDto.password);
