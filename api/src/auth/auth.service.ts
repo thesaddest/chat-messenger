@@ -28,6 +28,27 @@ class AuthService {
         };
     }
 
+    async login(userDto: UserDto): Promise<IRegisteredUser> {
+        const user = await userService.getUserByEmail(userDto.email);
+        if (!user) {
+            throw ErrorException.BadRequest(`User with email: ${userDto.email} was not found`);
+        }
+
+        const isPassEqual = await bcrypt.compare(userDto.password, user.password);
+        if (!isPassEqual) {
+            throw ErrorException.BadRequest(`Incorrect password`);
+        }
+
+        const tokens = await jwtService.generateTokens(user);
+
+        return {
+            id: user.id,
+            email: user.email,
+            accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
+        };
+    }
+
     async createHashedPassword(password: string): Promise<string> {
         return bcrypt.hash(password, 10);
     }

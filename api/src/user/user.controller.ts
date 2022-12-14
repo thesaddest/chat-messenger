@@ -5,12 +5,12 @@ import { NextFunction, Request, Response } from "express";
 import { validate } from "class-validator";
 import { ErrorException } from "../error-handler/error-exception.js";
 
-interface IRegisterRequest<T> extends Request {
+interface IAuthRequest<T> extends Request {
     body: T;
 }
 
 class UserController {
-    async register(req: IRegisterRequest<IAuthValues>, res: Response, next: NextFunction) {
+    async register(req: IAuthRequest<IAuthValues>, res: Response, next: NextFunction) {
         try {
             const { email, password } = req.body;
             const newUser = new UserDto();
@@ -26,6 +26,22 @@ class UserController {
             const registeredUser = await authService.register(newUser);
 
             return res.json(registeredUser);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async login(req: IAuthRequest<IAuthValues>, res: Response, next: NextFunction) {
+        try {
+            const { email, password } = req.body;
+
+            const userData = new UserDto();
+            userData.email = email;
+            userData.password = password;
+
+            const loginedUser = await authService.login(userData);
+
+            return res.json(loginedUser);
         } catch (e) {
             next(e);
         }
