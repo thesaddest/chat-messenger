@@ -17,13 +17,12 @@ class AuthService {
 
         const user = await userService.createUser(userDto.email, hashedPassword);
 
-        const tokens = await jwtService.generateTokens(user);
+        const token = await jwtService.generateTokens(user);
 
         return {
             id: user.id,
             email: user.email,
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
+            token: token,
         };
     }
 
@@ -39,13 +38,12 @@ class AuthService {
             throw ErrorException.BadRequest(`Incorrect password`);
         }
 
-        const tokens = await jwtService.generateTokens(user);
+        const token = await jwtService.generateTokens(user);
 
         return {
             id: user.id,
             email: user.email,
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
+            token: token,
         };
     }
 

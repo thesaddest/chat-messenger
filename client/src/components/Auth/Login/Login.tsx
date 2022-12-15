@@ -6,23 +6,19 @@ import { useNavigate } from "react-router-dom";
 import { IAuthValues } from "../interfaces";
 import { AUTH_RULES } from "../auth.constants";
 import { StyledAuthButton } from "../StyledAuthButton";
+import { useAppDispatch } from "../../../hooks/redux-hooks";
+import { login } from "../../../store/auth/authSlice";
 
 const { Title } = Typography;
 
 export const Login: FC = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
+    const dispatch = useAppDispatch();
 
     const onFinish = (values: IAuthValues) => {
+        dispatch(login(values));
         form.resetFields();
-        fetch("http://localhost:4000/api/login", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        }).then((data) => console.log(data));
     };
 
     return (

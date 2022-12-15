@@ -6,23 +6,19 @@ import { useNavigate } from "react-router-dom";
 import { IAuthValues } from "../interfaces";
 import { AUTH_RULES } from "../auth.constants";
 import { StyledAuthButton } from "../StyledAuthButton";
+import { useAppDispatch } from "../../../hooks/redux-hooks";
+import { register } from "../../../store/auth/authSlice";
 
 const { Title } = Typography;
 
 export const SignUp: FC = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
+    const dispatch = useAppDispatch();
 
     const onFinish = (values: IAuthValues) => {
+        dispatch(register(values));
         form.resetFields();
-        fetch("http://localhost:4000/api/register", {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(values),
-        }).then(async (data) => console.log(await data.json()));
     };
 
     return (
