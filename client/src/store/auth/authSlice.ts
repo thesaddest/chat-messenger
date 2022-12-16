@@ -19,30 +19,30 @@ const initialState: AuthState = {
 export const login = createAsyncThunk<IUser, IAuthValues, { rejectValue: string }>(
     "auth/login",
     async function (userData, { rejectWithValue }) {
-        const { data } = await AuthService.login(userData);
+        try {
+            const { data } = await AuthService.login(userData);
 
-        if (!data || data === undefined) {
-            return rejectWithValue("An error occured while login");
+            localStorage.setItem("token", data.token);
+
+            return data;
+        } catch (e: any) {
+            return rejectWithValue(e.response.data.message);
         }
-
-        localStorage.setItem("token", data.token);
-
-        return data;
     },
 );
 
 export const register = createAsyncThunk<IUser, IAuthValues, { rejectValue: string }>(
     "auth/register",
     async function (userData, { rejectWithValue }) {
-        const { data } = await AuthService.register(userData);
+        try {
+            const { data } = await AuthService.register(userData);
 
-        if (!data || data === undefined) {
-            return rejectWithValue("An error occured while register");
+            localStorage.setItem("token", data.token);
+
+            return data;
+        } catch (e: any) {
+            return rejectWithValue(e.response.data.message);
         }
-
-        localStorage.setItem("token", data.token);
-
-        return data;
     },
 );
 
