@@ -8,12 +8,14 @@ interface AuthState {
     user: IUser | null;
     loading: boolean;
     error: string | null;
+    isAuth: boolean;
 }
 
 const initialState: AuthState = {
     user: null,
     loading: false,
     error: null,
+    isAuth: false,
 };
 
 export const login = createAsyncThunk<IUser, IAuthValues, { rejectValue: string }>(
@@ -52,22 +54,29 @@ const authSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(login.pending, (state) => {
-                state.loading = true;
-            })
-
             .addCase(login.fulfilled, (state, action) => {
                 state.user = action.payload;
-            })
-            .addCase(register.pending, (state) => {
-                state.loading = true;
+                state.loading = false;
+                state.error = null;
+                state.isAuth = true;
             })
             .addCase(register.fulfilled, (state, action) => {
                 state.user = action.payload;
+                state.loading = false;
+                state.error = null;
+                state.isAuth = true;
             })
             .addMatcher(isError, (state, action: PayloadAction<string>) => {
-                state.error = action.payload;
+                state.user = null;
                 state.loading = false;
+                state.error = action.payload;
+                state.isAuth = false;
+            })
+            .addMatcher(isPending, (state) => {
+                state.user = null;
+                state.loading = true;
+                state.error = null;
+                state.isAuth = false;
             });
     },
 });
@@ -76,4 +85,8 @@ export default authSlice.reducer;
 
 function isError(action: AnyAction) {
     return action.type.endsWith("rejected");
+}
+
+function isPending(action: AnyAction) {
+    return action.type.endsWith("pending");
 }

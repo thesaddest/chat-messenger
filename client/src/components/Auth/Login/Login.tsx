@@ -1,5 +1,5 @@
-import { Form, Button, Input, Typography } from "antd";
-import { FC } from "react";
+import { Form, Button, Input, Typography, Alert } from "antd";
+import { FC, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
@@ -16,8 +16,16 @@ export const Login: FC = () => {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
 
-    const onFinish = (values: IAuthValues) => {
-        dispatch(login(values));
+    const [error, setError] = useState<string | null>(null);
+
+    const onFinish = async (values: IAuthValues) => {
+        const { payload } = await dispatch(login(values));
+
+        if (typeof payload === "string") {
+            return setError(payload);
+        }
+
+        navigate("/home");
         form.resetFields();
     };
 
@@ -42,6 +50,7 @@ export const Login: FC = () => {
                     </StyledAuthButton>
                 </Form.Item>
             </Form>
+            {error && <Alert type="error" message={error} />}
         </>
     );
 };

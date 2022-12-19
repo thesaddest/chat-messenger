@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Pages from "./components/Pages";
+import Pages from "./routes/Pages";
 
 const AppWrapper = styled.div`
     min-height: 100vh;
