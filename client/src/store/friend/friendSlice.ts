@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface IFriend {
+export interface IFriend {
+    id: string;
     username: string;
     connected: boolean;
 }
@@ -10,10 +11,14 @@ interface FriendState {
 }
 
 const initialState: FriendState = {
-    friends: [],
+    friends: [
+        { id: "1", username: "John Doe", connected: false },
+        { id: "2", username: "Sarah Connor", connected: true },
+        { id: "3", username: "Peter Dark", connected: false },
+    ],
 };
 const friendSlice = createSlice({
-    name: "auth",
+    name: "friend",
     initialState,
     reducers: {},
 });

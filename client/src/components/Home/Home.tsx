@@ -1,8 +1,9 @@
 import { FC } from "react";
 import styled from "styled-components";
 
+import { Navbar } from "./Navbar";
+
 import { Chat } from "./Chat";
-import { Sidebar } from "./Sidebar";
 
 const StyledContainer = styled.div`
     width: 100vw;
@@ -12,7 +13,7 @@ const StyledContainer = styled.div`
 export const Home: FC = () => {
     return (
         <StyledContainer>
-            <Sidebar />
+            <Navbar />
             <Chat />
         </StyledContainer>
     );

@@ -1,43 +1,56 @@
 import { Avatar, Tabs } from "antd";
-import { FC } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
+import { MinusCircleFilled, CheckCircleFilled } from "@ant-design/icons";
 
-const StyledAvatar = styled(Avatar)`
-    width: 24px;
-    height: 24px;
-    line-height: 12px;
-`;
+import { useAppSelector } from "../../../hooks/redux-hooks";
+import { IFriend } from "../../../store/friend/friendSlice";
 
-const items = [
-    {
-        label: (
-            <span>
-                <StyledAvatar size={"small"} /> John Snow
-            </span>
-        ),
-        key: "1",
-        children: `Content of Tab 1`,
-    },
-    {
-        label: (
-            <span>
-                <StyledAvatar /> John Snow
-            </span>
-        ),
-        key: "2",
-        children: `Content of Tab 2`,
-    },
-    {
-        label: (
-            <span>
-                <StyledAvatar /> John Snow
-            </span>
-        ),
-        key: "3",
-        children: `Content of Tab 3`,
-    },
+const DEFAULT_TAB_ITEM = [
+    { label: "No friends", key: "1", children: "Add some frineds :)", style: { paddingTop: "0.5rem" } },
 ];
 
+const StyledAvatar = styled(Avatar)`
+    width: 36px;
+    height: 36px;
+    line-height: 12px;
+    margin-right: 12px;
+`;
+
+const StyledFriendsCardDiv = styled.div`
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+`;
+
 export const Chat: FC = () => {
-    return <Tabs tabPosition={"left"} items={items} />;
+    const { friends } = useAppSelector((state) => state.friend);
+
+    const [friendsList] = useState<IFriend[]>(friends);
+
+    return friendsList.length > 0 ? (
+        <Tabs
+            tabPosition="left"
+            items={friendsList.map((friend) => {
+                return {
+                    label: (
+                        <StyledFriendsCardDiv>
+                            {friend.connected ? (
+                                <CheckCircleFilled style={{ color: "#66bfbf", marginRight: "0.25rem" }} />
+                            ) : (
+                                <MinusCircleFilled style={{ color: "#f76b8a", marginRight: "0.25rem" }} />
+                            )}
+                            <StyledAvatar />
+                            {friend.username}
+                        </StyledFriendsCardDiv>
+                    ),
+                    key: friend.id,
+                    children: `Content ${friend.username}`,
+                    style: { paddingTop: "0.9rem" },
+                };
+            })}
+        />
+    ) : (
+        <Tabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
+    );
 };
