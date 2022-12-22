@@ -2,7 +2,6 @@ import { FC } from "react";
 import styled from "styled-components";
 
 import { Navbar } from "./Navbar";
-
 import { Chat } from "./Chat";
 
 const StyledContainer = styled.div`

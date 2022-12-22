@@ -1,13 +1,14 @@
-import { Form, Button, Input, Typography, Alert } from "antd";
+import { Form, Button, Input, Typography } from "antd";
 import { FC, useState } from "react";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
-import { IAuthValues } from "../interfaces";
+import { ILoginValues } from "../interfaces";
 import { AUTH_RULES } from "../auth.constants";
 import { StyledAuthButton } from "../StyledAuthButton";
 import { useAppDispatch } from "../../../hooks/redux-hooks";
 import { login } from "../../../store/auth/authSlice";
+import { StyledAuthErrorAlert } from "../StyledAuthErrorAlert";
 
 const { Title } = Typography;
 
@@ -18,7 +19,7 @@ export const Login: FC = () => {
 
     const [error, setError] = useState<string | null>(null);
 
-    const onFinish = async (values: IAuthValues) => {
+    const onFinish = async (values: ILoginValues) => {
         const { payload } = await dispatch(login(values));
 
         if (typeof payload === "string") {
@@ -50,7 +51,7 @@ export const Login: FC = () => {
                     </StyledAuthButton>
                 </Form.Item>
             </Form>
-            {error && <Alert type="error" message={error} />}
+            {error && <StyledAuthErrorAlert type="error" message={error} />}
         </>
     );
 };

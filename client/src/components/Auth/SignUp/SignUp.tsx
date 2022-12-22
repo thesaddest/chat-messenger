@@ -1,13 +1,14 @@
-import { Form, Button, Input, Typography, Alert } from "antd";
+import { Form, Button, Input, Typography } from "antd";
 import { FC, useState } from "react";
 import { LockOutlined, UserOutlined, LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
-import { IAuthValues } from "../interfaces";
+import { IRegisterValues } from "../interfaces";
 import { AUTH_RULES } from "../auth.constants";
 import { StyledAuthButton } from "../StyledAuthButton";
 import { useAppDispatch } from "../../../hooks/redux-hooks";
 import { register } from "../../../store/auth/authSlice";
+import { StyledAuthErrorAlert } from "../StyledAuthErrorAlert";
 
 const { Title } = Typography;
 
@@ -18,7 +19,7 @@ export const SignUp: FC = () => {
 
     const [error, setError] = useState<string | null>(null);
 
-    const onFinish = async (values: IAuthValues) => {
+    const onFinish = async (values: IRegisterValues) => {
         const { payload } = await dispatch(register(values));
 
         if (typeof payload === "string") {
@@ -35,6 +36,10 @@ export const SignUp: FC = () => {
             <Form form={form} name="login-form" initialValues={{ remember: true }} onFinish={onFinish}>
                 <Form.Item name="email" rules={AUTH_RULES.EMAIL} hasFeedback>
                     <Input prefix={<UserOutlined />} placeholder="Email" />
+                </Form.Item>
+
+                <Form.Item name="username" rules={AUTH_RULES.USERNAME} hasFeedback>
+                    <Input prefix={<UserOutlined />} placeholder="Username" />
                 </Form.Item>
 
                 <Form.Item name="password" rules={AUTH_RULES.PASSWORD} hasFeedback>
@@ -64,7 +69,7 @@ export const SignUp: FC = () => {
                     </StyledAuthButton>
                 </Form.Item>
             </Form>
-            {error && <Alert type="error" message={error} />}
+            {error && <StyledAuthErrorAlert type="error" message={error} />}
         </>
     );
 };

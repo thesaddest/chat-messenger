@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, PayloadAction, AnyAction } from "@reduxj
 
 import AuthService from "../../api/auth/auth.service";
 import { IUser } from "../../api/interfaces";
-import { IAuthValues } from "../../components/Auth/interfaces";
+import { ILoginValues, IRegisterValues } from "../../components/Auth/interfaces";
 
 interface AuthState {
     user: IUser | null;
@@ -18,7 +18,7 @@ const initialState: AuthState = {
     isAuth: false,
 };
 
-export const login = createAsyncThunk<IUser, IAuthValues, { rejectValue: string }>(
+export const login = createAsyncThunk<IUser, ILoginValues, { rejectValue: string }>(
     "auth/login",
     async function (userData, { rejectWithValue }) {
         try {
@@ -33,7 +33,7 @@ export const login = createAsyncThunk<IUser, IAuthValues, { rejectValue: string 
     },
 );
 
-export const register = createAsyncThunk<IUser, IAuthValues, { rejectValue: string }>(
+export const register = createAsyncThunk<IUser, IRegisterValues, { rejectValue: string }>(
     "auth/register",
     async function (userData, { rejectWithValue }) {
         try {

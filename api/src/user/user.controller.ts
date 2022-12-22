@@ -1,4 +1,4 @@
-import { UserDto } from "./user.dto.js";
+import { UserRegisterDto, UserLoginDto } from "./user.dto.js";
 import { IAuthValues } from "./../auth/interfaces.js";
 import { authService } from "../auth/auth.service.js";
 import { NextFunction, Request, Response } from "express";
@@ -12,15 +12,16 @@ interface IAuthRequest<T> extends Request {
 class UserController {
     async register(req: IAuthRequest<IAuthValues>, res: Response, next: NextFunction) {
         try {
-            const { email, password } = req.body;
-            const newUser = new UserDto();
+            const { email, username, password } = req.body;
+            const newUser = new UserRegisterDto();
             newUser.email = email;
+            newUser.username = username;
             newUser.password = password;
 
             const errors = await validate(newUser);
 
             if (errors.length) {
-                return next(ErrorException.BadRequest("Email or password validation error", errors));
+                return next(ErrorException.BadRequest("Email, username or password validation error", errors));
             }
 
             const registeredUser = await authService.register(newUser);
@@ -35,7 +36,7 @@ class UserController {
         try {
             const { email, password } = req.body;
 
-            const userData = new UserDto();
+            const userData = new UserLoginDto();
             userData.email = email;
             userData.password = password;
 
