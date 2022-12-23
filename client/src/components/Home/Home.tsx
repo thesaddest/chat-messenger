@@ -1,6 +1,8 @@
 import { FC } from "react";
 import styled from "styled-components";
 
+import { useSocket } from "../../hooks/use-socket";
+
 import { Navbar } from "./Navbar";
 import { Chat } from "./Chat";
 
@@ -10,6 +12,7 @@ const StyledContainer = styled.div`
 `;
 
 export const Home: FC = () => {
+    useSocket();
     return (
         <StyledContainer>
             <Navbar />

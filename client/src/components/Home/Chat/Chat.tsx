@@ -23,13 +23,15 @@ const StyledFriendsCardDiv = styled.div`
     align-items: center;
 `;
 
+const StyledTabs = styled(Tabs)`A`;
+
 export const Chat: FC = () => {
     const { friends } = useAppSelector((state) => state.friend);
 
     const [friendsList] = useState<IFriend[]>(friends);
 
     return friendsList.length > 0 ? (
-        <Tabs
+        <StyledTabs
             tabPosition="left"
             items={friendsList.map((friend) => {
                 return {
@@ -51,6 +53,6 @@ export const Chat: FC = () => {
             })}
         />
     ) : (
-        <Tabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
+        <StyledTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
     );
 };

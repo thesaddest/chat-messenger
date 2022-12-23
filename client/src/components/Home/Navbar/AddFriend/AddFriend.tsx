@@ -1,6 +1,6 @@
 import { Button, Form, Input, Modal, Typography } from "antd";
 import { FC, SyntheticEvent, useState } from "react";
-import { UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
+import { UsergroupAddOutlined, UserAddOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
 import { AUTH_RULES } from "../../../Auth/auth.constants";
@@ -52,7 +52,7 @@ export const AddFriend: FC = () => {
                 >
                     <Form form={form} name="add-friend-form" onFinish={onFinish}>
                         <Form.Item name="username" rules={AUTH_RULES.USERNAME}>
-                            <Input prefix={<UserOutlined />} placeholder="Enter friend's username" />
+                            <Input prefix={<UserAddOutlined />} placeholder="Enter friend's username" />
                         </Form.Item>
                     </Form>
                 </Modal>

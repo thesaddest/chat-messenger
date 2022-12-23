@@ -11,16 +11,12 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: process.env.SOCKET_IO_ORIGIN_URL, credentials: true } });
-
-io.on("connect", (socket) => {
-    console.log(socket);
-});
+const io = new Server(server, { cors: { origin: process.env.CLIENT_URL, credentials: true } });
 app.use(express.json());
 app.use(helmet());
 app.use(
     cors({
-        origin: process.env.SOCKET_IO_ORIGIN_URL,
+        origin: process.env.CLIENT_URL,
         credentials: true,
     }),
 );
@@ -29,6 +25,11 @@ app.use(errorMiddleware);
 
 AppDataSource.initialize();
 
-app.listen(4000, () => {
+io.on("connection", (socket) => {
+    console.log(socket.id);
+    console.log(socket.handshake.auth);
+});
+
+server.listen(4000, () => {
     console.log(`listening on PORT: ${process.env.SERVER_PORT}`);
 });

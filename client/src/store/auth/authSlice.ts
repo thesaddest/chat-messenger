@@ -51,7 +51,14 @@ export const register = createAsyncThunk<IUser, IRegisterValues, { rejectValue: 
 const authSlice = createSlice({
     name: "auth",
     initialState,
-    reducers: {},
+    reducers: {
+        socketLogout(state, action: PayloadAction<string>) {
+            state.user = null;
+            state.loading = false;
+            state.error = action.payload;
+            state.isAuth = false;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(login.fulfilled, (state, action) => {
@@ -80,6 +87,8 @@ const authSlice = createSlice({
             });
     },
 });
+
+export const { socketLogout } = authSlice.actions;
 
 export default authSlice.reducer;
 
