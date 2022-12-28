@@ -1,10 +1,9 @@
 import { Avatar, Tabs } from "antd";
-import { FC, useState } from "react";
+import { FC } from "react";
 import styled from "styled-components";
 import { MinusCircleFilled, CheckCircleFilled } from "@ant-design/icons";
 
 import { useAppSelector } from "../../../hooks/redux-hooks";
-import { IFriend } from "../../../store/friend/friendSlice";
 
 const DEFAULT_TAB_ITEM = [
     { label: "No friends", key: "1", children: "Add some frineds :)", style: { paddingTop: "0.5rem" } },
@@ -28,12 +27,10 @@ const StyledTabs = styled(Tabs)`A`;
 export const Chat: FC = () => {
     const { friends } = useAppSelector((state) => state.friend);
 
-    const [friendsList] = useState<IFriend[]>(friends);
-
-    return friendsList.length > 0 ? (
+    return friends.length > 0 ? (
         <StyledTabs
             tabPosition="left"
-            items={friendsList.map((friend) => {
+            items={friends.map((friend) => {
                 return {
                     label: (
                         <StyledFriendsCardDiv>

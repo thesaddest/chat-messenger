@@ -1,26 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export interface IFriend {
-    id: string;
-    username: string;
-    connected: boolean;
-}
+import { IFriend } from "../../components/Home/Navbar/AddFriend/interfaces";
 
 interface FriendState {
     friends: IFriend[];
 }
 
 const initialState: FriendState = {
-    friends: [
-        { id: "1", username: "John Doe", connected: false },
-        { id: "2", username: "Sarah Connor", connected: true },
-        { id: "3", username: "Peter Dark", connected: false },
-    ],
+    friends: [],
 };
+
 const friendSlice = createSlice({
     name: "friend",
     initialState,
-    reducers: {},
+    reducers: {
+        getFriends(state, action: PayloadAction<IFriend[]>) {
+            state.friends = action.payload;
+        },
+        addFriend(state, action: PayloadAction<IFriend>) {
+            state.friends.push(action.payload);
+        },
+    },
 });
+
+export const { addFriend, getFriends } = friendSlice.actions;
 
 export default friendSlice.reducer;

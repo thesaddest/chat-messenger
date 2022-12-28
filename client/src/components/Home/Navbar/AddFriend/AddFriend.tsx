@@ -5,7 +5,19 @@ import styled from "styled-components";
 
 import { AUTH_RULES } from "../../../Auth/auth.constants";
 
-import { IAddFriendValues } from "./interfaces";
+import { socket } from "../../../../socket-io";
+import { StyledAuthErrorAlert } from "../../../Auth/StyledAuthErrorAlert";
+
+import { useAppDispatch } from "../../../../hooks/redux-hooks";
+import { addFriend } from "../../../../store/friend/friendSlice";
+
+import { IAddFriendValues, IFriend } from "./interfaces";
+
+interface IAddFriendCBValues {
+    done: boolean;
+    error: string;
+    friend: IFriend;
+}
 
 const { Title } = Typography;
 
@@ -18,14 +30,11 @@ const StyledTitle = styled(Title)`
 export const AddFriend: FC = () => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [modalError, setModalError] = useState<string>("");
+    const dispatch = useAppDispatch();
 
     const showModal = () => {
         setIsModalOpen(true);
-    };
-
-    const handleOk = (e: SyntheticEvent) => {
-        e.stopPropagation();
-        setIsModalOpen(false);
     };
 
     const handleCancel = (e: SyntheticEvent) => {
@@ -34,8 +43,15 @@ export const AddFriend: FC = () => {
     };
 
     const onFinish = (values: IAddFriendValues) => {
-        form.resetFields();
-        console.log(values);
+        socket.emit("add-friend", values.username, ({ error, friend }: IAddFriendCBValues) => {
+            if (error) {
+                return setModalError(error);
+            }
+            dispatch(addFriend(friend));
+
+            setIsModalOpen(false);
+            form.resetFields();
+        });
     };
 
     return (
@@ -46,7 +62,6 @@ export const AddFriend: FC = () => {
                     title="Add a friend!"
                     open={isModalOpen}
                     onCancel={handleCancel}
-                    onOk={handleOk}
                     okButtonProps={{ htmlType: "submit", form: "add-friend-form" }}
                     centered={true}
                 >
@@ -55,6 +70,7 @@ export const AddFriend: FC = () => {
                             <Input prefix={<UserAddOutlined />} placeholder="Enter friend's username" />
                         </Form.Item>
                     </Form>
+                    {modalError && <StyledAuthErrorAlert type="error" message={modalError} />}
                 </Modal>
                 <UsergroupAddOutlined />
             </Button>

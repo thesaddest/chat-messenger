@@ -1,3 +1,4 @@
+import { addFriend, AddFriendCB, getFriends } from "./socket/socket.middleware.js";
 import express from "express";
 import helmet from "helmet";
 import http from "http";
@@ -26,8 +27,12 @@ app.use(errorMiddleware);
 AppDataSource.initialize();
 
 io.on("connection", (socket) => {
-    console.log(socket.id);
     console.log(socket.handshake.auth);
+
+    getFriends(socket);
+    socket.on("add-friend", (username: string, cb: AddFriendCB) => {
+        addFriend(username, cb, socket);
+    });
 });
 
 server.listen(4000, () => {
