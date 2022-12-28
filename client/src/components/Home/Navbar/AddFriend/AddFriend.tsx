@@ -4,17 +4,14 @@ import { UsergroupAddOutlined, UserAddOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
 import { AUTH_RULES } from "../../../Auth/auth.constants";
-
 import { socket } from "../../../../socket-io";
 import { StyledAuthErrorAlert } from "../../../Auth/StyledAuthErrorAlert";
-
 import { useAppDispatch } from "../../../../hooks/redux-hooks";
 import { addFriend } from "../../../../store/friend/friendSlice";
 
 import { IAddFriendValues, IFriend } from "./interfaces";
 
 interface IAddFriendCBValues {
-    done: boolean;
     error: string;
     friend: IFriend;
 }
@@ -47,6 +44,7 @@ export const AddFriend: FC = () => {
             if (error) {
                 return setModalError(error);
             }
+
             dispatch(addFriend(friend));
 
             setIsModalOpen(false);
