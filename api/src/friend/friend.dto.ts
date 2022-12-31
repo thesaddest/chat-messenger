@@ -1,4 +1,4 @@
-import { IsBoolean, IsNumber, IsString } from "class-validator";
+import { IsNumber, IsString } from "class-validator";
 
 export class FriendDto {
     @IsNumber()
@@ -6,7 +6,4 @@ export class FriendDto {
 
     @IsString()
     username: string;
-
-    @IsBoolean()
-    connected: boolean;
 }

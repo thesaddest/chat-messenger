@@ -8,6 +8,7 @@ import { socket } from "../../../../socket-io";
 import { StyledAuthErrorAlert } from "../../../Auth/StyledAuthErrorAlert";
 import { useAppDispatch } from "../../../../hooks/redux-hooks";
 import { addFriend } from "../../../../store/friend/friendSlice";
+import { SOCKET_EVENTS } from "../../../../socket-io/socket.constants";
 
 import { IAddFriendValues, IFriend } from "./interfaces";
 
@@ -40,7 +41,7 @@ export const AddFriend: FC = () => {
     };
 
     const onFinish = (values: IAddFriendValues) => {
-        socket.emit("add-friend", values.username, ({ error, friend }: IAddFriendCBValues) => {
+        socket.emit(SOCKET_EVENTS.ADD_FRIEND, values.username, ({ error, friend }: IAddFriendCBValues) => {
             if (error) {
                 return setModalError(error);
             }

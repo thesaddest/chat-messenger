@@ -13,7 +13,6 @@ class FriendService {
         return {
             id: friend.id,
             username: friend.username,
-            connected: friend.connected,
         };
     }
 
@@ -40,7 +39,7 @@ class FriendService {
         const friends = user.friends;
 
         return friends.map((friend) => {
-            return { id: friend.id, username: friend.username, connected: friend.connected };
+            return { id: friend.id, username: friend.username };
         });
     }
 }

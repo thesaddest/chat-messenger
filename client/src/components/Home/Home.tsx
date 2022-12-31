@@ -13,6 +13,7 @@ const StyledContainer = styled.div`
 
 export const Home: FC = () => {
     useSocket();
+
     return (
         <StyledContainer>
             <Navbar />

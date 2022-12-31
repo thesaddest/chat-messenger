@@ -1,4 +1,4 @@
-import { addFriend, AddFriendCB, getFriends } from "./socket/socket.middleware.js";
+import { addFriend, getCurrentUserFriends, getConnectedFriends } from "./socket/socket.middleware.js";
 import express from "express";
 import helmet from "helmet";
 import http from "http";
@@ -8,6 +8,8 @@ import * as dotenv from "dotenv";
 import { AppDataSource } from "./db/database.js";
 import { router } from "./router/index.js";
 import { errorMiddleware } from "./error-handler/error.middleware.js";
+import { AddFriendCB } from "./socket/interfaces.js";
+import { SOCKET_EVENTS } from "./socket/socket.constants.js";
 dotenv.config();
 
 const app = express();
@@ -27,10 +29,10 @@ app.use(errorMiddleware);
 AppDataSource.initialize();
 
 io.on("connection", (socket) => {
-    console.log(socket.handshake.auth);
+    getConnectedFriends(io, socket);
+    getCurrentUserFriends(socket);
 
-    getFriends(socket);
-    socket.on("add-friend", (username: string, cb: AddFriendCB) => {
+    socket.on(SOCKET_EVENTS.ADD_FRIEND, (username: string, cb: AddFriendCB) => {
         addFriend(username, cb, socket);
     });
 });

@@ -13,9 +13,6 @@ export class Friend extends BaseEntity {
     @Column({ nullable: false })
     username: string;
 
-    @Column({ nullable: false, default: false })
-    connected: boolean;
-
     @ManyToOne(() => User, (user) => user.friends)
     user: Relation<User>;
 }

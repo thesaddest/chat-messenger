@@ -25,16 +25,20 @@ const StyledFriendsCardDiv = styled.div`
 const StyledTabs = styled(Tabs)`A`;
 
 export const Chat: FC = () => {
+    const { connectedFriends } = useAppSelector((state) => state.friend);
     const { friends } = useAppSelector((state) => state.friend);
 
+    console.log("friends: ", friends, "connectedFriends: ", connectedFriends);
+
+    //TODO: Change friend.username to online/offline status
     return friends.length > 0 ? (
         <StyledTabs
             tabPosition="left"
-            items={friends.map((friend) => {
+            items={friends.map((friend, index) => {
                 return {
                     label: (
                         <StyledFriendsCardDiv>
-                            {friend.connected ? (
+                            {friend.username ? (
                                 <CheckCircleFilled style={{ color: "#66bfbf", marginRight: "0.25rem" }} />
                             ) : (
                                 <MinusCircleFilled style={{ color: "#f76b8a", marginRight: "0.25rem" }} />

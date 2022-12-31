@@ -5,5 +5,4 @@ export interface IAddFriendValues {
 export interface IFriend {
     id: string;
     username: string;
-    connected: boolean;
 }
