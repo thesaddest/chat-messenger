@@ -13,6 +13,9 @@ export class Friend extends BaseEntity {
     @Column({ nullable: false })
     username: string;
 
-    @ManyToOne(() => User, (user) => user.friends)
+    @Column({ nullable: true })
+    addedBy: string;
+
+    @ManyToOne(() => User, (user) => user.friends, { nullable: true })
     user: Relation<User>;
 }

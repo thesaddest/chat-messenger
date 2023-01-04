@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 
-import { socketError } from "../store/auth/authSlice";
-import { getAllFriends, getConnectedFriends } from "../store/friend/friendSlice";
+import { socketDisconnect, socketError } from "../store/auth/authSlice";
+import { getAllFriends } from "../store/friend/friendSlice";
 import { SOCKET_EVENTS } from "../socket-io/socket.constants";
-import { IConnectedUser } from "../socket-io/interfaces";
+import { socket } from "../socket-io";
 
-import { IFriend } from "./../components/Home/Navbar/AddFriend/interfaces";
+import { IFriend, IMessage } from "../api/interfaces";
+
+import { getAllMessages } from "../store/message/messageSlice";
+
 import { useAppDispatch, useAppSelector } from "./redux-hooks";
-import { socket } from "./../socket-io/index";
 
 export const useSocket = () => {
     const dispatch = useAppDispatch();
@@ -18,30 +20,45 @@ export const useSocket = () => {
             id: user?.id,
             username: user?.username,
             token: user?.token,
-            connected: true,
         };
         socket.connect();
+
+        socket.on(SOCKET_EVENTS.GET_ALL_MESSAGES, (messages: IMessage[]) => {
+            dispatch(getAllMessages(messages));
+        });
 
         socket.on(SOCKET_EVENTS.GET_ALL_FRIENDS, (friends: IFriend[]) => {
             dispatch(getAllFriends(friends));
         });
 
-        socket.on(SOCKET_EVENTS.GET_CONNECTED_FRIENDS, (connectedFriends: IConnectedUser[]) => {
-            dispatch(getConnectedFriends(connectedFriends));
+        socket.on(SOCKET_EVENTS.ON_CONNECT, () => {
+            //send friend's username, and state.friend.username === username, set it to online
+            console.log("user connected");
         });
 
-        socket.on(SOCKET_EVENTS.ERROR, (e) => {
-            dispatch(socketError(e.message));
+        socket.on(SOCKET_EVENTS.ON_DISCONNECT, () => {
             socket.auth = {
                 id: null,
                 username: null,
                 token: null,
-                connected: false,
             };
+            dispatch(socketDisconnect());
+        });
+
+        socket.on(SOCKET_EVENTS.ERROR, (e) => {
+            socket.auth = {
+                id: null,
+                username: null,
+                token: null,
+            };
+            dispatch(socketError(e.message));
         });
 
         return () => {
+            socket.off(SOCKET_EVENTS.ON_CONNECT);
+            socket.off(SOCKET_EVENTS.GET_ALL_MESSAGES);
             socket.off(SOCKET_EVENTS.ERROR);
+            socket.off(SOCKET_EVENTS.ON_DISCONNECT);
         };
     }, [dispatch, user]);
 };
