@@ -8,27 +8,22 @@ class FriendService {
         const friendRepository = AppDataSource.getRepository(Friend);
 
         friend.user = user;
+        friend.addedBy = user.username;
         await friendRepository.save(friend);
 
         return {
             id: friend.id,
             username: friend.username,
+            addedBy: friend.addedBy,
         };
     }
 
     async createFriend(username: string): Promise<Friend> {
         const friendRepository = AppDataSource.getRepository(Friend);
-
         const friend = await friendRepository.create({ username });
         await friendRepository.save(friend);
 
         return friend;
-    }
-
-    async getFriendByUsername(username: string): Promise<Friend> {
-        const friendRepository = AppDataSource.getRepository(Friend);
-
-        return await friendRepository.findOne({ where: { username } });
     }
 
     async hasFriend(user: User, friendUsername: string): Promise<Friend> {
@@ -39,8 +34,20 @@ class FriendService {
         const friends = user.friends;
 
         return friends.map((friend) => {
-            return { id: friend.id, username: friend.username };
+            return { id: friend.id, username: friend.username, addedBy: friend.addedBy };
         });
+    }
+
+    async getFriendsByUsername(username: string): Promise<Friend[]> {
+        const allFriends = await this.getAllFriends();
+
+        return allFriends.filter((friend) => friend.username === username);
+    }
+
+    private async getAllFriends(): Promise<Friend[]> {
+        const friendRepository = AppDataSource.getRepository(Friend);
+
+        return friendRepository.find();
     }
 }
 

@@ -9,8 +9,9 @@ import { StyledAuthErrorAlert } from "../../../Auth/StyledAuthErrorAlert";
 import { useAppDispatch } from "../../../../hooks/redux-hooks";
 import { addFriend } from "../../../../store/friend/friendSlice";
 import { SOCKET_EVENTS } from "../../../../socket-io/socket.constants";
+import { IFriend } from "../../../../api/interfaces";
 
-import { IAddFriendValues, IFriend } from "./interfaces";
+import { IAddFriendValues } from "./interfaces";
 
 interface IAddFriendCBValues {
     error: string;

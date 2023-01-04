@@ -3,6 +3,7 @@
 
 # misc
 .DS_Store
+.idea
 
 # dotenv environment variable files
 .env

@@ -20,9 +20,7 @@ class AuthService {
         }
 
         const hashedPassword = await this.createHashedPassword(userDto.password);
-
         const user = await userService.createUser(userDto.email, userDto.username, hashedPassword);
-
         const token = await jwtService.generateTokens(user);
 
         return {

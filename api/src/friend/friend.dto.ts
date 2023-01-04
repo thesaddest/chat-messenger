@@ -6,4 +6,7 @@ export class FriendDto {
 
     @IsString()
     username: string;
+
+    @IsString()
+    addedBy: string;
 }

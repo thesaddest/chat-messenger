@@ -2,13 +2,14 @@
 export class ErrorException extends Error {
     public status: number = null;
     public errors: any = null;
+
     constructor(status: number, message: string, errors: any = []) {
         super(message);
         this.status = status;
         this.errors = errors;
     }
 
-    static UnauthorizedErorr() {
+    static UnauthorizedError() {
         return new ErrorException(401, "User is not authorized");
     }
 

@@ -1,10 +1,10 @@
 import { socketService } from "./socket.service.js";
 import { AddFriendCB } from "./interfaces.js";
-import { FriendDto } from "../friend/friend.dto.js";
-import { Server, Socket } from "socket.io";
+import { Socket } from "socket.io";
 import { Friend } from "../friend/friend.entity.js";
 import { friendService } from "../friend/friend.service.js";
 import { userService } from "../user/user.service.js";
+import { FriendDto } from "../friend/friend.dto.js";
 import { SOCKET_EVENTS } from "./socket.constants.js";
 
 export const addFriend = async (username: string, cb: AddFriendCB, socket: Socket): Promise<void | Friend> => {
@@ -31,35 +31,11 @@ export const addFriend = async (username: string, cb: AddFriendCB, socket: Socke
     return cb({ error: null, friend: addedFriend });
 };
 
-// export const getCurrentUserFriends = async (socket: Socket): Promise<FriendDto[]> => {
-//     const user = await socketService.getCurrentUser(socket);
-
-//     if (user) {
-//         const friends = await friendService.getUserFriends(user);
-
-//         socket.emit(SOCKET_EVENTS.GET_ALL_FRIENDS, friends);
-
-//         return friends;
-//     }
-// };
-
-export const getCurrentUserFriends = async (socket: Socket, io: Server): Promise<FriendDto[]> => {
+export const getFriends = async (socket: Socket): Promise<FriendDto[]> => {
     const user = await socketService.getCurrentUser(socket);
 
-    if (user) {
-        const allUserFriends = await friendService.getUserFriends(user);
-        const allConnectedUsers = await socketService.getAllConnectedUsers(io);
-        const connectedFriends = await socketService.getConnectedFriends(socket, allConnectedUsers);
+    const friends = await friendService.getUserFriends(user);
+    socket.emit(SOCKET_EVENTS.GET_ALL_FRIENDS, friends);
 
-        socket.emit(SOCKET_EVENTS.GET_ALL_FRIENDS, allUserFriends);
-        return allUserFriends;
-    }
-};
-
-export const getConnectedFriends = async (io: Server, socket: Socket) => {
-    const connectedUsers = await socketService.getAllConnectedUsers(io);
-    const connectedFriends = await socketService.getConnectedFriends(socket, connectedUsers);
-    socket.emit(SOCKET_EVENTS.GET_CONNECTED_FRIENDS, connectedFriends);
-
-    return connectedFriends;
+    return friends;
 };

@@ -1,7 +1,6 @@
 import { Avatar, Tabs } from "antd";
 import { FC } from "react";
 import styled from "styled-components";
-import { MinusCircleFilled, CheckCircleFilled } from "@ant-design/icons";
 
 import { useAppSelector } from "../../../hooks/redux-hooks";
 
@@ -22,33 +21,32 @@ const StyledFriendsCardDiv = styled.div`
     align-items: center;
 `;
 
-const StyledTabs = styled(Tabs)`A`;
+const StyledTabs = styled(Tabs)`
+    height: 100%;
+
+    .ant-tabs-content-holder {
+    }
+`;
 
 export const Chat: FC = () => {
-    const { connectedFriends } = useAppSelector((state) => state.friend);
     const { friends } = useAppSelector((state) => state.friend);
-
-    console.log("friends: ", friends, "connectedFriends: ", connectedFriends);
+    console.log("friends: ", friends);
+    const { messages } = useAppSelector((state) => state.message);
+    console.log("messages: ", messages);
 
     //TODO: Change friend.username to online/offline status
     return friends.length > 0 ? (
         <StyledTabs
             tabPosition="left"
-            items={friends.map((friend, index) => {
+            items={friends?.map((friend, index) => {
                 return {
                     label: (
                         <StyledFriendsCardDiv>
-                            {friend.username ? (
-                                <CheckCircleFilled style={{ color: "#66bfbf", marginRight: "0.25rem" }} />
-                            ) : (
-                                <MinusCircleFilled style={{ color: "#f76b8a", marginRight: "0.25rem" }} />
-                            )}
-                            <StyledAvatar />
-                            {friend.username}
+                            <StyledAvatar /> {friend.username}
                         </StyledFriendsCardDiv>
                     ),
                     key: friend.id,
-                    children: `Content ${friend.username}`,
+                    children: `Content ${messages[index].content}`,
                     style: { paddingTop: "0.9rem" },
                 };
             })}
