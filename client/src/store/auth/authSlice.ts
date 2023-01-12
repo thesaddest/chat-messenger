@@ -20,7 +20,7 @@ const initialState: AuthState = {
 
 export const login = createAsyncThunk<IUser, ILoginValues, { rejectValue: string }>(
     "auth/login",
-    async function (userData, { rejectWithValue }) {
+    async function(userData, { rejectWithValue }) {
         try {
             const { data } = await AuthService.login(userData);
 
@@ -35,7 +35,7 @@ export const login = createAsyncThunk<IUser, ILoginValues, { rejectValue: string
 
 export const register = createAsyncThunk<IUser, IRegisterValues, { rejectValue: string }>(
     "auth/register",
-    async function (userData, { rejectWithValue }) {
+    async function(userData, { rejectWithValue }) {
         try {
             const { data } = await AuthService.register(userData);
 
@@ -56,12 +56,6 @@ const authSlice = createSlice({
             state.user = null;
             state.loading = false;
             state.error = action.payload;
-            state.isAuth = false;
-        },
-        socketDisconnect(state) {
-            state.user = null;
-            state.loading = false;
-            state.error = null;
             state.isAuth = false;
         },
     },
@@ -94,7 +88,7 @@ const authSlice = createSlice({
     },
 });
 
-export const { socketError, socketDisconnect } = authSlice.actions;
+export const { socketError } = authSlice.actions;
 
 export default authSlice.reducer;
 

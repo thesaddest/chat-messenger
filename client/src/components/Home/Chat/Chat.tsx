@@ -1,31 +1,69 @@
 import { Avatar, Tabs } from "antd";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import styled from "styled-components";
+import { MinusCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../../hooks/redux-hooks";
 
-const DEFAULT_TAB_ITEM = [
-    { label: "No friends", key: "1", children: "Add some frineds :)", style: { paddingTop: "0.5rem" } },
-];
+import { ChatInputBox } from "./ChatInput/ChatInputBox";
+import { DEFAULT_TAB_ITEM } from "./chat.constants";
+import { Messages } from "./Messages/Messages";
+
+const StyledContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  width: 90vw;
+  height: 90vh;
+`;
+
+const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const StyledAvatar = styled(Avatar)`
-    width: 36px;
-    height: 36px;
-    line-height: 12px;
-    margin-right: 12px;
+  width: 36px;
+  height: 36px;
+  line-height: 12px;
+  margin-right: 12px;
 `;
 
 const StyledFriendsCardDiv = styled.div`
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const StyledTabs = styled(Tabs)`
-    height: 100%;
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
 
-    .ant-tabs-content-holder {
+  //TODO: Find solution to overwrite antd styles without !important
+  .ant-tabs-tab {
+    .anticon {
+      margin-right: 0.2rem;
     }
+
+    @media only screen and (max-width: 425px) {
+      padding: 0 0.5rem !important;
+    }
+  }
+
+  .ant-tabs-content {
+    width: 85%;
+
+    @media only screen and (max-width: 425px) {
+      width: 100%;
+    }
+  }
+
+  .ant-tabs-ink-bar {
+    @media only screen and (max-width: 425px) {
+      height: 35px !important;
+    }
+  }
 `;
 
 export const Chat: FC = () => {
@@ -34,23 +72,41 @@ export const Chat: FC = () => {
     const { messages } = useAppSelector((state) => state.message);
     console.log("messages: ", messages);
 
-    //TODO: Change friend.username to online/offline status
+    //TODO: get friend's socketId from redis with help of this index
+    const [friendIndex, setFriendIndex] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (friends.length > 0) {
+            setFriendIndex(friends[0].id);
+        }
+    }, [friends]);
+
     return friends.length > 0 ? (
-        <StyledTabs
-            tabPosition="left"
-            items={friends?.map((friend, index) => {
-                return {
-                    label: (
-                        <StyledFriendsCardDiv>
-                            <StyledAvatar /> {friend.username}
-                        </StyledFriendsCardDiv>
-                    ),
-                    key: friend.id,
-                    children: `Content ${messages[index].content}`,
-                    style: { paddingTop: "0.9rem" },
-                };
-            })}
-        />
+        <StyledWrapper>
+            <StyledContainer>
+                <StyledTabs
+                    tabPosition="left"
+                    items={friends?.map((friend) => {
+                        return {
+                            label: (
+                                <StyledFriendsCardDiv>
+                                    {friend.connected ? <CheckCircleOutlined style={{ color: "#52c41a" }} /> :
+                                        <MinusCircleOutlined style={{ color: "#eb2f96" }} />}
+                                    <StyledAvatar /> {friend.username}
+                                </StyledFriendsCardDiv>
+                            ),
+                            key: friend.id,
+                            children: <Messages friend={friend} messages={messages} />,
+                        };
+                    })}
+                    defaultActiveKey={friendIndex ? friendIndex : undefined}
+                    onChange={(activeKey) => setFriendIndex(activeKey)}
+                />
+                <ChatInputBox friendId={friendIndex} />
+            </StyledContainer>
+        </StyledWrapper>
+
+
     ) : (
         <StyledTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
     );

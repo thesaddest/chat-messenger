@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNumber, IsString } from "class-validator";
 
 export class FriendDto {
     @IsNumber()
@@ -9,4 +9,7 @@ export class FriendDto {
 
     @IsString()
     addedBy: string;
+
+    @IsBoolean()
+    connected: boolean;
 }

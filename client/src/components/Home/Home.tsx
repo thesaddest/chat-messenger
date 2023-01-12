@@ -7,8 +7,8 @@ import { Navbar } from "./Navbar";
 import { Chat } from "./Chat";
 
 const StyledContainer = styled.div`
-    width: 100vw;
-    height: 100vh;
+  width: 100vw;
+  height: 100vh;
 `;
 
 export const Home: FC = () => {

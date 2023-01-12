@@ -39,7 +39,8 @@ export const Login: FC = () => {
                 </Form.Item>
 
                 <Form.Item name="password" rules={AUTH_RULES.PASSWORD} hasFeedback>
-                    <Input.Password prefix={<LockOutlined />} type="password" placeholder="Password" />
+                    <Input.Password prefix={<LockOutlined />} type="password" placeholder="Password"
+                                    autoComplete="password" />
                 </Form.Item>
 
                 <Form.Item>

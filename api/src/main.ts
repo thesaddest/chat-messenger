@@ -1,4 +1,10 @@
-import { addFriend, getFriends } from "./socket/socket.middleware.js";
+import {
+    addFriend,
+    getFriends,
+    onInitUser,
+    onDeinitUser,
+    sendMessage,
+} from "./socket/socket.controller.js";
 import express from "express";
 import helmet from "helmet";
 import http from "http";
@@ -10,6 +16,8 @@ import { router } from "./router/index.js";
 import { errorMiddleware } from "./error-handler/error.middleware.js";
 import { AddFriendCB } from "./socket/interfaces.js";
 import { SOCKET_EVENTS } from "./socket/socket.constants.js";
+import { Message } from "./message/message.entity.js";
+import { socketAuthMiddleware } from "./socket/socket.middleware.js";
 
 dotenv.config();
 
@@ -29,17 +37,23 @@ app.use(errorMiddleware);
 
 AppDataSource.initialize();
 
-io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
-    console.log(socket.id, "user connected");
 
+io.use(socketAuthMiddleware);
+io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
+    onInitUser(socket);
     getFriends(socket);
 
-    socket.on(SOCKET_EVENTS.ADD_FRIEND, (username: string, cb: AddFriendCB) => {
-        addFriend(username, cb, socket);
+    socket.on(SOCKET_EVENTS.ADD_FRIEND, async (username: string, cb: AddFriendCB) => {
+        await addFriend(username, cb, socket);
+        await getFriends(socket);
+    });
+
+    socket.on(SOCKET_EVENTS.SEND_MESSAGE, (messageDto: Message) => {
+        sendMessage(socket, messageDto);
     });
 
     socket.on(SOCKET_EVENTS.ON_DISCONNECT, () => {
-        console.log(socket.id, "user disconnected");
+        onDeinitUser(socket);
     });
 });
 

@@ -7,23 +7,7 @@ interface MessageState {
 }
 
 const initialState: MessageState = {
-    messages: [
-        {
-            to: "someId",
-            from: "someFriendId",
-            content: "hey, test",
-        },
-        {
-            to: "someId",
-            from: "someFriendId",
-            content: "heeeeeyyyyy, some ",
-        },
-        {
-            to: "someId",
-            from: "someFriendId",
-            content: "hello, note",
-        },
-    ],
+    messages: [],
 };
 
 const messageSlice = createSlice({
@@ -34,7 +18,7 @@ const messageSlice = createSlice({
             state.messages = action.payload;
         },
         sendMessage(state, action: PayloadAction<IMessage>) {
-            state.messages?.push(action.payload);
+            state.messages.push(action.payload);
         },
     },
 });

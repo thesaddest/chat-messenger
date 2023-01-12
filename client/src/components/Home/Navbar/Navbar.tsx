@@ -5,13 +5,16 @@ import styled from "styled-components";
 import { AddFriend } from "./AddFriend";
 
 const StyledDivider = styled(Divider)`
-    margin: 0;
+  margin: 0;
 `;
 
 const StyledContainer = styled.div`
-    padding: 0.5rem;
-    display: flex;
-    justify-content: start;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: start;
+  @media only screen and (max-width: 425px) {
+    justify-content: space-evenly;
+  }
 `;
 
 export const Navbar: FC = () => {
