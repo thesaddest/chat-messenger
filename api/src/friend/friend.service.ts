@@ -44,7 +44,6 @@ class FriendService {
         const connectedFriends = [];
         for (const friend of friends) {
             const connected = await redisClient.hget(`username:${friend.username}`, "connected");
-            console.log(friend.username, connected);
             connectedFriends.push({
                 id: friend.id,
                 username: friend.username,
@@ -52,7 +51,6 @@ class FriendService {
                 connected: (connected === null || connected === "false") ? false : connected,
             });
         }
-        console.log(connectedFriends);
         return connectedFriends;
     }
 }
