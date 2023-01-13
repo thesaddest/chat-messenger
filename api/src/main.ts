@@ -42,7 +42,7 @@ io.use(socketAuthMiddleware);
 io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
     onInitUser(socket);
     getFriends(socket);
-
+    
     socket.on(SOCKET_EVENTS.ADD_FRIEND, async (username: string, cb: AddFriendCB) => {
         await addFriend(username, cb, socket);
         await getFriends(socket);

@@ -67,9 +67,9 @@ const StyledTabs = styled(Tabs)`
 `;
 
 export const Chat: FC = () => {
-    const { friends } = useAppSelector((state) => state.friend);
+    const friends = useAppSelector((state) => state.friend.friends);
     console.log("friends: ", friends);
-    const { messages } = useAppSelector((state) => state.message);
+    const messages = useAppSelector((state) => state.message.messages);
     console.log("messages: ", messages);
 
     //TODO: get friend's socketId from redis with help of this index

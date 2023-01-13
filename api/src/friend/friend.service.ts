@@ -43,15 +43,16 @@ class FriendService {
     async getConnectedFriends(friends: FriendDto[]): Promise<FriendDto[]> {
         const connectedFriends = [];
         for (const friend of friends) {
-            const connected: boolean = await redisClient.hget(`username:${friend.username}`, "connected");
+            const connected = await redisClient.hget(`username:${friend.username}`, "connected");
+            console.log(friend.username, connected);
             connectedFriends.push({
                 id: friend.id,
                 username: friend.username,
                 addedBy: friend.addedBy,
-                connected: connected === null ? false : Boolean(connected),
+                connected: (connected === null || connected === "false") ? false : connected,
             });
         }
-
+        console.log(connectedFriends);
         return connectedFriends;
     }
 }
