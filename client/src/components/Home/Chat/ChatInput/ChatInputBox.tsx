@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { SendOutlined } from "@ant-design/icons";
 
 import { MESSAGE_RULES } from "../chat.constants";
-import { IMessage } from "../interfaces";
+import { IMessage, IMessageValues } from "../interfaces";
 import { socket } from "../../../../socket-io";
 import { SOCKET_EVENTS } from "../../../../socket-io/socket.constants";
 import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
@@ -13,7 +13,7 @@ import { sendMessage } from "../../../../store/message/messageSlice";
 const { TextArea } = Input;
 
 interface ChatInputBoxProps {
-    friendId: string | null;
+    friendId: string;
 }
 
 //TODO: ask about error in onFinish function
@@ -54,12 +54,11 @@ const StyledButton = styled(Button)`
 export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
-    const user = useAppSelector(state => state.auth.user);
+    const userId = useAppSelector(state => state.auth.user?.userId);
 
-    const onFinish = (values: any) => {
-        if (user && friendId && values) {
-            const message: IMessage = { to: friendId, from: null, content: values.message };
-            console.log(message);
+    const onFinish = (values: IMessageValues) => {
+        if (userId) {
+            const message: IMessage = { to: friendId, from: userId, content: values.message };
             socket.emit(SOCKET_EVENTS.SEND_MESSAGE, message);
             dispatch(sendMessage(message));
             form.resetFields();
@@ -72,7 +71,7 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     };
 
     return (
-        <StyledForm form={form} name="message-form" onFinish={onFinish}>
+        <StyledForm form={form} name="message-form" onFinish={(values) => onFinish(values as IMessageValues)}>
             <StyledFormItemTextAreaContainer name="message" rules={MESSAGE_RULES.MESSAGE}>
                 <TextArea placeholder="Message" onPressEnter={(e) => onEnterPress(e)} />
             </StyledFormItemTextAreaContainer>

@@ -26,13 +26,15 @@ export const Messages: FC<MessagesProps> = ({ messages, friend }) => {
         if (bottomDiv) {
             bottomDiv.current?.scrollIntoView();
         }
-    });
+    }, [bottomDiv]);
 
     return (
         <StyledWrapper>
-            {messages.map((message) =>
-                <MessageItem friendId={friend.id} key={friend.id + message.content} {...message} />,
-            )}
+            {messages
+                .filter((message) => message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
+                )
+                .map((msg, msgIndex) => <MessageItem friendId={friend.userBehindFriend}
+                                                     key={msgIndex + msg.content} {...msg} />)}
             <div ref={bottomDiv}></div>
         </StyledWrapper>
     );

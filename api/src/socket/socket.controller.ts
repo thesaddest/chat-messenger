@@ -1,29 +1,27 @@
 import { socketService } from "./socket.service.js";
 import { AddFriendCB } from "./interfaces.js";
 import { Socket } from "socket.io";
-import { Friend } from "../friend/friend.entity.js";
 import { friendService } from "../friend/friend.service.js";
 import { userService } from "../user/user.service.js";
-import { FriendDto } from "../friend/friend.dto.js";
 import { SOCKET_EVENTS } from "./socket.constants.js";
 import { MessageDto } from "../message/message.dto.js";
-import { messageService } from "../message/message.service.js";
 
-export const onInitUser = async (socket: Socket) => {
+export const onInitUser = async (socket: Socket): Promise<void> => {
     const user = await socketService.initUser(socket);
     const friendsRooms = await socketService.getFriendsRooms(socket);
 
+    socket.join(user.userId);
     socket.to(friendsRooms).emit(SOCKET_EVENTS.ON_INIT_USER, { connected: true, username: user.username });
 };
 
-export const onDeinitUser = async (socket: Socket) => {
+export const onDeinitUser = async (socket: Socket): Promise<void> => {
     const user = await socketService.deinitUser(socket);
     const friendsRooms = await socketService.getFriendsRooms(socket);
 
     socket.to(friendsRooms).emit(SOCKET_EVENTS.ON_DEINIT_USER, { connected: false, username: user.username });
 };
 
-export const addFriend = async (username: string, cb: AddFriendCB, socket: Socket): Promise<void | Friend> => {
+export const addFriend = async (username: string, cb: AddFriendCB, socket: Socket): Promise<void> => {
     const existingUser = await userService.getUserByUsername(username);
 
     if (!existingUser) {
@@ -47,16 +45,14 @@ export const addFriend = async (username: string, cb: AddFriendCB, socket: Socke
     return cb({ error: null, friend: addedFriend });
 };
 
-export const getFriends = async (socket: Socket): Promise<FriendDto[]> => {
-    const user = await socketService.getCurrentUser(socket);
-    const userFriends = await friendService.getUserFriends(user);
-    const friends = await friendService.getConnectedFriends(userFriends);
-    socket.emit(SOCKET_EVENTS.GET_ALL_FRIENDS, friends);
-
-    return friends;
+export const getFriends = async (socket: Socket): Promise<void> => {
+    socket.emit(SOCKET_EVENTS.GET_ALL_FRIENDS);
 };
 
-export const sendMessage = async (socket: Socket, messageDto: MessageDto) => {
-    const message = await messageService.createMessage(messageDto);
-    console.log(message);
+export const sendMessage = async (socket: Socket, messageDto: MessageDto): Promise<void> => {
+    socket.to(messageDto.to).emit(SOCKET_EVENTS.SEND_MESSAGE, messageDto);
+};
+
+export const getMessages = async (socket: Socket): Promise<void> => {
+    socket.emit(SOCKET_EVENTS.GET_ALL_MESSAGES);
 };

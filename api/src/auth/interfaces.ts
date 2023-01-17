@@ -5,7 +5,7 @@ export interface IAuthValues {
 }
 
 export interface IRegisteredUser {
-    id: number;
+    userId: string;
     email: string;
     username: string;
     token: string;

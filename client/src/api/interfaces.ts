@@ -1,19 +1,18 @@
 export interface IUser {
-    id: number;
+    userId: string;
     email: string;
     username: string;
-    connected: boolean;
     token: string;
 }
 
 export interface IMessage {
     to: string;
-    from: string | null;
+    from: string;
     content: string;
 }
 
 export interface IFriend {
-    id: string;
+    userBehindFriend: string;
     username: string;
     addedBy: string;
     connected: boolean;

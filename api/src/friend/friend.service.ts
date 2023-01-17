@@ -3,17 +3,20 @@ import { Friend } from "./friend.entity.js";
 import { AppDataSource } from "../db/database.js";
 import { FriendDto } from "./friend.dto.js";
 import { redisClient } from "../redis/index.js";
+import { userService } from "../user/user.service.js";
 
 class FriendService {
     async addFriend(friend: Friend, user: User): Promise<FriendDto> {
         const friendRepository = AppDataSource.getRepository(Friend);
+        const userBehindFriend = await userService.getUserByUsername(friend.username);
 
+        friend.userBehindFriend = userBehindFriend.userId;
         friend.user = user;
         friend.addedBy = user.username;
         await friendRepository.save(friend);
 
         return {
-            id: friend.id,
+            userBehindFriend: friend.userBehindFriend,
             username: friend.username,
             addedBy: friend.addedBy,
             connected: false,
@@ -22,7 +25,7 @@ class FriendService {
 
     async createFriend(username: string): Promise<Friend> {
         const friendRepository = AppDataSource.getRepository(Friend);
-        const friend = await friendRepository.create({ username });
+        const friend = friendRepository.create({ username });
         await friendRepository.save(friend);
 
         return friend;
@@ -36,7 +39,12 @@ class FriendService {
         const friends = user.friends;
 
         return friends.map((friend) => {
-            return { id: friend.id, username: friend.username, addedBy: friend.addedBy, connected: false };
+            return {
+                userBehindFriend: friend.userBehindFriend,
+                username: friend.username,
+                addedBy: friend.addedBy,
+                connected: false,
+            };
         });
     }
 
@@ -45,10 +53,10 @@ class FriendService {
         for (const friend of friends) {
             const connected = await redisClient.hget(`username:${friend.username}`, "connected");
             connectedFriends.push({
-                id: friend.id,
+                userBehindFriend: friend.userBehindFriend,
                 username: friend.username,
                 addedBy: friend.addedBy,
-                connected: (connected === null || connected === "false") ? false : connected,
+                connected: (connected === null || connected === "false") ? false : Boolean(connected),
             });
         }
         return connectedFriends;

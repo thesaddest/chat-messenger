@@ -21,9 +21,9 @@ interface IAddFriendCBValues {
 const { Title } = Typography;
 
 const StyledTitle = styled(Title)`
-    margin-bottom: 0;
-    padding-right: 1rem;
-    padding-left: 2rem;
+  margin-bottom: 0;
+  padding-right: 1rem;
+  padding-left: 2rem;
 `;
 
 export const AddFriend: FC = () => {
@@ -38,6 +38,7 @@ export const AddFriend: FC = () => {
 
     const handleCancel = (e: SyntheticEvent) => {
         e.stopPropagation();
+        setModalError("");
         setIsModalOpen(false);
     };
 
@@ -48,7 +49,6 @@ export const AddFriend: FC = () => {
             }
 
             dispatch(addFriend(friend));
-
             setIsModalOpen(false);
             form.resetFields();
         });

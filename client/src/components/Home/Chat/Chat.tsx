@@ -1,5 +1,5 @@
 import { Avatar, Tabs } from "antd";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import { MinusCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 
@@ -35,6 +35,7 @@ const StyledFriendsCardDiv = styled.div`
   align-items: center;
 `;
 
+
 const StyledTabs = styled(Tabs)`
   height: 100%;
   width: 100%;
@@ -53,7 +54,6 @@ const StyledTabs = styled(Tabs)`
 
   .ant-tabs-content {
     width: 85%;
-
     @media only screen and (max-width: 425px) {
       width: 100%;
     }
@@ -68,18 +68,9 @@ const StyledTabs = styled(Tabs)`
 
 export const Chat: FC = () => {
     const friends = useAppSelector((state) => state.friend.friends);
-    console.log("friends: ", friends);
     const messages = useAppSelector((state) => state.message.messages);
-    console.log("messages: ", messages);
 
-    //TODO: get friend's socketId from redis with help of this index
-    const [friendIndex, setFriendIndex] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (friends.length > 0) {
-            setFriendIndex(friends[0].id);
-        }
-    }, [friends]);
+    const [friendIndex, setFriendIndex] = useState<string>("1");
 
     return friends.length > 0 ? (
         <StyledWrapper>
@@ -95,18 +86,16 @@ export const Chat: FC = () => {
                                     <StyledAvatar /> {friend.username}
                                 </StyledFriendsCardDiv>
                             ),
-                            key: friend.id,
+                            key: `${friend.userBehindFriend}`,
                             children: <Messages friend={friend} messages={messages} />,
                         };
                     })}
-                    defaultActiveKey={friendIndex ? friendIndex : undefined}
+                    activeKey={`${friendIndex}`}
                     onChange={(activeKey) => setFriendIndex(activeKey)}
                 />
                 <ChatInputBox friendId={friendIndex} />
             </StyledContainer>
         </StyledWrapper>
-
-
     ) : (
         <StyledTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
     );

@@ -1,9 +1,7 @@
 import {
-    addFriend,
     getFriends,
-    onInitUser,
     onDeinitUser,
-    sendMessage,
+    sendMessage, getMessages, onInitUser, addFriend,
 } from "./socket/socket.controller.js";
 import express from "express";
 import helmet from "helmet";
@@ -16,8 +14,8 @@ import { router } from "./router/index.js";
 import { errorMiddleware } from "./error-handler/error.middleware.js";
 import { AddFriendCB } from "./socket/interfaces.js";
 import { SOCKET_EVENTS } from "./socket/socket.constants.js";
-import { Message } from "./message/message.entity.js";
 import { socketAuthMiddleware } from "./socket/socket.middleware.js";
+import { MessageDto } from "./message/message.dto.js";
 
 dotenv.config();
 
@@ -37,18 +35,17 @@ app.use(errorMiddleware);
 
 AppDataSource.initialize();
 
-
 io.use(socketAuthMiddleware);
 io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
     onInitUser(socket);
     getFriends(socket);
-    
-    socket.on(SOCKET_EVENTS.ADD_FRIEND, async (username: string, cb: AddFriendCB) => {
-        await addFriend(username, cb, socket);
-        await getFriends(socket);
+    getMessages(socket);
+
+    socket.on(SOCKET_EVENTS.ADD_FRIEND, (username: string, cb: AddFriendCB) => {
+        addFriend(username, cb, socket);
     });
 
-    socket.on(SOCKET_EVENTS.SEND_MESSAGE, (messageDto: Message) => {
+    socket.on(SOCKET_EVENTS.SEND_MESSAGE, (messageDto: MessageDto) => {
         sendMessage(socket, messageDto);
     });
 
@@ -57,6 +54,6 @@ io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
     });
 });
 
-server.listen(4000, () => {
+server.listen(process.env.SERVER_PORT, () => {
     console.log(`listening on PORT: ${process.env.SERVER_PORT}`);
 });

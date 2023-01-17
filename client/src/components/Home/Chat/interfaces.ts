@@ -1,9 +1,9 @@
-export interface IMessageValues {
-    message: string;
-}
-
 export interface IMessage {
     to: string;
-    from: string | null;
+    from: string;
     content: string;
+}
+
+export interface IMessageValues {
+    message: string;
 }

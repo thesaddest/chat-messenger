@@ -73,16 +73,21 @@ const authSlice = createSlice({
                 state.error = null;
                 state.isAuth = true;
             })
+            .addCase(login.pending, (state) => {
+                state.user = null;
+                state.loading = true;
+                state.error = null;
+                state.isAuth = false;
+            }).addCase(register.pending, (state) => {
+            state.user = null;
+            state.loading = true;
+            state.error = null;
+            state.isAuth = false;
+        })
             .addMatcher(isError, (state, action: PayloadAction<string>) => {
                 state.user = null;
                 state.loading = false;
                 state.error = action.payload;
-                state.isAuth = false;
-            })
-            .addMatcher(isPending, (state) => {
-                state.user = null;
-                state.loading = true;
-                state.error = null;
                 state.isAuth = false;
             });
     },
@@ -94,8 +99,4 @@ export default authSlice.reducer;
 
 function isError(action: AnyAction) {
     return action.type.endsWith("rejected");
-}
-
-function isPending(action: AnyAction) {
-    return action.type.endsWith("pending");
 }

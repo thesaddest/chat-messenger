@@ -33,7 +33,7 @@ export const SignUp: FC = () => {
     return (
         <>
             <Title level={2}>Sign Up</Title>
-            <Form form={form} name="login-form" initialValues={{ remember: true }} onFinish={onFinish}>
+            <Form form={form} name="register-form" initialValues={{ remember: true }} onFinish={onFinish}>
                 <Form.Item name="email" rules={AUTH_RULES.EMAIL} hasFeedback>
                     <Input prefix={<UserOutlined />} placeholder="Email" />
                 </Form.Item>
@@ -43,7 +43,8 @@ export const SignUp: FC = () => {
                 </Form.Item>
 
                 <Form.Item name="password" rules={AUTH_RULES.PASSWORD} hasFeedback>
-                    <Input.Password prefix={<LockOutlined />} type="password" placeholder="Password" />
+                    <Input.Password prefix={<LockOutlined />} type="password" placeholder="Password"
+                                    autoComplete="password" />
                 </Form.Item>
 
                 <Form.Item
@@ -52,7 +53,8 @@ export const SignUp: FC = () => {
                     rules={AUTH_RULES.CONFIRM_PASSWORD}
                     hasFeedback
                 >
-                    <Input.Password prefix={<LockOutlined />} type="password" placeholder="Confirm your password" />
+                    <Input.Password prefix={<LockOutlined />} type="password" placeholder="Confirm your password"
+                                    autoComplete="password" />
                 </Form.Item>
 
                 <Form.Item>

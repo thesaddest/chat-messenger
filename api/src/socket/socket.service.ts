@@ -14,20 +14,19 @@ class SocketService {
         const userFriends = await friendService.getUserFriends(user);
         const friends = await friendService.getConnectedFriends(userFriends);
 
-        return friends.map(friend => friend.username);
+        return friends.map(friend => friend.userBehindFriend);
     }
 
     async initUser(socket: Socket): Promise<User> {
         const user = await this.getCurrentUser(socket);
-        await redisClient.hset(`username:${user.username}`, "socketid", socket.id, "connected", true);
-        socket.join(user.username);
+        await redisClient.hset(`username:${user.username}`, "userId", user.userId, "connected", true);
 
         return user;
     }
 
     async deinitUser(socket: Socket): Promise<User> {
         const user = await this.getCurrentUser(socket);
-        await redisClient.hset(`username:${user.username}`, "socketid", socket.id, "connected", false);
+        await redisClient.hset(`username:${user.username}`, "userId", user.userId, "connected", false);
 
         return user;
     }

@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
 import { socketError } from "../store/auth/authSlice";
-import { getAllFriends, setFriendConnectedStatus } from "../store/friend/friendSlice";
+import { addFriend, getFriends, initUser } from "../store/friend/friendSlice";
 import { SOCKET_EVENTS } from "../socket-io/socket.constants";
 import { socket } from "../socket-io";
 import { IFriend, IFriendStatus, IMessage } from "../api/interfaces";
-import { getAllMessages } from "../store/message/messageSlice";
+import { getMessages, sendMessage } from "../store/message/messageSlice";
 
 import { useAppDispatch, useAppSelector } from "./redux-hooks";
 
@@ -15,26 +15,34 @@ export const useSocket = () => {
 
     useEffect(() => {
         socket.auth = {
-            id: user?.id,
+            id: user?.userId,
             username: user?.username,
             token: user?.token,
         };
         socket.connect();
 
-        socket.on(SOCKET_EVENTS.GET_ALL_FRIENDS, (friends: IFriend[]) => {
-            dispatch(getAllFriends(friends));
-        });
-
-        socket.on(SOCKET_EVENTS.GET_ALL_MESSAGES, (messages: IMessage[]) => {
-            dispatch(getAllMessages(messages));
-        });
-
         socket.on(SOCKET_EVENTS.ON_CONNECT, (friendStatus: IFriendStatus) => {
-            dispatch(setFriendConnectedStatus(friendStatus));
+            dispatch(initUser(friendStatus));
+        });
+
+        socket.on(SOCKET_EVENTS.GET_ALL_FRIENDS, () => {
+            dispatch(getFriends());
+        });
+
+        socket.on(SOCKET_EVENTS.GET_ALL_MESSAGES, () => {
+            dispatch(getMessages());
+        });
+
+        socket.on(SOCKET_EVENTS.SEND_MESSAGE, (message: IMessage) => {
+            dispatch(sendMessage(message));
+        });
+
+        socket.on(SOCKET_EVENTS.ADD_FRIEND, (friend: IFriend) => {
+            dispatch(addFriend(friend));
         });
 
         socket.on(SOCKET_EVENTS.ON_DISCONNECT, (friendStatus: IFriendStatus) => {
-            dispatch(setFriendConnectedStatus(friendStatus));
+            dispatch(initUser(friendStatus));
         });
 
         socket.on(SOCKET_EVENTS.ERROR, (e) => {
@@ -50,6 +58,8 @@ export const useSocket = () => {
             socket.off(SOCKET_EVENTS.ON_CONNECT);
             socket.off(SOCKET_EVENTS.GET_ALL_MESSAGES);
             socket.off(SOCKET_EVENTS.GET_ALL_FRIENDS);
+            socket.off(SOCKET_EVENTS.SEND_MESSAGE);
+            socket.off(SOCKET_EVENTS.ADD_FRIEND);
             socket.off(SOCKET_EVENTS.ERROR);
             socket.off(SOCKET_EVENTS.ON_DISCONNECT);
         };

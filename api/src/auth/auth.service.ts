@@ -4,6 +4,8 @@ import { userService } from "./../user/user.service.js";
 import bcrypt from "bcrypt";
 import { jwtService } from "./jwt.service.js";
 import { ErrorException } from "../error-handler/error-exception.js";
+import { v4 as uuidv4 } from "uuid";
+import { User } from "../user/user.entity.js";
 
 class AuthService {
     async register(userDto: UserRegisterDto): Promise<IRegisteredUser> {
@@ -20,11 +22,12 @@ class AuthService {
         }
 
         const hashedPassword = await this.createHashedPassword(userDto.password);
-        const user = await userService.createUser(userDto.email, userDto.username, hashedPassword);
+        const userId = uuidv4();
+        const user = await userService.createUser(userId, userDto.email, userDto.username, hashedPassword);
         const token = await jwtService.generateTokens(user);
 
         return {
-            id: user.id,
+            userId: user.userId,
             email: user.email,
             username: user.username,
             token: token,
@@ -46,7 +49,7 @@ class AuthService {
         const token = await jwtService.generateTokens(user);
 
         return {
-            id: user.id,
+            userId: user.userId,
             email: user.email,
             username: user.username,
             token: token,

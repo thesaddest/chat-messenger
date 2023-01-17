@@ -1,8 +1,8 @@
-import { IsBoolean, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsString } from "class-validator";
 
 export class FriendDto {
-    @IsNumber()
-    id: number;
+    @IsString()
+    userBehindFriend: string;
 
     @IsString()
     username: string;

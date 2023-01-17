@@ -4,7 +4,7 @@ import styled from "styled-components";
 interface MessageItemProps {
     friendId: string;
     to: string;
-    from: string | null;
+    from: string;
     content: string;
 }
 

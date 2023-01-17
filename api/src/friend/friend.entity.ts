@@ -11,6 +11,9 @@ export class Friend extends BaseEntity {
         Object.assign(this, friend);
     }
 
+    @Column({ nullable: true })
+    userBehindFriend: string;
+
     @Column({ nullable: false })
     username: string;
 
