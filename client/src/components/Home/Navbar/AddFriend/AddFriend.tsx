@@ -1,5 +1,5 @@
 import { Button, Form, Input, Modal, Typography } from "antd";
-import { FC, SyntheticEvent, useState } from "react";
+import { FC, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { UsergroupAddOutlined, UserAddOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
@@ -12,6 +12,8 @@ import { SOCKET_EVENTS } from "../../../../socket-io/socket.constants";
 import { IFriend } from "../../../../api/interfaces";
 
 import { IAddFriendValues } from "./interfaces";
+
+import type { InputRef } from "antd";
 
 interface IAddFriendCBValues {
     error: string;
@@ -30,7 +32,16 @@ export const AddFriend: FC = () => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [modalError, setModalError] = useState<string>("");
+    const inputRef = useRef<InputRef>(null);
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (inputRef && inputRef.current) {
+                inputRef.current.focus();
+            }
+        }, 0);
+    });
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -67,7 +78,7 @@ export const AddFriend: FC = () => {
                 >
                     <Form form={form} name="add-friend-form" onFinish={onFinish}>
                         <Form.Item name="username" rules={AUTH_RULES.USERNAME}>
-                            <Input prefix={<UserAddOutlined />} placeholder="Enter friend's username" />
+                            <Input ref={inputRef} prefix={<UserAddOutlined />} placeholder="Enter friend's username" />
                         </Form.Item>
                     </Form>
                     {modalError && <StyledAuthErrorAlert type="error" message={modalError} />}
