@@ -36,11 +36,11 @@ export const AddFriend: FC = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        setTimeout(() => {
-            if (inputRef && inputRef.current) {
-                inputRef.current.focus();
-            }
-        }, 0);
+        if (inputRef && inputRef.current) {
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 0);
+        }
     });
 
     const showModal = () => {

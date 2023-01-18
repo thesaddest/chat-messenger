@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { IMessage } from "../../api/interfaces";
 import MessageService from "../../api/message/message.service";
@@ -38,7 +38,11 @@ export const getMessages = createAsyncThunk<IMessage[], undefined, { rejectValue
 const messageSlice = createSlice({
     name: "friend",
     initialState,
-    reducers: {},
+    reducers: {
+        addMessage: (state, action: PayloadAction<IMessage>) => {
+            state.messages.push(action.payload);
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getMessages.fulfilled, (state, action) => {
@@ -75,5 +79,7 @@ const messageSlice = createSlice({
             });
     },
 });
+
+export const { addMessage } = messageSlice.actions;
 
 export default messageSlice.reducer;

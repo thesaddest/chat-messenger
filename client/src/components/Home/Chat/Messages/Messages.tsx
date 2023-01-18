@@ -23,18 +23,22 @@ export const Messages: FC<MessagesProps> = ({ messages, friend }) => {
     const bottomDiv = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        if (bottomDiv) {
-            bottomDiv.current?.scrollIntoView();
+        if (bottomDiv && bottomDiv.current) {
+            setTimeout(() => {
+                bottomDiv.current?.scrollIntoView();
+            }, 0);
         }
-    }, [bottomDiv]);
+    });
 
     return (
         <StyledWrapper>
             {messages
-                .filter((message) => message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
+                .filter((message) =>
+                    message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
                 )
-                .map((msg, msgIndex) => <MessageItem friendId={friend.userBehindFriend}
-                                                     key={msgIndex + msg.content} {...msg} />)}
+                .map((msg, msgIndex) =>
+                    <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} {...msg} />,
+                )}
             <div ref={bottomDiv}></div>
         </StyledWrapper>
     );

@@ -2,8 +2,8 @@ import { User } from "./../user/user.entity.js";
 import { Friend } from "./friend.entity.js";
 import { AppDataSource } from "../db/database.js";
 import { FriendDto } from "./friend.dto.js";
-import { redisClient } from "../redis/index.js";
 import { userService } from "../user/user.service.js";
+import { redisService } from "../redis/redis.service.js";
 
 class FriendService {
     async addFriend(friend: Friend, user: User): Promise<FriendDto> {
@@ -13,13 +13,13 @@ class FriendService {
         friend.userBehindFriend = userBehindFriend.userId;
         friend.user = user;
         friend.addedBy = user.username;
-        await friendRepository.save(friend);
 
+        await friendRepository.save(friend);
         return {
             userBehindFriend: friend.userBehindFriend,
             username: friend.username,
             addedBy: friend.addedBy,
-            connected: false,
+            connected: await redisService.getFriendConnectedStatusByUsername(friend.username),
         };
     }
 
@@ -51,12 +51,11 @@ class FriendService {
     async getConnectedFriends(friends: FriendDto[]): Promise<FriendDto[]> {
         const connectedFriends = [];
         for (const friend of friends) {
-            const connected = await redisClient.hget(`username:${friend.username}`, "connected");
             connectedFriends.push({
                 userBehindFriend: friend.userBehindFriend,
                 username: friend.username,
                 addedBy: friend.addedBy,
-                connected: (connected === null || connected === "false") ? false : Boolean(connected),
+                connected: await redisService.getFriendConnectedStatusByUsername(friend.username),
             });
         }
         return connectedFriends;

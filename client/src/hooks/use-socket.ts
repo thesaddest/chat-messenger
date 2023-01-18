@@ -5,7 +5,7 @@ import { addFriend, getFriends, initUser } from "../store/friend/friendSlice";
 import { SOCKET_EVENTS } from "../socket-io/socket.constants";
 import { socket } from "../socket-io";
 import { IFriend, IFriendStatus, IMessage } from "../api/interfaces";
-import { getMessages, sendMessage } from "../store/message/messageSlice";
+import { addMessage, getMessages } from "../store/message/messageSlice";
 
 import { useAppDispatch, useAppSelector } from "./redux-hooks";
 
@@ -34,7 +34,7 @@ export const useSocket = () => {
         });
 
         socket.on(SOCKET_EVENTS.SEND_MESSAGE, (message: IMessage) => {
-            dispatch(sendMessage(message));
+            dispatch(addMessage(message));
         });
 
         socket.on(SOCKET_EVENTS.ADD_FRIEND, (friend: IFriend) => {
