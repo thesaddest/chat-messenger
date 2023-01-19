@@ -9,9 +9,9 @@ interface MessageItemProps {
 }
 
 const StyledContainer = styled.div<MessageItemProps>`
-  background: ${props => props.to === props.friendId ? "cadetblue" : "slategray"};
+  background: ${props => props.to === props.friendId ? "#1677ff" : "slategray"};
   color: ghostwhite;
-  border: 1px solid ${props => props.to === props.friendId ? "cadetblue" : "slategray"};
+  border: 1px solid ${props => props.to === props.friendId ? "#1677ff" : "slategray"};
   border-radius: 10px;
   margin: ${props => props.to === props.friendId ? "0 0 1rem auto" : "0 auto 1rem 0"};
   padding: 0.25rem;

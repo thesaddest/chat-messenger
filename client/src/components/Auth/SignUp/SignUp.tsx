@@ -2,6 +2,7 @@ import { Form, Button, Input, Typography } from "antd";
 import { FC, useState } from "react";
 import { LockOutlined, UserOutlined, LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 import { IRegisterValues } from "../interfaces";
 import { AUTH_RULES } from "../auth.constants";
@@ -11,6 +12,14 @@ import { register } from "../../../store/auth/authSlice";
 import { StyledAuthErrorAlert } from "../StyledAuthErrorAlert";
 
 const { Title } = Typography;
+
+const StyledSignUpContainer = styled.div`
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
 
 export const SignUp: FC = () => {
     const navigate = useNavigate();
@@ -31,7 +40,7 @@ export const SignUp: FC = () => {
     };
 
     return (
-        <>
+        <StyledSignUpContainer>
             <Title level={2}>Sign Up</Title>
             <Form form={form} name="register-form" initialValues={{ remember: true }} onFinish={onFinish}>
                 <Form.Item name="email" rules={AUTH_RULES.EMAIL} hasFeedback>
@@ -72,6 +81,6 @@ export const SignUp: FC = () => {
                 </Form.Item>
             </Form>
             {error && <StyledAuthErrorAlert type="error" message={error} />}
-        </>
+        </StyledSignUpContainer>
     );
 };

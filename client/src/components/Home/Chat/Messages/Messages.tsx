@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { IMessage } from "../interfaces";
 import { IFriend } from "../../../../api/interfaces";
+import { ChatInputBox } from "../ChatInput/ChatInputBox";
 
 import { MessageItem } from "./MessageItem";
 
@@ -12,8 +13,9 @@ interface MessagesProps {
 }
 
 const StyledWrapper = styled.div`
-  padding-top: 0.9rem;
-  height: 100%;
+  height: 60vh;
+  overflow-y: auto;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   text-align: center;
@@ -24,23 +26,24 @@ export const Messages: FC<MessagesProps> = ({ messages, friend }) => {
 
     useEffect(() => {
         if (bottomDiv && bottomDiv.current) {
-            setTimeout(() => {
-                bottomDiv.current?.scrollIntoView();
-            }, 0);
+            bottomDiv.current?.scrollIntoView({ behavior: "smooth" });
         }
     });
 
     return (
-        <StyledWrapper>
-            {messages
-                .filter((message) =>
-                    message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
-                )
-                .map((msg, msgIndex) =>
-                    <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} {...msg} />,
-                )}
-            <div ref={bottomDiv}></div>
-        </StyledWrapper>
-    );
+        <>
+            <StyledWrapper>
+                {messages
+                    .filter((message) =>
+                        message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
+                    )
+                    .map((msg, msgIndex) =>
+                        <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} {...msg} />,
+                    )}
+                <div ref={bottomDiv}></div>
+            </StyledWrapper>
+            <ChatInputBox friendId={friend.userBehindFriend} />
+        </>
 
+    );
 };

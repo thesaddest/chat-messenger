@@ -22,10 +22,8 @@ interface IAddFriendCBValues {
 
 const { Title } = Typography;
 
-const StyledTitle = styled(Title)`
-  margin-bottom: 0;
-  padding-right: 1rem;
-  padding-left: 2rem;
+const StyledButton = styled(Button)`
+  border: 1px solid lightgray;
 `;
 
 export const AddFriend: FC = () => {
@@ -67,8 +65,8 @@ export const AddFriend: FC = () => {
 
     return (
         <>
-            <StyledTitle level={4}>Add Friend</StyledTitle>
-            <Button onClick={showModal}>
+            <Title level={4}>Add a friend</Title>
+            <StyledButton onClick={showModal}>
                 <Modal
                     title="Add a friend!"
                     open={isModalOpen}
@@ -78,13 +76,14 @@ export const AddFriend: FC = () => {
                 >
                     <Form form={form} name="add-friend-form" onFinish={onFinish}>
                         <Form.Item name="username" rules={AUTH_RULES.USERNAME}>
-                            <Input ref={inputRef} prefix={<UserAddOutlined />} placeholder="Enter friend's username" />
+                            <Input ref={inputRef} prefix={<UserAddOutlined />}
+                                   placeholder="Enter friend's username" />
                         </Form.Item>
                     </Form>
                     {modalError && <StyledAuthErrorAlert type="error" message={modalError} />}
                 </Modal>
                 <UsergroupAddOutlined />
-            </Button>
+            </StyledButton>
         </>
     );
 };

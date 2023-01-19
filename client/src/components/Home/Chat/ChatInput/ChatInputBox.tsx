@@ -16,30 +16,64 @@ interface ChatInputBoxProps {
     friendId: string;
 }
 
-//TODO: ask about error in onFinish function
-const StyledForm = styled(Form)`
+const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 10%;
+  padding: 1rem 0;
+`;
 
-  @media only screen and (max-width: 768px) {
-    justify-content: space-evenly;
-  }
+const StyledForm = styled(Form)`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  background: lightgray;
 `;
 
 const StyledFormItemTextAreaContainer = styled(Form.Item)`
-  width: 85%;
+  margin: 0;
+  width: 90%;
+  height: 100%;
+
+  .ant-input {
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .ant-input:hover {
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
+
+  .ant-input:focus {
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  textarea {
+    outline: none;
+    resize: none;
+    border-color: transparent;
+    background: lightgray;
+
+    .ant-input-status-success {
+      border-color: transparent;
+    }
+
+  }
 
   @media only screen and (max-width: 768px) {
     width: 70%;
   }
 `;
 
-
 const StyledFormItemButtonContainer = styled(Form.Item)`
   display: flex;
   justify-content: center;
-  width: 10%;
+  width: 15%;
+  margin: 0;
 `;
 
 const StyledButton = styled(Button)`
@@ -71,15 +105,18 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     };
 
     return (
-        <StyledForm form={form} name="message-form" onFinish={(values) => onFinish(values as IMessageValues)}>
-            <StyledFormItemTextAreaContainer name="message" rules={MESSAGE_RULES.MESSAGE}>
-                <TextArea placeholder="Message" onPressEnter={(e) => onEnterPress(e)} />
-            </StyledFormItemTextAreaContainer>
-            <StyledFormItemButtonContainer>
-                <StyledButton block type="primary" htmlType="submit">
-                    <SendOutlined />
-                </StyledButton>
-            </StyledFormItemButtonContainer>
-        </StyledForm>
+        <StyledWrapper>
+            <StyledForm form={form} name="message-form" onFinish={(values) => onFinish(values as IMessageValues)}>
+                <StyledFormItemTextAreaContainer name="message" rules={MESSAGE_RULES.MESSAGE}>
+                    <TextArea placeholder="Write a message..." onPressEnter={(e) => onEnterPress(e)} />
+                </StyledFormItemTextAreaContainer>
+                <StyledFormItemButtonContainer>
+                    <StyledButton block type="primary" htmlType="submit">
+                        <SendOutlined />
+                    </StyledButton>
+                </StyledFormItemButtonContainer>
+            </StyledForm>
+        </StyledWrapper>
+
     );
 };

@@ -6,7 +6,7 @@ interface IChatRules {
 
 export const MESSAGE_RULES: IChatRules = {
     MESSAGE: [
-        { type: "string", required: true, message: "Please enter the message" },
+        { type: "string", required: true, message: "Please enter at least 1 character" },
         { min: 1, message: "Please enter at least 1 character" },
     ],
 };

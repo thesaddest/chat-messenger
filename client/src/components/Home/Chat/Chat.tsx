@@ -1,76 +1,47 @@
-import { Avatar, Tabs } from "antd";
+import { Tabs } from "antd";
 import { FC, useState } from "react";
 import styled from "styled-components";
-import { MinusCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../../hooks/redux-hooks";
 
-import { ChatInputBox } from "./ChatInput/ChatInputBox";
 import { DEFAULT_TAB_ITEM } from "./chat.constants";
 import { Messages } from "./Messages/Messages";
-
-const StyledContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  width: 90vw;
-  height: 90vh;
-`;
-
-const StyledWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const StyledAvatar = styled(Avatar)`
-  width: 36px;
-  height: 36px;
-  line-height: 12px;
-  margin-right: 0.3rem;
-`;
-
-const StyledFriendsCardDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  span.anticon.anticon-minus-circle {
-    margin-right: 0.3rem;
-    color: #eb2f96;
-  }
-
-  span.anticon.anticon-check-circle {
-    margin-right: 0.3rem;
-    color: #52c41a;
-  }
-`;
-
+import { FriendSidebarCard } from "./FriendSidebarCard/FriendSidebarCard";
 
 const StyledTabs = styled(Tabs)`
-  height: 100%;
-  width: 100%;
-  overflow-y: scroll;
+  height: 75vh;
 
-  //TODO: Find solution to overwrite antd styles without !important
-  /*.ant-tabs-tab {
+  .ant-tabs-nav {
+    flex: 1;
 
-    @media only screen and (max-width: 425px) {
-      padding: 0 0.5rem !important;
+    .ant-tabs-tab-active {
+      transition: all 0s;
+      border: 1px solid #1677ff;
+      background-color: #1677ff;
+
+      .ant-tabs-tab-btn {
+        color: whitesmoke;
+      }
     }
   }
 
-  .ant-tabs-content {
-    width: 85%;
-    @media only screen and (max-width: 425px) {
-      width: 100%;
+  .ant-tabs-tabpane {
+    padding-left: 0;
+  }
+
+  .ant-tabs-content-holder {
+    flex: 2;
+
+    .ant-tabs-content {
+      height: 100%;
+
+      .ant-tabs-tabpane {
+        padding-left: 0;
+        height: 100%;
+      }
     }
   }
 
-  .ant-tabs-ink-bar {
-    @media only screen and (max-width: 425px) {
-      height: 35px !important;
-    }
-  }*/
 `;
 
 export const Chat: FC = () => {
@@ -80,29 +51,19 @@ export const Chat: FC = () => {
     const [friendIndex, setFriendIndex] = useState<string>("1");
 
     return friends.length > 0 ? (
-        <StyledWrapper>
-            <StyledContainer>
-                <StyledTabs
-                    tabPosition="left"
-                    items={friends?.map((friend) => {
-                        return {
-                            label: (
-                                <StyledFriendsCardDiv>
-                                    {friend.connected ? <CheckCircleOutlined /> :
-                                        <MinusCircleOutlined />}
-                                    <StyledAvatar /> {friend.username}
-                                </StyledFriendsCardDiv>
-                            ),
-                            key: `${friend.userBehindFriend}`,
-                            children: <Messages friend={friend} messages={messages} />,
-                        };
-                    })}
-                    activeKey={`${friendIndex}`}
-                    onChange={(activeKey) => setFriendIndex(activeKey)}
-                />
-                <ChatInputBox friendId={friendIndex} />
-            </StyledContainer>
-        </StyledWrapper>
+        <>
+            <StyledTabs tabPosition="left"
+                        items={friends?.map((friend) => {
+                            return {
+                                label: <FriendSidebarCard friend={friend} />,
+                                key: `${friend.userBehindFriend}`,
+                                children: <Messages friend={friend} messages={messages} />,
+                            };
+                        })}
+                        activeKey={`${friendIndex}`}
+                        onChange={(activeKey) => setFriendIndex(activeKey)}>
+            </StyledTabs>
+        </>
     ) : (
         <StyledTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
     );

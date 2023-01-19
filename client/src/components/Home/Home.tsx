@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
 import { LoadingOutlined } from "@ant-design/icons";
+import { Divider } from "antd";
 
 import { useSocket } from "../../hooks/use-socket";
 import { useAppSelector } from "../../hooks/redux-hooks";
@@ -8,17 +9,30 @@ import { useAppSelector } from "../../hooks/redux-hooks";
 import { Navbar } from "./Navbar";
 import { Chat } from "./Chat";
 
-
-const StyledContainer = styled.div`
-  width: 100vw;
+const StyledHome = styled.div`
   height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledHomeContainer = styled.div`
+  border: 1px solid lightgray;
+  border-radius: 10px;
+  width: 65vw;
+  height: 80vh;
 `;
 
 const StyledLoadingContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 80%;
+`;
+
+const StyledDivider = styled(Divider)`
+  margin: 0;
+  background-color: lightgray;
 `;
 
 export const Home: FC = () => {
@@ -27,11 +41,17 @@ export const Home: FC = () => {
     const isFriendsLoading = useAppSelector((state) => state.friend.loading);
 
     return (
-        <StyledContainer>
-            <Navbar />
-            {isFriendsLoading
-                ? <StyledLoadingContainer><LoadingOutlined /></StyledLoadingContainer>
-                : <Chat />}
-        </StyledContainer>
+        <StyledHome>
+            <StyledHomeContainer>
+                <Navbar />
+                <StyledDivider />
+                {isFriendsLoading
+                    ? <StyledLoadingContainer>
+                        <LoadingOutlined />
+                    </StyledLoadingContainer>
+                    : <Chat />
+                }
+            </StyledHomeContainer>
+        </StyledHome>
     );
 };
