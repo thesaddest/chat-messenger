@@ -23,7 +23,7 @@ interface IAddFriendCBValues {
 const { Title } = Typography;
 
 const StyledButton = styled(Button)`
-  border: 1px solid lightgray;
+  border: 1px solid slategray;
 `;
 
 export const AddFriend: FC = () => {

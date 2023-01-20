@@ -20,8 +20,11 @@ const StyledWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 10%;
   padding: 1rem 0;
+
+  @media only screen and (max-width: 425px) {
+    padding-bottom: 0;
+  }
 `;
 
 const StyledForm = styled(Form)`
@@ -61,7 +64,6 @@ const StyledFormItemTextAreaContainer = styled(Form.Item)`
     .ant-input-status-success {
       border-color: transparent;
     }
-
   }
 
   @media only screen and (max-width: 768px) {

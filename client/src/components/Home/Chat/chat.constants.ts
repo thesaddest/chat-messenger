@@ -4,6 +4,8 @@ interface IChatRules {
     MESSAGE: Rule[];
 }
 
+export const DEFAULT_ACTIVE_KEY = "START";
+
 export const MESSAGE_RULES: IChatRules = {
     MESSAGE: [
         { type: "string", required: true, message: "Please enter at least 1 character" },
@@ -12,5 +14,6 @@ export const MESSAGE_RULES: IChatRules = {
 };
 
 export const DEFAULT_TAB_ITEM = [
-    { label: "No friends", key: "1", children: "Add some friends :)", style: { paddingTop: "0.5rem" } },
+    { label: "No friends", key: DEFAULT_ACTIVE_KEY, children: "Add some friends :)", style: { paddingTop: "0.5rem" } },
 ];
+

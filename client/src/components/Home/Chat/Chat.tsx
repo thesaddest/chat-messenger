@@ -1,10 +1,11 @@
 import { Tabs } from "antd";
-import { FC, useState } from "react";
+import { FC } from "react";
 import styled from "styled-components";
 
-import { useAppSelector } from "../../../hooks/redux-hooks";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux-hooks";
+import { setFriendIdActiveKey } from "../../../store/friend/friendSlice";
 
-import { DEFAULT_TAB_ITEM } from "./chat.constants";
+import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "./chat.constants";
 import { Messages } from "./Messages";
 import { FriendSidebarCard } from "./FriendSidebarCard";
 
@@ -14,14 +15,23 @@ const StyledTabs = styled(Tabs)`
   .ant-tabs-nav {
     flex: 1;
 
+    .ant-tabs-tab {
+      @media only screen and (max-width: 768px) {
+        padding-left: 0.2rem;
+      }
+    }
+
     .ant-tabs-tab-active {
-      transition: all 0s;
       border: 1px solid #1677ff;
       background-color: #1677ff;
 
       .ant-tabs-tab-btn {
         color: whitesmoke;
       }
+    }
+
+    @media only screen and (max-width: 425px) {
+      display: ${props => props.activeKey === DEFAULT_ACTIVE_KEY ? "flex" : "none"};
     }
   }
 
@@ -40,15 +50,27 @@ const StyledTabs = styled(Tabs)`
         height: 100%;
       }
     }
+
+    @media only screen and (max-width: 425px) {
+      display: ${props => props.activeKey === DEFAULT_ACTIVE_KEY ? "none" : "flex"};
+    }
   }
 
+  @media only screen and (max-width: 425px) {
+    height: 95vh;
+  }
 `;
 
 export const Chat: FC = () => {
     const friends = useAppSelector((state) => state.friend.friends);
     const messages = useAppSelector((state) => state.message.messages);
+    const friendIdActiveKey = useAppSelector(state => state.friend.friendIdActiveKey);
 
-    const [friendIndex, setFriendIndex] = useState<string>("1");
+    const dispatch = useAppDispatch();
+
+    const onTabChange = (activeKey: string) => {
+        dispatch(setFriendIdActiveKey(activeKey));
+    };
 
     return friends.length > 0 ? (
         <>
@@ -60,9 +82,9 @@ export const Chat: FC = () => {
                                 children: <Messages friend={friend} messages={messages} />,
                             };
                         })}
-                        activeKey={`${friendIndex}`}
-                        onChange={(activeKey) => setFriendIndex(activeKey)}>
-            </StyledTabs>
+                        activeKey={friendIdActiveKey}
+                        onChange={onTabChange}
+            />
         </>
     ) : (
         <StyledTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />

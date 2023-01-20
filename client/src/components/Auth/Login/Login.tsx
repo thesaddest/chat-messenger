@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { ILoginValues } from "../interfaces";
 import { AUTH_RULES } from "../auth.constants";
-import { StyledAuthButton } from "../StyledAuthButton";
+import { StyledZeroPaddingButton } from "../../Button/StyledZeroPaddingButton";
 import { useAppDispatch } from "../../../hooks/redux-hooks";
 import { login } from "../../../store/auth/authSlice";
 import { StyledAuthErrorAlert } from "../StyledAuthErrorAlert";
@@ -56,9 +56,9 @@ export const Login: FC = () => {
                     <Button block type="primary" htmlType="submit">
                         Login
                     </Button>
-                    <StyledAuthButton className="auth-button" type="link" onClick={() => navigate("/register")}>
+                    <StyledZeroPaddingButton type="link" onClick={() => navigate("/register")}>
                         Or create an account!
-                    </StyledAuthButton>
+                    </StyledZeroPaddingButton>
                 </Form.Item>
             </Form>
             {error && <StyledAuthErrorAlert type="error" message={error} />}

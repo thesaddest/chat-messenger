@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 import { IRegisterValues } from "../interfaces";
 import { AUTH_RULES } from "../auth.constants";
-import { StyledAuthButton } from "../StyledAuthButton";
+import { StyledZeroPaddingButton } from "../../Button/StyledZeroPaddingButton";
 import { useAppDispatch } from "../../../hooks/redux-hooks";
 import { register } from "../../../store/auth/authSlice";
 import { StyledAuthErrorAlert } from "../StyledAuthErrorAlert";
@@ -70,14 +70,13 @@ export const SignUp: FC = () => {
                     <Button block type="primary" htmlType="submit">
                         Create Account
                     </Button>
-                    <StyledAuthButton
+                    <StyledZeroPaddingButton
                         icon={<LeftOutlined />}
-                        className="auth-button"
                         type="link"
                         onClick={() => navigate("/")}
                     >
                         Back
-                    </StyledAuthButton>
+                    </StyledZeroPaddingButton>
                 </Form.Item>
             </Form>
             {error && <StyledAuthErrorAlert type="error" message={error} />}

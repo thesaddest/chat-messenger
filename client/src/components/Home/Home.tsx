@@ -14,6 +14,10 @@ const StyledHome = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  
+  @media only screen and (max-width: 425px) {
+    overflow: hidden;
+  }
 `;
 
 const StyledHomeContainer = styled.div`
@@ -21,6 +25,12 @@ const StyledHomeContainer = styled.div`
   border-radius: 10px;
   width: 65vw;
   height: 80vh;
+
+  @media only screen and (max-width: 425px) {
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
 `;
 
 const StyledLoadingContainer = styled.div`

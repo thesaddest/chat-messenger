@@ -9,12 +9,13 @@ interface MessageItemProps {
 }
 
 const StyledContainer = styled.div<MessageItemProps>`
-  background: ${props => props.to === props.friendId ? "#1677ff" : "slategray"};
-  color: ghostwhite;
-  border: 1px solid ${props => props.to === props.friendId ? "#1677ff" : "slategray"};
-  border-radius: 10px;
+  background: ${props => props.to === props.friendId ? "#1677ff" : "lightgray"};
+  color: ${props => props.to === props.friendId ? "whitesmoke" : "black"};
+  border: 1px solid ${props => props.to === props.friendId ? "#1677ff" : "lightgray"};
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  border-radius: 20px;
   margin: ${props => props.to === props.friendId ? "0 0 1rem auto" : "0 auto 1rem 0"};
-  padding: 0.25rem;
+  padding: 0.5rem;
   max-width: 50%;
   word-break: break-word;
 `;

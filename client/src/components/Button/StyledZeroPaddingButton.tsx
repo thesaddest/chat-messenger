@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import styled from "styled-components";
 
-export const StyledAuthButton = styled(Button)`
-    padding: 0;
+export const StyledZeroPaddingButton = styled(Button)`
+  padding: 0;
 `;

@@ -20,6 +20,10 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
+
+  @media only screen and (max-width: 425px) {
+    height: 80vh;
+  }
 `;
 
 export const Messages: FC<MessagesProps> = ({ messages, friend }) => {
