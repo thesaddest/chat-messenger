@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 import { IMessage } from "../interfaces";
 import { IFriend } from "../../../../api/interfaces";
-import { ChatInputBox } from "../ChatInput/ChatInputBox";
+
+import { ChatInput } from "./ChatInput";
 
 import { MessageItem } from "./MessageItem";
 
@@ -42,7 +43,7 @@ export const Messages: FC<MessagesProps> = ({ messages, friend }) => {
                     )}
                 <div ref={bottomDiv}></div>
             </StyledWrapper>
-            <ChatInputBox friendId={friend.userBehindFriend} />
+            <ChatInput friendId={friend.userBehindFriend} />
         </>
 
     );

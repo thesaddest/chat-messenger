@@ -1,2 +1,2 @@
 export * from "./Chat";
-export * from "./ChatInput/ChatInputBox";
+export * from "./Messages/ChatInput/ChatInput";

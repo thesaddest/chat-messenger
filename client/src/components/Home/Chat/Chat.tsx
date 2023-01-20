@@ -5,8 +5,8 @@ import styled from "styled-components";
 import { useAppSelector } from "../../../hooks/redux-hooks";
 
 import { DEFAULT_TAB_ITEM } from "./chat.constants";
-import { Messages } from "./Messages/Messages";
-import { FriendSidebarCard } from "./FriendSidebarCard/FriendSidebarCard";
+import { Messages } from "./Messages";
+import { FriendSidebarCard } from "./FriendSidebarCard";
 
 const StyledTabs = styled(Tabs)`
   height: 75vh;

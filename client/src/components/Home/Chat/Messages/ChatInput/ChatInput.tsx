@@ -3,12 +3,12 @@ import { Button, Form, Input } from "antd";
 import styled from "styled-components";
 import { SendOutlined } from "@ant-design/icons";
 
-import { MESSAGE_RULES } from "../chat.constants";
-import { IMessage, IMessageValues } from "../interfaces";
-import { socket } from "../../../../socket-io";
-import { SOCKET_EVENTS } from "../../../../socket-io/socket.constants";
-import { useAppDispatch, useAppSelector } from "../../../../hooks/redux-hooks";
-import { sendMessage } from "../../../../store/message/messageSlice";
+import { MESSAGE_RULES } from "../../chat.constants";
+import { IMessage, IMessageValues } from "../../interfaces";
+import { socket } from "../../../../../socket-io";
+import { SOCKET_EVENTS } from "../../../../../socket-io/socket.constants";
+import { useAppDispatch, useAppSelector } from "../../../../../hooks/redux-hooks";
+import { sendMessage } from "../../../../../store/message/messageSlice";
 
 const { TextArea } = Input;
 
@@ -85,7 +85,7 @@ const StyledButton = styled(Button)`
 `;
 
 
-export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
+export const ChatInput: FC<ChatInputBoxProps> = ({ friendId }) => {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
     const userId = useAppSelector(state => state.auth.user?.userId);
