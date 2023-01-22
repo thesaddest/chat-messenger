@@ -1,7 +1,6 @@
 import { Button, Form, Input, Modal, Typography } from "antd";
 import { FC, SyntheticEvent, useEffect, useRef, useState } from "react";
 import { UsergroupAddOutlined, UserAddOutlined } from "@ant-design/icons";
-import styled from "styled-components";
 
 import { AUTH_RULES } from "../../../Auth/auth.constants";
 import { socket } from "../../../../socket-io";
@@ -21,10 +20,6 @@ interface IAddFriendCBValues {
 }
 
 const { Title } = Typography;
-
-const StyledButton = styled(Button)`
-  border: 1px solid slategray;
-`;
 
 export const AddFriend: FC = () => {
     const [form] = Form.useForm();
@@ -66,7 +61,7 @@ export const AddFriend: FC = () => {
     return (
         <>
             <Title level={4}>Add a friend</Title>
-            <StyledButton onClick={showModal}>
+            <Button onClick={showModal} type={"primary"}>
                 <Modal
                     title="Add a friend!"
                     open={isModalOpen}
@@ -83,7 +78,7 @@ export const AddFriend: FC = () => {
                     {modalError && <StyledAuthErrorAlert type="error" message={modalError} />}
                 </Modal>
                 <UsergroupAddOutlined />
-            </StyledButton>
+            </Button>
         </>
     );
 };

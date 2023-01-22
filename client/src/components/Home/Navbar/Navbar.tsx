@@ -36,7 +36,7 @@ const StyledLeftDiv = styled.div<IStyledLeftDivProps>`
   }
 `;
 
-const StyledContainer = styled.div`
+const StyledHeader = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -54,7 +54,6 @@ const StyledContainer = styled.div`
   }
 `;
 
-
 export const Navbar: FC = () => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
@@ -65,7 +64,7 @@ export const Navbar: FC = () => {
     };
 
     return (
-        <StyledContainer>
+        <StyledHeader>
             <StyledLeftDiv friendIdActiveKey={friendIdActiveKey}>
                 {(width >= 426 || friendIdActiveKey === DEFAULT_ACTIVE_KEY) ? <AddFriend /> :
                     <StyledZeroPaddingButton
@@ -78,6 +77,6 @@ export const Navbar: FC = () => {
                 }
             </StyledLeftDiv>
             <StyledRightDiv />
-        </StyledContainer>
+        </StyledHeader>
     );
 };

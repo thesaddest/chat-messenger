@@ -5,14 +5,14 @@ import FriendService from "../../api/friend/friend.service";
 import { DEFAULT_ACTIVE_KEY } from "../../components/Home/Chat/chat.constants";
 
 interface FriendState {
-    friends: IFriend[];
+    friends: IFriend[] | null;
     loading: boolean;
     error: string | null;
     friendIdActiveKey: string;
 }
 
 const initialState: FriendState = {
-    friends: [],
+    friends: null,
     loading: true,
     error: null,
     friendIdActiveKey: DEFAULT_ACTIVE_KEY,

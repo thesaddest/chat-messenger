@@ -71,15 +71,14 @@ export const Chat: FC = () => {
     const onTabChange = (activeKey: string) => {
         dispatch(setFriendIdActiveKey(activeKey));
     };
-
-    return friends.length > 0 ? (
+    return friends && friends.length > 0 ? (
         <>
             <StyledTabs tabPosition="left"
                         items={friends?.map((friend) => {
                             return {
                                 label: <FriendSidebarCard friend={friend} />,
                                 key: `${friend.userBehindFriend}`,
-                                children: <Messages friend={friend} messages={messages} />,
+                                children: messages && <Messages friend={friend} messages={messages} />,
                             };
                         })}
                         activeKey={friendIdActiveKey}

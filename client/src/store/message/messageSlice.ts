@@ -4,13 +4,13 @@ import { IMessage } from "../../api/interfaces";
 import MessageService from "../../api/message/message.service";
 
 interface MessageState {
-    messages: IMessage[];
+    messages: IMessage[] | null;
     loading: boolean;
     error: string | null;
 }
 
 const initialState: MessageState = {
-    messages: [],
+    messages: null,
     loading: true,
     error: null,
 };
@@ -40,6 +40,9 @@ const messageSlice = createSlice({
     initialState,
     reducers: {
         addMessage: (state, action: PayloadAction<IMessage>) => {
+            if (!state.messages) {
+                return;
+            }
             state.messages.push(action.payload);
         },
     },
@@ -63,6 +66,9 @@ const messageSlice = createSlice({
                 }
             })
             .addCase(sendMessage.fulfilled, (state, action) => {
+                if (!state.messages) {
+                    return;
+                }
                 state.messages.push(action.payload);
                 state.loading = false;
                 state.error = null;
