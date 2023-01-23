@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
 import { Form, FormInstance, Input } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
 
@@ -14,8 +14,8 @@ import type { InputRef } from "antd";
 
 interface IAddFriendPopupContentProps {
     form: FormInstance;
-    setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    setModalError: React.Dispatch<React.SetStateAction<string>>;
+    setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+    setModalError: Dispatch<SetStateAction<string>>;
     modalError: string;
 }
 

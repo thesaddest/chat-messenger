@@ -22,8 +22,6 @@ export const AddFriend: FC = () => {
         form.resetFields();
     };
 
-    //TODO: Separate business logic from ui
-
     return (
         <>
             <Title level={4}>Add a friend</Title>

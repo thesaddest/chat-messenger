@@ -10,6 +10,8 @@ import { IMessage, IMessageValues } from "../../../../entities/message";
 import { sendMessage } from "../../../../entities/message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 
+//TODO: autofocus on chat input
+
 const { TextArea } = Input;
 
 interface ChatInputBoxProps {
@@ -17,80 +19,79 @@ interface ChatInputBoxProps {
 }
 
 const StyledWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 0;
 
-  @media only screen and (max-width: 425px) {
-    padding-bottom: 0;
-  }
+    @media only screen and (max-width: 425px) {
+        padding-bottom: 0;
+    }
 `;
 
 const StyledForm = styled(Form)`
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width: 100%;
-  background: lightgray;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    background: lightgray;
 `;
 
 const StyledFormItemTextAreaContainer = styled(Form.Item)`
-  margin: 0;
-  width: 90%;
-  height: 100%;
+    margin: 0;
+    width: 90%;
+    height: 100%;
 
-  .ant-input {
-    border-color: transparent !important;
-    box-shadow: none !important;
-  }
-
-  .ant-input:hover {
-    border-color: transparent !important;
-    box-shadow: none !important;
-  }
-
-  .ant-input:focus {
-    border-color: transparent;
-    box-shadow: none;
-  }
-
-  textarea {
-    outline: none;
-    resize: none;
-    border-color: transparent;
-    background: lightgray;
-
-    .ant-input-status-success {
-      border-color: transparent;
+    .ant-input {
+        border-color: transparent !important;
+        box-shadow: none !important;
     }
-  }
 
-  @media only screen and (max-width: 768px) {
-    width: 70%;
-  }
+    .ant-input:hover {
+        border-color: transparent !important;
+        box-shadow: none !important;
+    }
+
+    .ant-input:focus {
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    textarea {
+        outline: none;
+        resize: none;
+        border-color: transparent;
+        background: lightgray;
+
+        .ant-input-status-success {
+            border-color: transparent;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        width: 70%;
+    }
 `;
 
 const StyledFormItemButtonContainer = styled(Form.Item)`
-  display: flex;
-  justify-content: center;
-  width: 15%;
-  margin: 0;
+    display: flex;
+    justify-content: center;
+    width: 15%;
+    margin: 0;
 `;
 
 const StyledButton = styled(Button)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1.5rem;
-  border-radius: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    border-radius: 45%;
 `;
-
 
 export const ChatInput: FC<ChatInputBoxProps> = ({ friendId }) => {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
-    const userId = useAppSelector(state => state.auth.user?.userId);
+    const userId = useAppSelector((state) => state.auth.user?.userId);
 
     const onFinish = (values: IMessageValues) => {
         if (userId) {
@@ -119,6 +120,5 @@ export const ChatInput: FC<ChatInputBoxProps> = ({ friendId }) => {
                 </StyledFormItemButtonContainer>
             </StyledForm>
         </StyledWrapper>
-
     );
 };
