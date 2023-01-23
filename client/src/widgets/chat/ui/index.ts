@@ -1,2 +1,2 @@
 export { ChatInput } from "./chat-input";
-export { ChatBox } from "./chat-box";
+export { ChatTabsContent, ChatBoxTabs } from "./chat-box-tabs";
