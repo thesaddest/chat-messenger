@@ -4,10 +4,10 @@ import { LockOutlined, UserOutlined, LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import { AUTH_RULES } from "../../shared/const/auth.constants";
+import { AUTH_RULES } from "../../shared/const";
 import { ZeroPaddingButton, AuthErrorAlert } from "../../shared/ui";
-import { register } from "../../entities/user/model/user";
-import { useAppDispatch } from "../../shared/lib/hooks/redux";
+import { register } from "../../entities/user";
+import { useAppDispatch } from "../../shared/lib/hooks";
 
 import { IRegisterValues } from "./interfaces";
 

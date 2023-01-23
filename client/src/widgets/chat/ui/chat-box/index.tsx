@@ -3,11 +3,10 @@ import { FC } from "react";
 import styled from "styled-components";
 
 import { setFriendIdActiveKey } from "../../../../entities/friend";
-import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks/redux";
-import { FriendSidebarCard } from "../../../../entities/friend/ui";
-import { MessagesList } from "../../../../entities/message/ui/messages-list";
-
-import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const/chat.constants";
+import { MessagesList } from "../../../../entities/message/ui";
+import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
+import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
+import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 
 const StyledTabs = styled(Tabs)`
   height: 75vh;
@@ -61,7 +60,7 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
-export const Chat: FC = () => {
+export const ChatBox: FC = () => {
     const friends = useAppSelector((state) => state.friend.friends);
     const messages = useAppSelector((state) => state.message.messages);
     const friendIdActiveKey = useAppSelector(state => state.friend.friendIdActiveKey);

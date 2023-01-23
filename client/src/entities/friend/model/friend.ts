@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import FriendService from "../api/friend.service";
-import { DEFAULT_ACTIVE_KEY } from "../../../shared/const/chat.constants";
+import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 
 import { IFriend, IFriendStatus } from "./interfaces";
 
@@ -30,7 +30,7 @@ export const getFriends = createAsyncThunk<IFriend[], undefined, { rejectValue: 
         return data;
     });
 
-const friendModel = createSlice({
+export const friendModel = createSlice({
     name: "friend",
     initialState,
     reducers: {
@@ -74,4 +74,4 @@ const friendModel = createSlice({
 
 export const { addFriend, initUser, setFriendIdActiveKey } = friendModel.actions;
 
-export default friendModel.reducer;
+export const reducer = friendModel.reducer;

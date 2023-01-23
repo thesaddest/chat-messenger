@@ -1,12 +1,12 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { LoadingOutlined } from "@ant-design/icons";
 import { Divider } from "antd";
 
-import { useAppSelector } from "../../shared/lib/hooks/redux";
-import { useSocket } from "../../shared/lib/hooks/use-socket";
+import { useAppSelector } from "../../shared/lib/hooks";
+import { useSocket } from "../../shared/lib/hooks";
 import { Navbar } from "../../widgets/navbar";
-import { Chat } from "../../widgets/chat";
+import { ChatBox } from "../../widgets/chat";
+import { Loader } from "../../shared/ui";
 
 const StyledHomeContainer = styled.div`
   height: 100vh;
@@ -32,13 +32,6 @@ const StyledHome = styled.div`
   }
 `;
 
-const StyledLoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80%;
-`;
-
 const StyledDivider = styled(Divider)`
   margin: 0;
   background-color: lightgray;
@@ -54,11 +47,9 @@ export const HomePage: FC = () => {
             <StyledHome>
                 <Navbar />
                 <StyledDivider />
-                {isFriendsLoading
-                    ? <StyledLoadingContainer>
-                        <LoadingOutlined />
-                    </StyledLoadingContainer>
-                    : <Chat />
+                {isFriendsLoading ?
+                    <Loader />
+                    : <ChatBox />
                 }
             </StyledHome>
         </StyledHomeContainer>

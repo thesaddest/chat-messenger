@@ -36,7 +36,7 @@ export const getMessages = createAsyncThunk<IMessage[], undefined, { rejectValue
     return response.data;
 });
 
-const messageModel = createSlice({
+export const messageModel = createSlice({
     name: "messages",
     initialState,
     reducers: {
@@ -89,4 +89,4 @@ const messageModel = createSlice({
 
 export const { addMessage } = messageModel.actions;
 
-export default messageModel.reducer;
+export const reducer = messageModel.reducer;

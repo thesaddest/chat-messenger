@@ -1,2 +1,1 @@
-export * from "./ui/chat-box";
-export * from "./ui/chat-input/index";
+export { ChatBox, ChatInput } from "./ui";

@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 
-import { socketError } from "../../../entities/user/model/user";
+import { socketError } from "../../../entities/user";
 import { addFriend, getFriends, initUser } from "../../../entities/friend";
-import { SOCKET_EVENTS } from "../../const/socket.constants";
-import { socket } from "../../socket-io/socketInstance";
-import { IFriend, IFriendStatus } from "../../../entities/friend/model/interfaces";
+import { SOCKET_EVENTS } from "../../const";
+import { socket } from "../../socket-io";
+import { IFriend, IFriendStatus } from "../../../entities/friend";
 import { addMessage, getMessages } from "../../../entities/message";
 import { IMessage } from "../../../entities/message/model/interfaces";
 
-import { useAppSelector, useAppDispatch } from "./redux";
+import { useAppDispatch } from "./use-app-dispatch";
+import { useAppSelector } from "./use-app-selector";
 
 
 export const useSocket = () => {

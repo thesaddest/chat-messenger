@@ -1,9 +1,9 @@
 import { AxiosResponse } from "axios";
 
-import api from "../../../shared/api/axiosInstance";
-import { IUser } from "../../friend/model/interfaces";
+import api from "../../../shared/api/axios-instance";
 import { ILoginValues } from "../../../pages/login/interfaces";
 import { IRegisterValues } from "../../../pages/register/interfaces";
+import { IUser } from "../model";
 
 export default class UserService {
     static async login(userData: ILoginValues): Promise<AxiosResponse<IUser>> {

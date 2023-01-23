@@ -1,1 +1,1 @@
-export * from "./model/friend";
+export * from "./model";

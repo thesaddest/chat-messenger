@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useRef } from "react";
 import styled from "styled-components";
 
-import { IFriend } from "../../../friend/model/interfaces";
-import { IMessage } from "../../model/interfaces";
+import { IFriend } from "../../../friend";
+import { IMessage } from "../../model";
 import { MessageItem } from "../message-item";
 import { ChatInput } from "../../../../widgets/chat";
 

@@ -7,7 +7,7 @@ import { HomePage } from "../home";
 
 import PrivateRoutes from "./private-routes";
 
-const Pages: FC = () => {
+export const Pages: FC = () => {
     return (
         <Routes>
             <Route path="/" element={<LoginPage />} />
@@ -19,5 +19,3 @@ const Pages: FC = () => {
         </Routes>
     );
 };
-
-export default Pages;

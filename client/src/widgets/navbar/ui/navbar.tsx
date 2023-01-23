@@ -2,13 +2,12 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { LeftOutlined } from "@ant-design/icons";
 
-import { useWindowSize } from "../../../shared/lib/hooks/use-window-size";
+import { useWindowSize } from "../../../shared/lib/hooks";
 import { ZeroPaddingButton } from "../../../shared/ui";
-import { DEFAULT_ACTIVE_KEY } from "../../../shared/const/chat.constants";
-import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks/redux";
+import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
+import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { setFriendIdActiveKey } from "../../../entities/friend";
-import { AddFriend } from "../../../entities/friend/ui/add-friend-modal";
-
+import { AddFriend } from "../../../features/add-friend";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
@@ -53,7 +52,6 @@ const StyledHeader = styled.header`
     }
   }
 `;
-
 export const Navbar: FC = () => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();

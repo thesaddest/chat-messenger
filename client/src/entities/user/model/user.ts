@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction, AnyAction } from "@reduxjs/toolkit";
 
 import UserService from "../api/user.service.";
-import { IUser } from "../../friend/model/interfaces";
 import { ILoginValues } from "../../../pages/login/interfaces";
 import { IRegisterValues } from "../../../pages/register/interfaces";
+
+import { IUser } from "./interfaces";
 
 interface AuthState {
     user: IUser | null;
@@ -49,7 +50,7 @@ export const register = createAsyncThunk<IUser, IRegisterValues, { rejectValue: 
     },
 );
 
-const userModel = createSlice({
+export const userModel = createSlice({
     name: "auth",
     initialState,
     reducers: {
@@ -96,7 +97,7 @@ const userModel = createSlice({
 
 export const { socketError } = userModel.actions;
 
-export default userModel.reducer;
+export const reducer = userModel.reducer;
 
 function isError(action: AnyAction) {
     return action.type.endsWith("rejected");

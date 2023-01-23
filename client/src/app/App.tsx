@@ -1,4 +1,6 @@
-import Pages from "../pages/routes/routes";
+import { Pages } from "../pages";
+
+import { withStore } from "./providers";
 
 function App() {
     return (
@@ -6,4 +8,4 @@ function App() {
     );
 }
 
-export default App;
+export default withStore(App);

@@ -3,12 +3,12 @@ import { Button, Form, Input } from "antd";
 import styled from "styled-components";
 import { SendOutlined } from "@ant-design/icons";
 
-import { MESSAGE_RULES } from "../../../../shared/const/chat.constants";
-import { socket } from "../../../../shared/socket-io/socketInstance";
-import { SOCKET_EVENTS } from "../../../../shared/const/socket.constants";
-import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks/redux";
-import { IMessage, IMessageValues } from "../../../../entities/message/model/interfaces";
+import { MESSAGE_RULES } from "../../../../shared/const";
+import { socket } from "../../../../shared/socket-io";
+import { SOCKET_EVENTS } from "../../../../shared/const";
+import { IMessage, IMessageValues } from "../../../../entities/message";
 import { sendMessage } from "../../../../entities/message";
+import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 
 const { TextArea } = Input;
 

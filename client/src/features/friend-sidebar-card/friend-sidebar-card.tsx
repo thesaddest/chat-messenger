@@ -3,7 +3,7 @@ import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { Avatar } from "antd";
 
-import { IFriend } from "../../model/interfaces";
+import { IFriend } from "../../entities/friend";
 
 interface FriendCardProps {
     friend: IFriend;
