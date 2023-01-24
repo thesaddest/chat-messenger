@@ -1,2 +1,2 @@
-export * from "./chat-box-tabs";
+export * from "./chat-tabs-box";
 export { ChatTabsContent } from "./chat-tabs-content";

@@ -5,8 +5,8 @@ import { Divider } from "antd";
 import { useAppSelector } from "../../shared/lib/hooks";
 import { useSocket } from "../../shared/lib/hooks";
 import { Navbar } from "../../widgets/navbar";
-import { ChatBoxTabs } from "../../widgets/chat";
 import { Loader } from "../../shared/ui";
+import { ChatTabsBox } from "../../widgets/chat";
 
 const StyledHomeContainer = styled.div`
     height: 100vh;
@@ -47,7 +47,7 @@ export const HomePage: FC = () => {
             <StyledHome>
                 <Navbar />
                 <StyledDivider />
-                {isFriendsLoading ? <Loader /> : <ChatBoxTabs />}
+                {isFriendsLoading ? <Loader /> : <ChatTabsBox />}
             </StyledHome>
         </StyledHomeContainer>
     );

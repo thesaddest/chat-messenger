@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from "react";
+import React, { FC, memo, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import { MessageItem } from "../message-item";
@@ -23,7 +23,7 @@ const StyledWrapper = styled.div`
     }
 `;
 
-export const MessagesList: FC<IMessagesListProps> = ({ messages, friend }) => {
+export const MessagesList = memo<IMessagesListProps>(({ messages, friend }) => {
     const bottomDiv = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -42,4 +42,4 @@ export const MessagesList: FC<IMessagesListProps> = ({ messages, friend }) => {
             <div ref={bottomDiv}></div>
         </StyledWrapper>
     );
-};
+});

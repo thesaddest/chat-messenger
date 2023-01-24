@@ -1,12 +1,12 @@
 import { Button, Form, Modal, Typography } from "antd";
-import { FC, SyntheticEvent, useState } from "react";
+import { memo, SyntheticEvent, useState } from "react";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 
 import { AddFriendPopupContent } from "./add-friend-popup-content";
 
 const { Title } = Typography;
 
-export const AddFriend: FC = () => {
+export const AddFriend = memo(() => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [modalError, setModalError] = useState<string>("");
@@ -44,4 +44,4 @@ export const AddFriend: FC = () => {
             </Button>
         </>
     );
-};
+});

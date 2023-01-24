@@ -61,7 +61,7 @@ const StyledChatBoxTabs = styled(Tabs)`
     }
 `;
 
-export const ChatBoxTabs: FC = () => {
+export const ChatTabsBox: FC = () => {
     const friends = useAppSelector((state) => state.friend.friends);
     const messages = useAppSelector((state) => state.message.messages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
