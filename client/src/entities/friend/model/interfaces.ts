@@ -14,3 +14,6 @@ export interface IAddFriendValues {
     username: string;
 }
 
+export interface IGetMoreFriends {
+    skip: number;
+}

@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import FriendService from "../api/friend.service";
 import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 
-import { IFriend, IFriendStatus } from "./interfaces";
+import { IFriend, IFriendStatus, IGetMoreFriends } from "./interfaces";
 
 interface FriendState {
     friends: IFriend[] | null;
@@ -18,9 +18,10 @@ const initialState: FriendState = {
     error: null,
     friendIdActiveKey: DEFAULT_ACTIVE_KEY,
 };
+
 export const getFriends = createAsyncThunk<IFriend[], undefined, { rejectValue: string }>(
     "friends/getFriends",
-    async function(_, { rejectWithValue }) {
+    async function (_, { rejectWithValue }) {
         const { data } = await FriendService.getFriends();
 
         if (!data) {
@@ -28,14 +29,28 @@ export const getFriends = createAsyncThunk<IFriend[], undefined, { rejectValue: 
         }
 
         return data;
-    });
+    },
+);
+
+export const getMoreFriends = createAsyncThunk<IFriend[], IGetMoreFriends, { rejectValue: string }>(
+    "friends/getMoreFriends",
+    async function (moreFriendsData, { rejectWithValue }) {
+        try {
+            const { data } = await FriendService.getMoreFriends(moreFriendsData);
+
+            return data;
+        } catch (e) {
+            return rejectWithValue("Error while sending message");
+        }
+    },
+);
 
 export const friendModel = createSlice({
     name: "friend",
     initialState,
     reducers: {
         initUser(state, action: PayloadAction<IFriendStatus>) {
-            const friend = state.friends?.find(friend => friend.username === action.payload.username);
+            const friend = state.friends?.find((friend) => friend.username === action.payload.username);
 
             if (!friend) {
                 return;
@@ -58,16 +73,32 @@ export const friendModel = createSlice({
                 state.error = null;
             })
             .addCase(getFriends.pending, (state) => {
-                state.friends = [];
+                state.friends = null;
                 state.loading = true;
                 state.error = null;
             })
             .addCase(getFriends.rejected, (state, action) => {
-                state.friends = [];
-                state.loading = false;
-                if (action.payload) {
-                    state.error = action.payload;
+                if (!action.payload) {
+                    return;
                 }
+                state.friends = null;
+                state.error = action.payload;
+                state.loading = false;
+            })
+            .addCase(getMoreFriends.fulfilled, (state, action) => {
+                if (!state.friends || action.payload.length === 0) {
+                    return;
+                }
+                state.friends = state.friends.concat(action.payload);
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(getMoreFriends.rejected, (state, action) => {
+                if (!action.payload) {
+                    return;
+                }
+                state.error = action.payload;
+                state.loading = false;
             });
     },
 });

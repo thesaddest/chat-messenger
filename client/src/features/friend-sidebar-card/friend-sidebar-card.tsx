@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { Avatar } from "antd";

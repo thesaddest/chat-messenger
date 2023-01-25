@@ -1,6 +1,5 @@
 import { User } from "./user.entity.js";
 import { AppDataSource } from "../db/database.js";
-import { Request } from "express";
 import { jwtService } from "../auth/jwt.service.js";
 
 class UserService {

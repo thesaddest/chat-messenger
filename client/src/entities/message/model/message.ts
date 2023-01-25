@@ -16,25 +16,31 @@ const initialState: MessageState = {
     error: null,
 };
 
-export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>("messages/sendMessage", async function(messageData, { rejectWithValue }) {
-    try {
-        const { data } = await MessageService.sendMessage(messageData);
+export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
+    "messages/sendMessage",
+    async function (messageData, { rejectWithValue }) {
+        try {
+            const { data } = await MessageService.sendMessage(messageData);
 
-        return data;
-    } catch (e) {
-        return rejectWithValue("Error while sending message");
-    }
-});
+            return data;
+        } catch (e) {
+            return rejectWithValue("Error while sending message");
+        }
+    },
+);
 
-export const getMessages = createAsyncThunk<IMessage[], undefined, { rejectValue: string }>("messages/getMessages", async function(_, { rejectWithValue }) {
-    const response = await MessageService.getMessages();
+export const getMessages = createAsyncThunk<IMessage[], undefined, { rejectValue: string }>(
+    "messages/getMessages",
+    async function (_, { rejectWithValue }) {
+        const response = await MessageService.getMessages();
 
-    if (!response.data) {
-        return rejectWithValue("Error while getting messages");
-    }
+        if (!response.data) {
+            return rejectWithValue("Error while getting messages");
+        }
 
-    return response.data;
-});
+        return response.data;
+    },
+);
 
 export const messageModel = createSlice({
     name: "messages",
@@ -55,16 +61,17 @@ export const messageModel = createSlice({
                 state.error = null;
             })
             .addCase(getMessages.pending, (state) => {
-                state.messages = [];
+                state.messages = null;
                 state.loading = true;
                 state.error = null;
             })
             .addCase(getMessages.rejected, (state, action) => {
-                state.messages = [];
-                state.loading = false;
-                if (action.payload) {
-                    state.error = action.payload;
+                if (!action.payload) {
+                    return;
                 }
+                state.error = action.payload;
+                state.messages = null;
+                state.loading = false;
             })
             .addCase(sendMessage.fulfilled, (state, action) => {
                 if (!state.messages) {
@@ -79,10 +86,11 @@ export const messageModel = createSlice({
                 state.error = null;
             })
             .addCase(sendMessage.rejected, (state, action) => {
-                state.loading = false;
-                if (action.payload) {
-                    state.error = action.payload;
+                if (!action.payload) {
+                    return;
                 }
+                state.error = action.payload;
+                state.loading = false;
             });
     },
 });

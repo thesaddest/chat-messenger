@@ -15,6 +15,7 @@ class FriendService {
         friend.addedBy = user.username;
 
         await friendRepository.save(friend);
+
         return {
             userBehindFriend: friend.userBehindFriend,
             username: friend.username,
@@ -35,8 +36,27 @@ class FriendService {
         return user.friends.find(({ username }) => username === friendUsername);
     }
 
+    async getUserFriendsWithLimit(user: User, skip: string): Promise<FriendDto[]> {
+        const friendRepository = AppDataSource.getRepository(Friend);
+        const friends = await friendRepository.find({
+            where: { addedBy: user.username },
+            take: 11,
+            skip: Number(skip),
+        });
+
+        return friends.map((friend) => {
+            return {
+                userBehindFriend: friend.userBehindFriend,
+                username: friend.username,
+                addedBy: friend.addedBy,
+                connected: false,
+            };
+        });
+    }
+
     async getUserFriends(user: User): Promise<FriendDto[]> {
-        const friends = user.friends;
+        const friendRepository = AppDataSource.getRepository(Friend);
+        const friends = await friendRepository.find({ where: { addedBy: user.username } });
 
         return friends.map((friend) => {
             return {

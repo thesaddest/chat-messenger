@@ -1,14 +1,19 @@
 import { Tabs } from "antd";
-import { FC } from "react";
+import { memo } from "react";
 import styled from "styled-components";
 
-import { setFriendIdActiveKey } from "../../../../entities/friend";
+import { getMoreFriends, setFriendIdActiveKey } from "../../../../entities/friend";
 import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
 import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
-import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
+import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
 
 import { ChatTabsContent } from "./chat-tabs-content";
 
+interface ITabsSrcollDirection {
+    direction: "left" | "right" | "top" | "bottom";
+}
+
+//TODO: remove ant-tabs button on scroll;
 const StyledChatBoxTabs = styled(Tabs)`
     height: 75vh;
 
@@ -61,7 +66,7 @@ const StyledChatBoxTabs = styled(Tabs)`
     }
 `;
 
-export const ChatTabsBox: FC = () => {
+export const ChatTabsBox = memo(() => {
     const friends = useAppSelector((state) => state.friend.friends);
     const messages = useAppSelector((state) => state.message.messages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
@@ -72,8 +77,15 @@ export const ChatTabsBox: FC = () => {
         dispatch(setFriendIdActiveKey(activeKey));
     };
 
+    const scrollHandler = useDebounce((e: ITabsSrcollDirection) => {
+        if (e.direction === "bottom" && friends) {
+            dispatch(getMoreFriends({ skip: friends.length }));
+        }
+    }, 1000);
+
     return friends && friends.length > 0 ? (
         <StyledChatBoxTabs
+            onTabScroll={(e) => scrollHandler(e)}
             tabPosition="left"
             items={friends?.map((friend) => {
                 return {
@@ -88,4 +100,4 @@ export const ChatTabsBox: FC = () => {
     ) : (
         <StyledChatBoxTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
     );
-};
+});

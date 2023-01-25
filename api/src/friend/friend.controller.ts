@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { NextFunction, Request, Response } from "express";
 import { userService } from "../user/user.service.js";
 import { ErrorException } from "../error-handler/error-exception.js";
@@ -12,7 +13,10 @@ class FriendController {
                 return ErrorException.UnauthorizedError();
             }
 
-            const userFriends = await friendService.getUserFriends(user);
+            let { skip } = req.query;
+            skip = skip || 0;
+
+            const userFriends = await friendService.getUserFriendsWithLimit(user, skip);
             const friends = await friendService.getConnectedFriends(userFriends);
 
             return res.json(friends);

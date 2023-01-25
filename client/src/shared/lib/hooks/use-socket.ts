@@ -6,11 +6,10 @@ import { SOCKET_EVENTS } from "../../const";
 import { socket } from "../../socket-io";
 import { IFriend, IFriendStatus } from "../../../entities/friend";
 import { addMessage, getMessages } from "../../../entities/message";
-import { IMessage } from "../../../entities/message/model/interfaces";
+import { IMessage } from "../../../entities/message";
 
 import { useAppDispatch } from "./use-app-dispatch";
 import { useAppSelector } from "./use-app-selector";
-
 
 export const useSocket = () => {
     const dispatch = useAppDispatch();
