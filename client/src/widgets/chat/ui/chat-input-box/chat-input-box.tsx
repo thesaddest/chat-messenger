@@ -2,8 +2,6 @@ import React, { FC } from "react";
 import { Form } from "antd";
 import styled from "styled-components";
 
-import { socket } from "../../../../shared/socket-io";
-import { SOCKET_EVENTS } from "../../../../shared/const";
 import { IMessage, IMessageValues } from "../../../../entities/message";
 import { sendMessage } from "../../../../entities/message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
@@ -44,7 +42,6 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     const onFinish = (values: IMessageValues) => {
         if (userId) {
             const message: IMessage = { to: friendId, from: userId, content: values.message };
-            socket.emit(SOCKET_EVENTS.SEND_MESSAGE, message);
             dispatch(sendMessage(message));
             form.resetFields();
         }

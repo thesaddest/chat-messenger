@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
 import { socketError } from "../../../entities/user";
-import { addFriend, getFriends, initUser } from "../../../entities/friend";
+import { getFriends, initUser } from "../../../entities/friend";
 import { SOCKET_EVENTS } from "../../const";
 import { socket } from "../../socket-io";
-import { IFriend, IFriendStatus } from "../../../entities/friend";
+import { IFriendStatus } from "../../../entities/friend";
 import { addMessage, getMessages } from "../../../entities/message";
 import { IMessage } from "../../../entities/message";
 
@@ -37,10 +37,6 @@ export const useSocket = () => {
 
         socket.on(SOCKET_EVENTS.SEND_MESSAGE, (message: IMessage) => {
             dispatch(addMessage(message));
-        });
-
-        socket.on(SOCKET_EVENTS.ADD_FRIEND, (friend: IFriend) => {
-            dispatch(addFriend(friend));
         });
 
         socket.on(SOCKET_EVENTS.ON_DISCONNECT, (friendStatus: IFriendStatus) => {

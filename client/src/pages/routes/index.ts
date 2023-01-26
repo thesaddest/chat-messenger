@@ -1,1 +1,1 @@
-export * from "./routes";
+export { Pages } from "./routes";

@@ -9,6 +9,7 @@ router.post("/auth/register", userController.register);
 router.post("/auth/login", userController.login);
 
 router.get("/friend/getFriends", friendController.getFriends);
+router.post("/friend/addFriend", friendController.addFriend);
 
 router.get("/message/getMessages", messageController.getMessages);
 router.post("/message/sendMessage", messageController.sendMessage);

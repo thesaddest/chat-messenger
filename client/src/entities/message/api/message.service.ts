@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 
 import api from "../../../shared/api/axios-instance";
-import { IMessage } from "../model/interfaces";
+import { IMessage } from "../model";
 
 export default class MessageService {
     static async getMessages(): Promise<AxiosResponse<IMessage[]>> {

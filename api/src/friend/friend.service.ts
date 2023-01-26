@@ -4,6 +4,7 @@ import { AppDataSource } from "../db/database.js";
 import { FriendDto } from "./friend.dto.js";
 import { userService } from "../user/user.service.js";
 import { redisService } from "../redis/redis.service.js";
+import { DEFAULT_TAKE_AMOUNT } from "./friend.constants.js";
 
 class FriendService {
     async addFriend(friend: Friend, user: User): Promise<FriendDto> {
@@ -40,7 +41,7 @@ class FriendService {
         const friendRepository = AppDataSource.getRepository(Friend);
         const friends = await friendRepository.find({
             where: { addedBy: user.username },
-            take: 11,
+            take: DEFAULT_TAKE_AMOUNT,
             skip: Number(skip),
         });
 

@@ -2,6 +2,9 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import MessageService from "../api/message.service";
 
+import { socket } from "../../../shared/socket-io";
+import { SOCKET_EVENTS } from "../../../shared/const";
+
 import { IMessage } from "./interfaces";
 
 interface MessageState {
@@ -20,6 +23,7 @@ export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: s
     "messages/sendMessage",
     async function (messageData, { rejectWithValue }) {
         try {
+            socket.emit(SOCKET_EVENTS.SEND_MESSAGE, messageData);
             const { data } = await MessageService.sendMessage(messageData);
 
             return data;

@@ -9,11 +9,12 @@ import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/
 
 import { ChatTabsContent } from "./chat-tabs-content";
 
+//TODO: Remove scroll to top from (probably) ant-tabs-nav-list
+
 interface ITabsSrcollDirection {
     direction: "left" | "right" | "top" | "bottom";
 }
 
-//TODO: remove ant-tabs button on scroll;
 const StyledChatBoxTabs = styled(Tabs)`
     height: 75vh;
 
@@ -85,7 +86,7 @@ export const ChatTabsBox = memo(() => {
 
     return friends && friends.length > 0 ? (
         <StyledChatBoxTabs
-            onTabScroll={(e) => scrollHandler(e)}
+            onTabScroll={scrollHandler}
             tabPosition="left"
             items={friends?.map((friend) => {
                 return {

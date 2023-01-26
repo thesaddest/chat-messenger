@@ -1,8 +1,4 @@
-import {
-    getFriends,
-    onDeinitUser,
-    sendMessage, getMessages, onInitUser, addFriend,
-} from "./socket/socket.controller.js";
+import { getFriends, onDeinitUser, sendMessage, getMessages, onInitUser } from "./socket/socket.controller.js";
 import express from "express";
 import helmet from "helmet";
 import http from "http";
@@ -12,7 +8,6 @@ import * as dotenv from "dotenv";
 import { AppDataSource } from "./db/database.js";
 import { router } from "./router/index.js";
 import { errorMiddleware } from "./error-handler/error.middleware.js";
-import { AddFriendCB } from "./socket/interfaces.js";
 import { SOCKET_EVENTS } from "./socket/socket.constants.js";
 import { socketAuthMiddleware } from "./socket/socket.middleware.js";
 import { MessageDto } from "./message/message.dto.js";
@@ -40,10 +35,6 @@ io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
     onInitUser(socket);
     getFriends(socket);
     getMessages(socket);
-
-    socket.on(SOCKET_EVENTS.ADD_FRIEND, (username: string, cb: AddFriendCB) => {
-        addFriend(username, cb, socket);
-    });
 
     socket.on(SOCKET_EVENTS.SEND_MESSAGE, (messageDto: MessageDto) => {
         sendMessage(socket, messageDto);

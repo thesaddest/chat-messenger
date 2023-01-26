@@ -14,13 +14,12 @@ class MessageController {
             const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
 
             if (!user) {
-                return ErrorException.UnauthorizedError();
+                return next(ErrorException.UnauthorizedError());
             }
 
             const messages = await messageService.getUserMessages(user);
             return res.json(messages);
         } catch (e) {
-            console.log(e);
             next(e);
         }
     }
@@ -32,7 +31,6 @@ class MessageController {
 
             return res.json({ to: message.to, from: message.from, content: message.content });
         } catch (e) {
-            console.log(e);
             next(e);
         }
     }

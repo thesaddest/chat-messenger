@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction, AnyAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
 import UserService from "../api/user.service.";
 import { ILoginValues } from "../../../pages/login/interfaces";
@@ -22,7 +22,7 @@ const initialState: AuthState = {
 
 export const login = createAsyncThunk<IUser, ILoginValues, { rejectValue: string }>(
     "auth/login",
-    async function(userData, { rejectWithValue }) {
+    async function (userData, { rejectWithValue }) {
         try {
             const { data } = await UserService.login(userData);
 
@@ -37,7 +37,7 @@ export const login = createAsyncThunk<IUser, ILoginValues, { rejectValue: string
 
 export const register = createAsyncThunk<IUser, IRegisterValues, { rejectValue: string }>(
     "auth/register",
-    async function(userData, { rejectWithValue }) {
+    async function (userData, { rejectWithValue }) {
         try {
             const { data } = await UserService.register(userData);
 
@@ -80,16 +80,11 @@ export const userModel = createSlice({
                 state.loading = true;
                 state.error = null;
                 state.isAuth = false;
-            }).addCase(register.pending, (state) => {
-            state.user = null;
-            state.loading = true;
-            state.error = null;
-            state.isAuth = false;
-        })
-            .addMatcher(isError, (state, action: PayloadAction<string>) => {
+            })
+            .addCase(register.pending, (state) => {
                 state.user = null;
-                state.loading = false;
-                state.error = action.payload;
+                state.loading = true;
+                state.error = null;
                 state.isAuth = false;
             });
     },
@@ -98,7 +93,3 @@ export const userModel = createSlice({
 export const { socketError } = userModel.actions;
 
 export const reducer = userModel.reducer;
-
-function isError(action: AnyAction) {
-    return action.type.endsWith("rejected");
-}

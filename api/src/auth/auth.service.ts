@@ -5,7 +5,6 @@ import bcrypt from "bcrypt";
 import { jwtService } from "./jwt.service.js";
 import { ErrorException } from "../error-handler/error-exception.js";
 import { v4 as uuidv4 } from "uuid";
-import { User } from "../user/user.entity.js";
 
 class AuthService {
     async register(userDto: UserRegisterDto): Promise<IRegisteredUser> {

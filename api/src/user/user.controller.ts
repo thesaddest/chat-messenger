@@ -40,9 +40,9 @@ class UserController {
             userData.email = email;
             userData.password = password;
 
-            const loginedUser = await authService.login(userData);
+            const loggedUser = await authService.login(userData);
 
-            return res.json(loginedUser);
+            return res.json(loggedUser);
         } catch (e) {
             next(e);
         }
