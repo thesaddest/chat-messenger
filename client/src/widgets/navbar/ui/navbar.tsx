@@ -1,3 +1,4 @@
+import { FC } from "react";
 import styled from "styled-components";
 import { LeftOutlined } from "@ant-design/icons";
 
@@ -51,7 +52,7 @@ const StyledHeader = styled.header`
         }
     }
 `;
-export const Navbar = () => {
+export const Navbar: FC = () => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);

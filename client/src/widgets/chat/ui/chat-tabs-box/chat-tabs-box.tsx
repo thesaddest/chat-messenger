@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/
 import { ChatTabsContent } from "./chat-tabs-content";
 
 //TODO: Remove scroll to top
+//TODO: Fix mobile design
 
 interface ITabsSrcollDirection {
     direction: "left" | "right" | "top" | "bottom";
@@ -41,6 +42,12 @@ const StyledChatBoxTabs = styled(Tabs)`
 
             .ant-tabs-tab-btn {
                 color: whitesmoke;
+            }
+        }
+
+        .ant-tabs-nav-list {
+            @media only screen and (max-width: 425px) {
+                overflow: scroll;
             }
         }
 

@@ -1,5 +1,5 @@
 import { SendOutlined } from "@ant-design/icons";
-import React from "react";
+import React, { memo } from "react";
 import styled from "styled-components";
 import { Button, Form } from "antd";
 
@@ -18,10 +18,10 @@ const StyledButton = styled(Button)`
     border-radius: 45%;
 `;
 
-export const SendMessageButton = () => (
+export const SendMessageButton = memo(() => (
     <StyledFormItemButtonContainer>
         <StyledButton block type="primary" htmlType="submit">
             <SendOutlined />
         </StyledButton>
     </StyledFormItemButtonContainer>
-);
+));
