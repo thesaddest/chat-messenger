@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/
 
 import { ChatTabsContent } from "./chat-tabs-content";
 
-//TODO: Remove scroll to top from (probably) ant-tabs-nav-list
+//TODO: Remove scroll to top
 
 interface ITabsSrcollDirection {
     direction: "left" | "right" | "top" | "bottom";
@@ -20,6 +20,14 @@ const StyledChatBoxTabs = styled(Tabs)`
 
     .ant-tabs-nav {
         flex: 1;
+
+        .ant-tabs-nav-operations {
+            display: none;
+        }
+
+        .ant-tabs-ink-bar {
+            display: none;
+        }
 
         .ant-tabs-tab {
             @media only screen and (max-width: 768px) {
@@ -71,7 +79,6 @@ export const ChatTabsBox = memo(() => {
     const friends = useAppSelector((state) => state.friend.friends);
     const messages = useAppSelector((state) => state.message.messages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
-
     const dispatch = useAppDispatch();
 
     const onTabChange = (activeKey: string) => {

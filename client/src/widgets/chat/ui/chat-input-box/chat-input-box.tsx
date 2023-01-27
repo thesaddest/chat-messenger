@@ -9,8 +9,6 @@ import { SendMessageButton } from "../../../../shared/ui";
 
 import { ChatInput } from "./chat-input";
 
-//TODO: autofocus on chat input
-
 interface ChatInputBoxProps {
     friendId: string;
 }

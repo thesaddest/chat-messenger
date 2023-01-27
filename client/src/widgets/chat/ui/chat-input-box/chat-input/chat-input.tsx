@@ -16,13 +16,13 @@ const StyledFormItemTextAreaContainer = styled(Form.Item)`
     height: 100%;
 
     .ant-input {
-        border-color: transparent !important;
-        box-shadow: none !important;
+        border-color: transparent;
+        box-shadow: none;
     }
 
     .ant-input:hover {
-        border-color: transparent !important;
-        box-shadow: none !important;
+        border-color: transparent;
+        box-shadow: none;
     }
 
     .ant-input:focus {
@@ -55,14 +55,12 @@ export const ChatInput: FC<IChatInputProps> = ({ form }) => {
     };
 
     useEffect(() => {
-        if (textAreaRef && textAreaRef.current) {
-            textAreaRef?.current?.focus();
-        }
+        requestAnimationFrame(() => textAreaRef.current?.focus());
     });
 
     return (
         <StyledFormItemTextAreaContainer name="message" rules={MESSAGE_RULES.MESSAGE}>
-            <TextArea ref={textAreaRef} placeholder="Write a message..." onPressEnter={(e) => onEnterPress(e)} />
+            <TextArea ref={textAreaRef} placeholder="Write a message..." onPressEnter={onEnterPress} />
         </StyledFormItemTextAreaContainer>
     );
 };
