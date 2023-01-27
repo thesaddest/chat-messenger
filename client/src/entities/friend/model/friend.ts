@@ -95,7 +95,7 @@ export const friendModel = createSlice({
                 state.loading = false;
             })
             .addCase(getMoreFriends.fulfilled, (state, action) => {
-                if (!state.friends) {
+                if (!state.friends || action.payload.length === 0) {
                     return;
                 }
                 state.friends = state.friends.concat(action.payload);
