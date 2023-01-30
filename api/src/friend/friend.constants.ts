@@ -1,1 +1,1 @@
-export const DEFAULT_TAKE_AMOUNT = 11;
+export const DEFAULT_TAKE_AMOUNT = 15;

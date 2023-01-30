@@ -13,6 +13,12 @@ const GlobalStyle = createGlobalStyle`
     font-size: 100%;
     vertical-align: baseline;
     list-style: none;
+
+    ::-webkit-scrollbar {
+      width: 0;
+      background: transparent;
+    }
+
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   }
 `;
