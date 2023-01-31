@@ -96,8 +96,6 @@ export const ChatTabsBox = memo(() => {
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const dispatch = useAppDispatch();
 
-    console.log(messages);
-
     const onTabChange = (activeKey: string) => {
         dispatch(setFriendIdActiveKey(activeKey));
     };
