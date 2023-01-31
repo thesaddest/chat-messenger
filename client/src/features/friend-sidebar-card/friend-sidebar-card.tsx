@@ -33,7 +33,6 @@ const StyledAvatar = styled(Avatar)`
 `;
 
 export const FriendSidebarCard = memo<FriendCardProps>(({ friend }) => {
-    console.log(friend);
     return (
         <StyledFriendsCardDiv>
             {friend.connected ? <CheckCircleOutlined /> : <MinusCircleOutlined />}
