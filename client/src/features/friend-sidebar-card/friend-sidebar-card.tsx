@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { Avatar } from "antd";
@@ -33,6 +33,7 @@ const StyledAvatar = styled(Avatar)`
 `;
 
 export const FriendSidebarCard = memo<FriendCardProps>(({ friend }) => {
+    console.log(friend);
     return (
         <StyledFriendsCardDiv>
             {friend.connected ? <CheckCircleOutlined /> : <MinusCircleOutlined />}

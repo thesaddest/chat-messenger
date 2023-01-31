@@ -1,19 +1,17 @@
 import { FC } from "react";
 
-import { IMessage } from "../../../../../entities/message";
 import { IFriend } from "../../../../../entities/friend";
 import { MessagesList } from "../../../../../entities/message/ui";
 import { ChatInputBox } from "../../chat-input-box";
 
 interface IChatTabsContentProps {
     friend: IFriend;
-    messages: IMessage[];
 }
 
-export const ChatTabsContent: FC<IChatTabsContentProps> = ({ friend, messages }) => {
+export const ChatTabsContent: FC<IChatTabsContentProps> = ({ friend }) => {
     return (
         <>
-            <MessagesList messages={messages} friend={friend} />
+            <MessagesList friend={friend} />
             <ChatInputBox friendId={friend.userBehindFriend} />
         </>
     );

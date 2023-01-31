@@ -2,11 +2,10 @@ import React, { memo, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import { MessageItem } from "../message-item";
-import { IMessage } from "../../model";
 import { IFriend } from "../../../friend";
+import { useAppSelector } from "../../../../shared/lib/hooks";
 
 interface IMessagesListProps {
-    messages: IMessage[];
     friend: IFriend;
 }
 
@@ -23,8 +22,9 @@ const StyledWrapper = styled.div`
     }
 `;
 
-export const MessagesList = memo<IMessagesListProps>(({ messages, friend }) => {
+export const MessagesList = memo<IMessagesListProps>(({ friend }) => {
     const bottomDiv = useRef<HTMLDivElement>(null);
+    const messages = useAppSelector((state) => state.message.messages);
 
     useEffect(() => {
         if (bottomDiv.current) {
@@ -34,11 +34,14 @@ export const MessagesList = memo<IMessagesListProps>(({ messages, friend }) => {
 
     return (
         <StyledWrapper>
-            {messages
-                .filter((message) => message.to === friend.userBehindFriend || message.from === friend.userBehindFriend)
-                .map((msg, msgIndex) => (
-                    <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} {...msg} />
-                ))}
+            {messages &&
+                messages
+                    .filter(
+                        (message) => message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
+                    )
+                    .map((msg, msgIndex) => (
+                        <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} {...msg} />
+                    ))}
             <div ref={bottomDiv}></div>
         </StyledWrapper>
     );

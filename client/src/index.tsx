@@ -24,10 +24,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <GlobalStyle />
-            <App />
-        </BrowserRouter>
-    </React.StrictMode>,
+    <BrowserRouter>
+        <GlobalStyle />
+        <App />
+    </BrowserRouter>,
 );

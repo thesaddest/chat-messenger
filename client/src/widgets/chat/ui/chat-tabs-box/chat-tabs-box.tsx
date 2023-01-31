@@ -82,10 +82,10 @@ const StyledChatBoxTabs = styled(Tabs)`
 
 export const ChatTabsBox = memo(() => {
     const friends = useAppSelector((state) => state.friend.friends);
-    const messages = useAppSelector((state) => state.message.messages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const dispatch = useAppDispatch();
 
+    console.log(friends);
     const onTabChange = (activeKey: string) => {
         dispatch(setFriendIdActiveKey(activeKey));
     };
@@ -104,7 +104,7 @@ export const ChatTabsBox = memo(() => {
                 return {
                     label: <FriendSidebarCard friend={friend} />,
                     key: `${friend.userBehindFriend}`,
-                    children: messages && <ChatTabsContent friend={friend} messages={messages} />,
+                    children: <ChatTabsContent friend={friend} />,
                 };
             })}
             activeKey={friendIdActiveKey}
