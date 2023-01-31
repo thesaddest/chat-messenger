@@ -7,6 +7,8 @@ import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
 import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
 
+import { getLastMessageBySender } from "../../../../entities/message";
+
 import { ChatTabsContent } from "./chat-tabs-content";
 
 //TODO: Remove scroll to top
@@ -35,7 +37,15 @@ const StyledChatBoxTabs = styled(Tabs)`
         }
 
         .ant-tabs-tab {
-            @media only screen and (max-width: 768px) {
+            padding: 0.5rem 0.75rem;
+
+            .ant-tabs-tab-btn {
+                display: flex;
+                width: 100%;
+                flex-direction: column;
+            }
+
+            @media only screen and(max-width: 768px) {
                 padding-left: 0.2rem;
             }
         }
@@ -82,8 +92,11 @@ const StyledChatBoxTabs = styled(Tabs)`
 
 export const ChatTabsBox = memo(() => {
     const friends = useAppSelector((state) => state.friend.friends);
+    const messages = useAppSelector((state) => state.message.messages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const dispatch = useAppDispatch();
+
+    console.log(messages);
 
     const onTabChange = (activeKey: string) => {
         dispatch(setFriendIdActiveKey(activeKey));
@@ -101,7 +114,9 @@ export const ChatTabsBox = memo(() => {
             tabPosition="left"
             items={friends?.map((friend) => {
                 return {
-                    label: <FriendSidebarCard friend={friend} />,
+                    label: messages && (
+                        <FriendSidebarCard friend={friend} message={getLastMessageBySender(messages, friend)} />
+                    ),
                     key: `${friend.userBehindFriend}`,
                     children: <ChatTabsContent friend={friend} />,
                 };

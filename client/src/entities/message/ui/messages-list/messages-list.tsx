@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { MessageItem } from "../message-item";
 import { IFriend } from "../../../friend";
 import { useAppSelector } from "../../../../shared/lib/hooks";
+import { filterMessageBySender } from "../../model";
 
 interface IMessagesListProps {
     friend: IFriend;
@@ -35,13 +36,9 @@ export const MessagesList = memo<IMessagesListProps>(({ friend }) => {
     return (
         <StyledWrapper>
             {messages &&
-                messages
-                    .filter(
-                        (message) => message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
-                    )
-                    .map((msg, msgIndex) => (
-                        <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} {...msg} />
-                    ))}
+                filterMessageBySender(messages, friend).map((msg, msgIndex) => (
+                    <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} {...msg} />
+                ))}
             <div ref={bottomDiv}></div>
         </StyledWrapper>
     );

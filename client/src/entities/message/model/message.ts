@@ -4,6 +4,7 @@ import MessageService from "../api/message.service";
 
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
+import { IFriend } from "../../friend";
 
 import { IMessage } from "./interfaces";
 
@@ -17,6 +18,17 @@ const initialState: MessageState = {
     messages: null,
     loading: true,
     error: null,
+};
+
+export const filterMessageBySender = (messages: IMessage[], friend: IFriend) => {
+    return messages.filter(
+        (message) => message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
+    );
+};
+
+export const getLastMessageBySender = (messages: IMessage[], friend: IFriend) => {
+    const filteredMessages = filterMessageBySender(messages, friend);
+    return filteredMessages[filteredMessages.length - 1];
 };
 
 export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
