@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 
-import { socketError } from "../../../entities/user";
-import { getFriends, initUser } from "../../../entities/friend";
-import { SOCKET_EVENTS } from "../../const";
+import { socketError } from "entities/user";
+import { getFriends, initUser } from "entities/friend";
+
+import { IFriendStatus } from "entities/friend";
+import { addMessage, getMessages } from "entities/message";
+import { IMessage } from "entities/message";
+
 import { socket } from "../../socket-io";
-import { IFriendStatus } from "../../../entities/friend";
-import { addMessage, getMessages } from "../../../entities/message";
-import { IMessage } from "../../../entities/message";
+import { SOCKET_EVENTS } from "../../const";
 
 import { useAppDispatch } from "./use-app-dispatch";
 import { useAppSelector } from "./use-app-selector";
