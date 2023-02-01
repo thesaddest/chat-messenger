@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
-import { getFriends, IFriendStatus, initUser } from "../model";
-import { addMessage, getMessages, IMessage } from "../../message";
-import { socketError } from "../../user";
+import { getFriends, IFriendStatus, initUser } from "../../../entities/friend";
+import { addMessage, getMessages, IMessage } from "../../../entities/message";
+import { socketError } from "../../../entities/user";
 
 export const useSocket = () => {
     const dispatch = useAppDispatch();
