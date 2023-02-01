@@ -6,21 +6,12 @@ import { IFriend } from "../../entities/friend";
 import { IMessage } from "../../entities/message";
 import { SidebarAvatar } from "../../shared/ui";
 
-interface FriendCardProps {
+import { FriendSidebarLastMessage } from "./friend-sidebar-last-message";
+
+interface FriendSidebarCardProps {
     friend: IFriend;
     message: IMessage;
 }
-
-const StyledLastMessageDiv = styled.div`
-    display: flex;
-    justify-content: start;
-
-    p {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-    }
-`;
 
 const StyledUsernameConnectedMessageContainer = styled.div`
     display: flex;
@@ -56,7 +47,7 @@ const StyledFriendsCardDiv = styled.div`
     }
 `;
 
-export const FriendSidebarCard = memo<FriendCardProps>(({ friend, message }) => {
+export const FriendSidebarCard = memo<FriendSidebarCardProps>(({ friend, message }) => {
     return (
         <StyledFriendsCardDiv>
             <div>
@@ -67,9 +58,7 @@ export const FriendSidebarCard = memo<FriendCardProps>(({ friend, message }) => 
                     <p>{friend.username}</p>
                     <div>{friend.connected ? <CheckCircleOutlined /> : <MinusCircleOutlined />}</div>
                 </StyledUsernameConnectedContainer>
-                <StyledLastMessageDiv>
-                    <p>{message && message.content}</p>
-                </StyledLastMessageDiv>
+                <FriendSidebarLastMessage message={message} />
             </StyledUsernameConnectedMessageContainer>
         </StyledFriendsCardDiv>
     );
