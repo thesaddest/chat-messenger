@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
       background: transparent;
     }
 
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    font-family: "SF Pro Display", 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !important;
   }
 `;
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
