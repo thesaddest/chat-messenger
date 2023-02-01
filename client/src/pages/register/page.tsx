@@ -14,11 +14,11 @@ import { IRegisterValues } from "./interfaces";
 const { Title } = Typography;
 
 const StyledSignUpContainer = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 `;
 
 export const RegisterPage: FC = () => {
@@ -52,8 +52,12 @@ export const RegisterPage: FC = () => {
                 </Form.Item>
 
                 <Form.Item name="password" rules={AUTH_RULES.PASSWORD} hasFeedback>
-                    <Input.Password prefix={<LockOutlined />} type="password" placeholder="Password"
-                                    autoComplete="password" />
+                    <Input.Password
+                        prefix={<LockOutlined />}
+                        type="password"
+                        placeholder="Password"
+                        autoComplete="password"
+                    />
                 </Form.Item>
 
                 <Form.Item
@@ -62,19 +66,19 @@ export const RegisterPage: FC = () => {
                     rules={AUTH_RULES.CONFIRM_PASSWORD}
                     hasFeedback
                 >
-                    <Input.Password prefix={<LockOutlined />} type="password" placeholder="Confirm your password"
-                                    autoComplete="password" />
+                    <Input.Password
+                        prefix={<LockOutlined />}
+                        type="password"
+                        placeholder="Confirm your password"
+                        autoComplete="password"
+                    />
                 </Form.Item>
 
                 <Form.Item>
                     <Button block type="primary" htmlType="submit">
                         Create Account
                     </Button>
-                    <ZeroPaddingButton
-                        icon={<LeftOutlined />}
-                        type="link"
-                        onClick={() => navigate("/")}
-                    >
+                    <ZeroPaddingButton icon={<LeftOutlined />} type="link" onClick={() => navigate("/")}>
                         Back
                     </ZeroPaddingButton>
                 </Form.Item>

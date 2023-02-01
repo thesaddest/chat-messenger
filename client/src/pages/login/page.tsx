@@ -14,11 +14,11 @@ import { ILoginValues } from "./interfaces";
 const { Title } = Typography;
 
 const StyledLoginContainer = styled.div`
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 `;
 
 export const LoginPage: FC = () => {
@@ -48,8 +48,12 @@ export const LoginPage: FC = () => {
                 </Form.Item>
 
                 <Form.Item name="password" rules={AUTH_RULES.PASSWORD} hasFeedback>
-                    <Input.Password prefix={<LockOutlined />} type="password" placeholder="Password"
-                                    autoComplete="password" />
+                    <Input.Password
+                        prefix={<LockOutlined />}
+                        type="password"
+                        placeholder="Password"
+                        autoComplete="password"
+                    />
                 </Form.Item>
 
                 <Form.Item>

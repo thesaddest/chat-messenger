@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { Divider } from "antd";
 
 import { useAppSelector } from "../../shared/lib/hooks";
-import { useSocket } from "../../shared/lib/hooks";
 import { Navbar } from "../../widgets/navbar";
 import { Loader } from "../../shared/ui";
 import { ChatTabsBox } from "../../widgets/chat";
+import { useSocket } from "../../entities/friend/hooks/use-socket";
 
 const StyledHomeContainer = styled.div`
     height: 100vh;

@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import MessageService from "../api/message.service";
-
+import { IFriend } from "../../friend";
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
-import { IFriend } from "../../friend";
 
 import { IMessage } from "./interfaces";
 

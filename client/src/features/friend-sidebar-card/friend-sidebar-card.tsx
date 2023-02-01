@@ -1,4 +1,4 @@
-import { memo } from "react";
+import React, { memo } from "react";
 import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 
@@ -23,9 +23,18 @@ const StyledUsernameConnectedContainer = styled.div`
     display: flex;
 
     p {
+        font-size: 18px;
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+
+        @media only screen and (max-width: 768px) {
+            font-size: 16px;
+        }
+
+        @media only screen and (max-width: 425px) {
+            font-size: 18px;
+        }
     }
 `;
 
