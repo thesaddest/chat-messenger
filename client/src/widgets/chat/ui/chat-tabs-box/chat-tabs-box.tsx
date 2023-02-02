@@ -7,8 +7,6 @@ import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
 import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
 
-import { getLastMessageBySender } from "../../../../entities/message";
-
 import { ChatTabsContent } from "./chat-tabs-content";
 
 //TODO: Remove scroll to top
@@ -112,11 +110,9 @@ export const ChatTabsBox = memo(() => {
             tabPosition="left"
             items={friends?.map((friend) => {
                 return {
-                    label: messages && (
-                        <FriendSidebarCard friend={friend} message={getLastMessageBySender(messages, friend)} />
-                    ),
+                    label: messages && <FriendSidebarCard friend={friend} messages={messages} />,
                     key: `${friend.userBehindFriend}`,
-                    children: <ChatTabsContent friend={friend} />,
+                    children: messages && <ChatTabsContent messages={messages} friend={friend} />,
                 };
             })}
             activeKey={friendIdActiveKey}

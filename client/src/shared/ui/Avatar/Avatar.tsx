@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { memo } from "react";
 import styled from "styled-components";
 import { Avatar } from "antd";
 
@@ -14,6 +14,6 @@ const StyledAvatar = styled(Avatar)<IStyledAvatarProps>`
     margin-right: 0.3rem;
 `;
 
-export const SharedAvatar: FC<IStyledAvatarProps> = ({ height, width }) => {
+export const SharedAvatar = memo<IStyledAvatarProps>(({ height, width }) => {
     return <StyledAvatar height={height} width={width} />;
-};
+});

@@ -19,13 +19,13 @@ const initialState: MessageState = {
     error: null,
 };
 
-export const filterMessageBySender = (messages: IMessage[], friend: IFriend) => {
+export const filterMessageBySender = (messages: IMessage[], friend: IFriend): IMessage[] => {
     return messages.filter(
         (message) => message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
     );
 };
 
-export const getLastMessageBySender = (messages: IMessage[], friend: IFriend) => {
+export const getLastMessageBySender = (messages: IMessage[], friend: IFriend): IMessage => {
     const filteredMessages = filterMessageBySender(messages, friend);
     return filteredMessages[filteredMessages.length - 1];
 };

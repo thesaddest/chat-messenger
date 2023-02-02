@@ -1,8 +1,8 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import styled from "styled-components";
 
 import { IFriend } from "../../entities/friend";
-import { IMessage } from "../../entities/message";
+import { getLastMessageBySender, IMessage } from "../../entities/message";
 import { SharedAvatar } from "../../shared/ui";
 import { UsernameConnected } from "../../shared/ui";
 
@@ -10,7 +10,7 @@ import { FriendSidebarLastMessage } from "./friend-sidebar-last-message";
 
 interface FriendSidebarCardProps {
     friend: IFriend;
-    message: IMessage;
+    messages: IMessage[];
 }
 
 const StyledUsernameConnectedMessageContainer = styled.div`
@@ -25,7 +25,9 @@ const StyledFriendsCardDiv = styled.div`
     align-items: center;
 `;
 
-export const FriendSidebarCard = memo<FriendSidebarCardProps>(({ friend, message }) => {
+export const FriendSidebarCard = memo<FriendSidebarCardProps>(({ friend, messages }) => {
+    const memoizedLastMessage = useMemo(() => getLastMessageBySender(messages, friend), [messages, friend]);
+
     return (
         <StyledFriendsCardDiv>
             <div>
@@ -33,7 +35,7 @@ export const FriendSidebarCard = memo<FriendSidebarCardProps>(({ friend, message
             </div>
             <StyledUsernameConnectedMessageContainer>
                 <UsernameConnected friend={friend} />
-                <FriendSidebarLastMessage message={message} />
+                <FriendSidebarLastMessage message={memoizedLastMessage} />
             </StyledUsernameConnectedMessageContainer>
         </StyledFriendsCardDiv>
     );

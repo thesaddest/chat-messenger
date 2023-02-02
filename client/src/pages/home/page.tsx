@@ -37,6 +37,13 @@ const StyledDivider = styled(Divider)`
     background-color: lightgray;
 `;
 
+const StyledLoadingContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80%;
+`;
+
 export const HomePage: FC = () => {
     useSocket();
 
@@ -47,7 +54,13 @@ export const HomePage: FC = () => {
             <StyledHome>
                 <Navbar />
                 <StyledDivider />
-                {isFriendsLoading ? <Loader /> : <ChatTabsBox />}
+                {isFriendsLoading ? (
+                    <StyledLoadingContainer>
+                        <Loader />
+                    </StyledLoadingContainer>
+                ) : (
+                    <ChatTabsBox />
+                )}
             </StyledHome>
         </StyledHomeContainer>
     );

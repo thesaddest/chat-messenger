@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { memo } from "react";
 import styled from "styled-components";
 
 import { IFriend } from "../../../../entities/friend";
@@ -23,7 +23,7 @@ const ChatInfoWrapper = styled.div`
     align-items: center;
 `;
 
-export const ChatInfo: FC<IChatInfoProps> = ({ friend }) => {
+export const ChatInfo = memo<IChatInfoProps>(({ friend }) => {
     return (
         <ChatInfoContainer>
             <ChatInfoWrapper>
@@ -32,4 +32,4 @@ export const ChatInfo: FC<IChatInfoProps> = ({ friend }) => {
             </ChatInfoWrapper>
         </ChatInfoContainer>
     );
-};
+});
