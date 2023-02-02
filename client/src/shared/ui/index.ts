@@ -1,4 +1,5 @@
 export { AuthErrorAlert } from "./Alert";
-export { ZeroPaddingButton, SendMessageButton } from "./Button";
+export { ZeroPaddingButton, SendMessageButton } from "./Buttons";
 export { Loader } from "./Loader";
-export { SidebarAvatar } from "./Avatar";
+export { SharedAvatar } from "./Avatar";
+export { UsernameConnected } from "./UsernameConnected";

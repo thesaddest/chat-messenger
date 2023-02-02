@@ -6,7 +6,7 @@ import { useAppSelector } from "../../shared/lib/hooks";
 import { Navbar } from "../../widgets/navbar";
 import { Loader } from "../../shared/ui";
 import { ChatTabsBox } from "../../widgets/chat";
-import { useSocket } from "../../app/lib/hooks/use-socket";
+import { useSocket } from "../../app/lib/hooks";
 
 const StyledHomeContainer = styled.div`
     height: 100vh;

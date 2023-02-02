@@ -17,11 +17,8 @@ const StyledWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1rem 0;
-
-    @media only screen and (max-width: 425px) {
-        padding-bottom: 0;
-    }
+    height: 5vh;
+    padding-top: 1rem;
 `;
 
 const StyledForm = styled(Form)`

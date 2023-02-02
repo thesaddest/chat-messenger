@@ -13,10 +13,10 @@ interface IMessagesListProps {
 const StyledWrapper = styled.div`
     height: 60vh;
     overflow-y: auto;
-    padding: 1rem;
     display: flex;
     flex-direction: column;
     text-align: center;
+    padding: 0 1rem;
 
     @media only screen and (max-width: 425px) {
         height: 80vh;

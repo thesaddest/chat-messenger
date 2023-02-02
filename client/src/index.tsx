@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import { createGlobalStyle } from "styled-components";
 import { BrowserRouter } from "react-router-dom";
@@ -19,7 +18,7 @@ const GlobalStyle = createGlobalStyle`
       background: transparent;
     }
 
-    font-family: "SF Pro Display", 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !important;
+    font-family: "SF Pro Display", Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji' !important;
   }
 `;
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
