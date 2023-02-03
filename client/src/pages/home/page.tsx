@@ -4,9 +4,9 @@ import { Divider } from "antd";
 
 import { useAppSelector } from "../../shared/lib/hooks";
 import { Navbar } from "../../widgets/navbar";
-import { Loader } from "../../shared/ui";
 import { ChatTabsBox } from "../../widgets/chat";
 import { useSocket } from "../../app/lib/hooks";
+import { SkeletonChat } from "../../features/skeleton-chat";
 
 const StyledHomeContainer = styled.div`
     height: 100vh;
@@ -37,13 +37,6 @@ const StyledDivider = styled(Divider)`
     background-color: lightgray;
 `;
 
-const StyledLoadingContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 80%;
-`;
-
 export const HomePage: FC = () => {
     useSocket();
 
@@ -52,14 +45,14 @@ export const HomePage: FC = () => {
     return (
         <StyledHomeContainer>
             <StyledHome>
-                <Navbar />
-                <StyledDivider />
                 {isFriendsLoading ? (
-                    <StyledLoadingContainer>
-                        <Loader />
-                    </StyledLoadingContainer>
+                    <SkeletonChat />
                 ) : (
-                    <ChatTabsBox />
+                    <>
+                        <Navbar />
+                        <StyledDivider />
+                        <ChatTabsBox />
+                    </>
                 )}
             </StyledHome>
         </StyledHomeContainer>
