@@ -14,6 +14,10 @@ export const MESSAGE_RULES: IChatRules = {
 };
 
 export const DEFAULT_TAB_ITEM = [
-    { label: "No friends", key: DEFAULT_ACTIVE_KEY, children: "Add some friends :)", style: { paddingTop: "0.5rem" } },
+    {
+        label: "No friends",
+        key: DEFAULT_ACTIVE_KEY,
+        children: "Add some friends :)",
+        style: { display: "flex", justifyContent: "center", paddingTop: "0.5rem" },
+    },
 ];
-
