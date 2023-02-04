@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, KeyboardEvent } from "react";
 import { Form, FormInstance, Input } from "antd";
 import styled from "styled-components";
 
@@ -49,7 +49,7 @@ const StyledFormItemTextAreaContainer = styled(Form.Item)`
 export const ChatInput: FC<IChatInputProps> = ({ form }) => {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-    const onEnterPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    const onEnterPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
         e.preventDefault();
         form.submit();
     };

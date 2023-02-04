@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
+import { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "react";
 import { Input, InputRef, List } from "antd";
 
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
@@ -22,6 +22,10 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({ f
         setSearchInputValue(e.target.value);
     };
 
+    const NO_FRIENDS_FOUND_LOCALE = useMemo(() => ({ emptyText: "No friends found" }), []);
+
+    //TODO: probably doesn't work properly, because we need to fetch all user's friends
+
     useEffect(() => {
         dispatch(getMoreFriends({ skip: friends.length }));
     }, [dispatch, friends.length]);
@@ -44,6 +48,7 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({ f
                 value={searchInputValue}
             />
             <List
+                locale={NO_FRIENDS_FOUND_LOCALE}
                 dataSource={getFriendsBySearchValue(searchInputValue, friends)}
                 renderItem={(item) => {
                     return (

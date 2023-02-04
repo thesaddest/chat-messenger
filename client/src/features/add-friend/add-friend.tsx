@@ -24,7 +24,7 @@ export const AddFriend = memo(() => {
         [form],
     );
 
-    const okButtonProps: ButtonProps = useMemo(() => ({ htmlType: "submit", form: "add-friend-form" }), []);
+    const OK_BUTTON_PROPS: ButtonProps = useMemo(() => ({ htmlType: "submit", form: "add-friend-form" }), []);
 
     return (
         <>
@@ -36,7 +36,7 @@ export const AddFriend = memo(() => {
                 title="Add a friend!"
                 open={isModalOpen}
                 onCancel={handleCancel}
-                okButtonProps={okButtonProps}
+                okButtonProps={OK_BUTTON_PROPS}
                 centered={true}
             >
                 <AddFriendPopupContent
