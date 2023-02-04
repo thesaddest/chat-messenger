@@ -23,6 +23,7 @@ const StyledFriendsCardDiv = styled.div`
     display: flex;
     justify-content: start;
     align-items: center;
+    overflow: hidden;
 `;
 
 export const FriendSidebarCard = memo<FriendSidebarCardProps>(({ friend, messages }) => {

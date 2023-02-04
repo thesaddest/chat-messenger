@@ -19,6 +19,12 @@ const initialState: FriendState = {
     friendIdActiveKey: DEFAULT_ACTIVE_KEY,
 };
 
+export const getFriendsBySearchValue = (username: string, friends: IFriend[]): IFriend[] => {
+    return friends.filter((friend) => {
+        return username.toLowerCase() === "" ? friend : friend.username.toLowerCase().includes(username);
+    });
+};
+
 export const getFriends = createAsyncThunk<IFriend[], undefined, { rejectValue: string }>(
     "friends/getFriends",
     async function (_, { rejectWithValue }) {

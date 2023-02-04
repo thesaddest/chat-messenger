@@ -41,6 +41,7 @@ export const HomePage: FC = () => {
     useSocket();
 
     const isFriendsLoading = useAppSelector((state) => state.friend.loading);
+    const friends = useAppSelector((state) => state.friend.friends);
 
     return (
         <StyledHomeContainer>
@@ -48,11 +49,13 @@ export const HomePage: FC = () => {
                 {isFriendsLoading ? (
                     <SkeletonChat />
                 ) : (
-                    <>
-                        <Navbar />
-                        <StyledDivider />
-                        <ChatTabsBox />
-                    </>
+                    friends && (
+                        <>
+                            <Navbar friends={friends} />
+                            <StyledDivider />
+                            <ChatTabsBox friends={friends} />
+                        </>
+                    )
                 )}
             </StyledHome>
         </StyledHomeContainer>

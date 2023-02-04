@@ -2,7 +2,7 @@ import { Tabs } from "antd";
 import { memo } from "react";
 import styled from "styled-components";
 
-import { getMoreFriends, setFriendIdActiveKey } from "../../../../entities/friend";
+import { getMoreFriends, IFriend, setFriendIdActiveKey } from "../../../../entities/friend";
 import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
 import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
@@ -10,6 +10,10 @@ import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/
 import { ChatTabsContent } from "./chat-tabs-content";
 
 //TODO: Remove scroll to top
+
+interface IChatTabsBoxProps {
+    friends: IFriend[];
+}
 
 interface ITabsSrcollDirection {
     direction: "left" | "right" | "top" | "bottom";
@@ -88,8 +92,7 @@ const StyledChatBoxTabs = styled(Tabs)`
     }
 `;
 
-export const ChatTabsBox = memo(() => {
-    const friends = useAppSelector((state) => state.friend.friends);
+export const ChatTabsBox = memo<IChatTabsBoxProps>(({ friends }) => {
     const messages = useAppSelector((state) => state.message.messages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const dispatch = useAppDispatch();
@@ -104,15 +107,15 @@ export const ChatTabsBox = memo(() => {
         }
     }, 1000);
 
-    return friends && friends.length > 0 ? (
+    return friends && messages && friends.length > 0 ? (
         <StyledChatBoxTabs
             onTabScroll={scrollHandler}
             tabPosition="left"
-            items={friends?.map((friend) => {
+            items={friends.map((friend) => {
                 return {
-                    label: messages && <FriendSidebarCard friend={friend} messages={messages} />,
+                    label: <FriendSidebarCard friend={friend} messages={messages} />,
                     key: `${friend.userBehindFriend}`,
-                    children: messages && <ChatTabsContent messages={messages} friend={friend} />,
+                    children: <ChatTabsContent messages={messages} friend={friend} />,
                 };
             })}
             activeKey={friendIdActiveKey}

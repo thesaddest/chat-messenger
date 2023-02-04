@@ -1,1 +1,1 @@
-export * from "./AuthErrorAlert";
+export * from "./ErrorAlert";

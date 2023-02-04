@@ -5,7 +5,7 @@ import { UserAddOutlined } from "@ant-design/icons";
 import { addFriend, IAddFriendValues } from "../../../entities/friend";
 import { useAppDispatch } from "../../../shared/lib/hooks";
 import { AUTH_RULES } from "../../../shared/const";
-import { AuthErrorAlert } from "../../../shared/ui";
+import { ErrorAlert } from "../../../shared/ui";
 
 import type { InputRef } from "antd";
 
@@ -38,7 +38,7 @@ export const AddFriendPopupContent: FC<IAddFriendPopupContentProps> = ({
 
     useEffect(() => {
         if (inputRef && inputRef.current) {
-            inputRef.current?.focus();
+            inputRef.current.focus();
         }
     });
 
@@ -47,7 +47,7 @@ export const AddFriendPopupContent: FC<IAddFriendPopupContentProps> = ({
             <Form.Item name="username" rules={AUTH_RULES.USERNAME}>
                 <Input ref={inputRef} prefix={<UserAddOutlined />} placeholder="Enter friend's username" />
             </Form.Item>
-            {modalError && <AuthErrorAlert type="error" message={modalError} />}
+            {modalError && <ErrorAlert type="error" message={modalError} />}
         </Form>
     );
 };

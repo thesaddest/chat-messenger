@@ -6,11 +6,16 @@ import { useWindowSize } from "../../../shared/lib/hooks";
 import { ZeroPaddingButton } from "../../../shared/ui";
 import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
-import { setFriendIdActiveKey } from "../../../entities/friend";
+import { IFriend, setFriendIdActiveKey } from "../../../entities/friend";
 import { AddFriend } from "../../../features/add-friend";
+import { SearchFriend } from "../../../features/search-friend";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
+}
+
+interface INavbarProps {
+    friends: IFriend[];
 }
 
 const StyledRightDiv = styled.div`
@@ -52,7 +57,8 @@ const StyledHeader = styled.header`
         }
     }
 `;
-export const Navbar: FC = () => {
+
+export const Navbar: FC<INavbarProps> = ({ friends }) => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
@@ -65,7 +71,10 @@ export const Navbar: FC = () => {
         <StyledHeader>
             <StyledLeftDiv friendIdActiveKey={friendIdActiveKey}>
                 {width >= 426 || friendIdActiveKey === DEFAULT_ACTIVE_KEY ? (
-                    <AddFriend />
+                    <>
+                        <AddFriend />
+                        <SearchFriend friends={friends} friendIdActiveKey={friendIdActiveKey} />
+                    </>
                 ) : (
                     <ZeroPaddingButton icon={<LeftOutlined />} type="link" onClick={onClick}>
                         Back

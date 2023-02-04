@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { AUTH_RULES } from "../../shared/const";
-import { ZeroPaddingButton, AuthErrorAlert } from "../../shared/ui";
+import { ZeroPaddingButton, ErrorAlert } from "../../shared/ui";
 import { login } from "../../entities/user";
 import { useAppDispatch } from "../../shared/lib/hooks";
 
@@ -65,7 +65,7 @@ export const LoginPage: FC = () => {
                     </ZeroPaddingButton>
                 </Form.Item>
             </Form>
-            {error && <AuthErrorAlert type="error" message={error} />}
+            {error && <ErrorAlert type="error" message={error} />}
         </StyledLoginContainer>
     );
 };
