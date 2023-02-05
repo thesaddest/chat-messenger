@@ -1,5 +1,5 @@
-import { FC, SyntheticEvent, useCallback, useEffect, useState } from "react";
-import { Button, Modal } from "antd";
+import { memo, SyntheticEvent, useCallback, useEffect, useRef, useState } from "react";
+import { Button, InputRef, Modal } from "antd";
 
 import { IFriend } from "../../entities/friend";
 import { SearchIcon } from "../../shared/ui";
@@ -11,8 +11,10 @@ interface ISearchFriend {
     friendIdActiveKey: string;
 }
 
-export const SearchFriend: FC<ISearchFriend> = ({ friends, friendIdActiveKey }) => {
+export const SearchFriend = memo<ISearchFriend>(({ friends, friendIdActiveKey }) => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+    const [modalSearchInputValue, setModalSearchInputValue] = useState<string>("");
+    const modalInputRef = useRef<InputRef>(null);
 
     const showModal = useCallback(() => {
         setIsModalOpen(true);
@@ -21,10 +23,12 @@ export const SearchFriend: FC<ISearchFriend> = ({ friends, friendIdActiveKey }) 
     const handleCancel = useCallback((e: SyntheticEvent) => {
         e.stopPropagation();
         setIsModalOpen(false);
+        setModalSearchInputValue("");
     }, []);
 
     useEffect(() => {
         setIsModalOpen(false);
+        setModalSearchInputValue("");
     }, [friendIdActiveKey]);
 
     return (
@@ -33,8 +37,13 @@ export const SearchFriend: FC<ISearchFriend> = ({ friends, friendIdActiveKey }) 
                 <SearchIcon />
             </Button>
             <Modal title="Search for a friend!" open={isModalOpen} onCancel={handleCancel} centered={true}>
-                <SearchFriendPopupContent friends={friends} friendIdActiveKey={friendIdActiveKey} />
+                <SearchFriendPopupContent
+                    modalInputRef={modalInputRef}
+                    friends={friends}
+                    modalSearchInputValue={modalSearchInputValue}
+                    setModalSearchInputValue={setModalSearchInputValue}
+                />
             </Modal>
         </>
     );
-};
+});

@@ -15,4 +15,8 @@ export default class FriendService {
     static async addFriend(username: IAddFriendValues): Promise<AxiosResponse<IFriend>> {
         return api.post<IFriend>("/friend/addFriend", username);
     }
+
+    static async getAllRemainingFriends({ skip }: IGetMoreFriends): Promise<AxiosResponse<IFriend[]>> {
+        return api.get<IFriend[]>("/friend/getAllRemainingFriends", { params: { skip } });
+    }
 }

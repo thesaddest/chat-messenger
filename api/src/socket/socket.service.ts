@@ -11,10 +11,10 @@ class SocketService {
 
     async getFriendsRooms(socket: Socket): Promise<string[]> {
         const user = await socketService.getCurrentUser(socket);
-        const userFriends = await friendService.getUserFriends(user);
+        const userFriends = await friendService.getAllUserFriends(user);
         const friends = await friendService.getConnectedFriends(userFriends);
 
-        return friends.map(friend => friend.userBehindFriend);
+        return friends.map((friend) => friend.userBehindFriend);
     }
 
     async initUser(socket: Socket): Promise<User> {

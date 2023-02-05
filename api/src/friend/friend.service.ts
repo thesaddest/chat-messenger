@@ -55,7 +55,7 @@ class FriendService {
         });
     }
 
-    async getUserFriends(user: User): Promise<FriendDto[]> {
+    async getAllUserFriends(user: User): Promise<FriendDto[]> {
         const friendRepository = AppDataSource.getRepository(Friend);
         const friends = await friendRepository.find({ where: { addedBy: user.username } });
 
@@ -80,6 +80,23 @@ class FriendService {
             });
         }
         return connectedFriends;
+    }
+
+    async getAllRemainingFriends(user: User, skip: string): Promise<FriendDto[]> {
+        const friendRepository = AppDataSource.getRepository(Friend);
+        const friends = await friendRepository.find({
+            where: { addedBy: user.username },
+            skip: Number(skip),
+        });
+
+        return friends.map((friend) => {
+            return {
+                userBehindFriend: friend.userBehindFriend,
+                username: friend.username,
+                addedBy: friend.addedBy,
+                connected: false,
+            };
+        });
     }
 }
 

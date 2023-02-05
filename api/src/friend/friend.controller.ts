@@ -59,6 +59,28 @@ class FriendController {
             next(e);
         }
     }
+
+    async getAllRemainingFriends(req: Request, res: Response, next: NextFunction) {
+        try {
+            const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
+
+            if (!user) {
+                return next(ErrorException.UnauthorizedError());
+            }
+
+            let { skip } = req.query;
+            // @ts-ignore
+            skip = skip || 0;
+
+            // @ts-ignore
+            const userFriends = await friendService.getAllRemainingFriends(user, skip);
+            const friends = await friendService.getConnectedFriends(userFriends);
+
+            return res.json(friends);
+        } catch (e) {
+            next(e);
+        }
+    }
 }
 
 export const friendController = new FriendController();

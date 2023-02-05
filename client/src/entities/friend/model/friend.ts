@@ -25,6 +25,19 @@ export const getFriendsBySearchValue = (username: string, friends: IFriend[]): I
     });
 };
 
+export const getAllRemainingFriends = createAsyncThunk<IFriend[], IGetMoreFriends, { rejectValue: string }>(
+    "friends/getAllRemainingFriends",
+    async function (moreFriendsData, { rejectWithValue }) {
+        try {
+            const { data } = await FriendService.getAllRemainingFriends(moreFriendsData);
+
+            return data;
+        } catch (e: any) {
+            return rejectWithValue(e.response.data.message);
+        }
+    },
+);
+
 export const getFriends = createAsyncThunk<IFriend[], undefined, { rejectValue: string }>(
     "friends/getFriends",
     async function (_, { rejectWithValue }) {
@@ -38,7 +51,7 @@ export const getFriends = createAsyncThunk<IFriend[], undefined, { rejectValue: 
     },
 );
 
-export const getMoreFriends = createAsyncThunk<IFriend[], IGetMoreFriends, { rejectValue: string }>(
+export const getFriendsWithLimit = createAsyncThunk<IFriend[], IGetMoreFriends, { rejectValue: string }>(
     "friends/getMoreFriends",
     async function (moreFriendsData, { rejectWithValue }) {
         try {
@@ -100,7 +113,23 @@ export const friendModel = createSlice({
                 state.error = action.payload;
                 state.loading = false;
             })
-            .addCase(getMoreFriends.fulfilled, (state, action) => {
+            .addCase(getAllRemainingFriends.fulfilled, (state, action) => {
+                if (!state.friends) {
+                    return;
+                }
+                state.friends = state.friends.concat(action.payload);
+                state.loading = false;
+                state.error = null;
+            })
+            .addCase(getAllRemainingFriends.rejected, (state, action) => {
+                if (!action.payload) {
+                    return;
+                }
+                state.friends = null;
+                state.error = action.payload;
+                state.loading = false;
+            })
+            .addCase(getFriendsWithLimit.fulfilled, (state, action) => {
                 if (!state.friends || action.payload.length === 0) {
                     return;
                 }
@@ -108,7 +137,7 @@ export const friendModel = createSlice({
                 state.loading = false;
                 state.error = null;
             })
-            .addCase(getMoreFriends.rejected, (state, action) => {
+            .addCase(getFriendsWithLimit.rejected, (state, action) => {
                 if (!action.payload) {
                     return;
                 }

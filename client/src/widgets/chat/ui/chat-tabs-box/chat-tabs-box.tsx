@@ -2,7 +2,7 @@ import { Tabs } from "antd";
 import { memo } from "react";
 import styled from "styled-components";
 
-import { getMoreFriends, IFriend, setFriendIdActiveKey } from "../../../../entities/friend";
+import { getFriendsWithLimit, IFriend, setFriendIdActiveKey } from "../../../../entities/friend";
 import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
 import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
@@ -103,7 +103,7 @@ export const ChatTabsBox = memo<IChatTabsBoxProps>(({ friends }) => {
 
     const scrollHandler = useDebounce((e: ITabsSrcollDirection) => {
         if (e.direction === "bottom" && friends) {
-            dispatch(getMoreFriends({ skip: friends.length }));
+            dispatch(getFriendsWithLimit({ skip: friends.length }));
         }
     }, 1000);
 
