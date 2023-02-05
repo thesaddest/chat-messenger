@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { LeftOutlined } from "@ant-design/icons";
 
 import { useWindowSize } from "../../../shared/lib/hooks";
-import { ZeroPaddingButton } from "../../../shared/ui";
+import { MemoTitle, ZeroPaddingButton } from "../../../shared/ui";
 import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { IFriend, setFriendIdActiveKey } from "../../../entities/friend";
@@ -29,7 +29,7 @@ const StyledRightDiv = styled.div`
 
 const StyledLeftDiv = styled.div<IStyledLeftDivProps>`
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     flex: 1;
 
@@ -58,6 +58,11 @@ const StyledHeader = styled.header`
     }
 `;
 
+const StyledModalButtonsContainer = styled.div`
+    display: flex;
+    gap: 0.5rem;
+`;
+
 export const Navbar: FC<INavbarProps> = ({ friends }) => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
@@ -72,8 +77,11 @@ export const Navbar: FC<INavbarProps> = ({ friends }) => {
             <StyledLeftDiv friendIdActiveKey={friendIdActiveKey}>
                 {width >= 426 || friendIdActiveKey === DEFAULT_ACTIVE_KEY ? (
                     <>
-                        <AddFriend />
-                        <SearchFriend friends={friends} friendIdActiveKey={friendIdActiveKey} />
+                        <MemoTitle />
+                        <StyledModalButtonsContainer>
+                            <AddFriend />
+                            <SearchFriend friends={friends} friendIdActiveKey={friendIdActiveKey} />
+                        </StyledModalButtonsContainer>
                     </>
                 ) : (
                     <ZeroPaddingButton icon={<LeftOutlined />} type="link" onClick={onClick}>
