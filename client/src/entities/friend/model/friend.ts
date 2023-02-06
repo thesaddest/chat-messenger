@@ -19,9 +19,9 @@ const initialState: FriendState = {
     friendIdActiveKey: DEFAULT_ACTIVE_KEY,
 };
 
-export const getFriendsBySearchValue = (username: string, friends: IFriend[]): IFriend[] => {
+export const getFriendsBySearchValue = (searchValue: string, friends: IFriend[]): IFriend[] => {
     return friends.filter((friend) => {
-        return username.toLowerCase() === "" ? friend : friend.username.toLowerCase().includes(username);
+        return searchValue.toLowerCase() === "" ? friend : friend.username.toLowerCase().includes(searchValue);
     });
 };
 
