@@ -4,6 +4,5 @@ export { Loader } from "./Loader";
 export { SharedAvatar } from "./Avatar";
 export { UsernameConnected } from "./UsernameConnected";
 export { SkeletonNavbar, SkeletonFriendSidebarCard } from "./Skeleton";
-export { SearchIcon } from "./SearchIcon";
-export { AddFriendIcon } from "./AddFriendIcon";
+export { Search, AddFriendGroup, AddFriend, ArrowLeft } from "./Icons";
 export { MemoTitle } from "./Title";

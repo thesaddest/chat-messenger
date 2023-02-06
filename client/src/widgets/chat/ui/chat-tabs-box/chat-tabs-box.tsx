@@ -2,7 +2,7 @@ import { Tabs } from "antd";
 import { memo } from "react";
 import styled from "styled-components";
 
-import { getFriendsWithLimit, IFriend, setFriendIdActiveKey } from "../../../../entities/friend";
+import { getFriendsWithLimit, setFriendIdActiveKey } from "../../../../entities/friend";
 import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
 import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
@@ -10,10 +10,6 @@ import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/
 import { ChatTabsContent } from "./chat-tabs-content";
 
 //TODO: Remove scroll to top
-
-interface IChatTabsBoxProps {
-    friends: IFriend[];
-}
 
 interface ITabsSrcollDirection {
     direction: "left" | "right" | "top" | "bottom";
@@ -92,9 +88,10 @@ const StyledChatBoxTabs = styled(Tabs)`
     }
 `;
 
-export const ChatTabsBox = memo<IChatTabsBoxProps>(({ friends }) => {
+export const ChatTabsBox = memo(() => {
     const messages = useAppSelector((state) => state.message.messages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
+    const friends = useAppSelector((state) => state.friend.friends);
     const dispatch = useAppDispatch();
 
     const onTabChange = (activeKey: string) => {

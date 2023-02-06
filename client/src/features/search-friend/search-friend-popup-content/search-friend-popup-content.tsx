@@ -1,9 +1,9 @@
 import { ChangeEvent, Dispatch, FC, RefObject, SetStateAction, useEffect, useMemo } from "react";
 import { Input, InputRef, List } from "antd";
 
-import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
+import { useAppDispatch } from "../../../shared/lib/hooks";
 import { getAllRemainingFriends, getFriendsBySearchValue, IFriend } from "../../../entities/friend";
-import { SearchIcon } from "../../../shared/ui";
+import { Search } from "../../../shared/ui";
 
 import { SearchPopupListItem } from "./search-popup-list-item";
 
@@ -23,10 +23,7 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
     setIsModalOpen,
 }) => {
     const dispatch = useAppDispatch();
-    const messages = useAppSelector((state) => state.message.messages);
-
     const NO_FRIENDS_FOUND_LOCALE = useMemo(() => ({ emptyText: "No friends found" }), []);
-
     const friendsBySearchValue = useMemo(
         () => getFriendsBySearchValue(modalSearchInputValue, friends),
         [friends, modalSearchInputValue],
@@ -37,7 +34,7 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
     };
 
     useEffect(() => {
-        dispatch(getAllRemainingFriends({ skip: friends.length }));
+        friends && dispatch(getAllRemainingFriends({ skip: friends.length }));
     }, []);
 
     useEffect(() => {
@@ -49,7 +46,7 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
     return (
         <>
             <Input
-                prefix={<SearchIcon />}
+                prefix={<Search />}
                 placeholder="Enter friend's username"
                 onChange={handleChange}
                 ref={modalInputRef}
@@ -60,11 +57,9 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
                 dataSource={friendsBySearchValue}
                 renderItem={(item) => {
                     return (
-                        messages &&
                         modalSearchInputValue.length > 0 && (
                             <SearchPopupListItem
                                 item={item}
-                                messages={messages}
                                 setIsModalOpen={setIsModalOpen}
                                 setModalSearchInputValue={setModalSearchInputValue}
                             />

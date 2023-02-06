@@ -1,6 +1,6 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { memo } from "react";
 
-export const SearchIcon = memo(() => {
+export const Search = memo(() => {
     return <SearchOutlined />;
 });

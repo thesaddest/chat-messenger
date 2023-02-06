@@ -4,12 +4,10 @@ import styled from "styled-components";
 
 import { IFriend, setFriendIdActiveKey } from "../../../../entities/friend";
 import { FriendSidebarCard } from "../../../friend-sidebar-card";
-import { useAppDispatch } from "../../../../shared/lib/hooks";
-import { IMessage } from "../../../../entities/message";
+import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 
 interface IFriendPopupItemProps {
     item: IFriend;
-    messages: IMessage[];
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     setModalSearchInputValue: Dispatch<SetStateAction<string>>;
 }
@@ -18,12 +16,8 @@ const StyledListItem = styled(List.Item)`
     cursor: pointer;
 `;
 
-export const SearchPopupListItem: FC<IFriendPopupItemProps> = ({
-    item,
-    messages,
-    setIsModalOpen,
-    setModalSearchInputValue,
-}) => {
+export const SearchPopupListItem: FC<IFriendPopupItemProps> = ({ item, setIsModalOpen, setModalSearchInputValue }) => {
+    const messages = useAppSelector((state) => state.message.messages);
     const dispatch = useAppDispatch();
 
     const handleClick = () => {
@@ -33,8 +27,10 @@ export const SearchPopupListItem: FC<IFriendPopupItemProps> = ({
     };
 
     return (
-        <StyledListItem onClick={handleClick}>
-            <FriendSidebarCard friend={item} messages={messages} />
-        </StyledListItem>
+        messages && (
+            <StyledListItem onClick={handleClick}>
+                <FriendSidebarCard friend={item} messages={messages} />
+            </StyledListItem>
+        )
     );
 };

@@ -1,21 +1,16 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import styled from "styled-components";
-import { LeftOutlined } from "@ant-design/icons";
 
 import { useWindowSize } from "../../../shared/lib/hooks";
-import { MemoTitle, ZeroPaddingButton } from "../../../shared/ui";
+import { MemoTitle, ZeroPaddingButton, ArrowLeft } from "../../../shared/ui";
 import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
-import { IFriend, setFriendIdActiveKey } from "../../../entities/friend";
+import { setFriendIdActiveKey } from "../../../entities/friend";
 import { AddFriend } from "../../../features/add-friend";
 import { SearchFriend } from "../../../features/search-friend";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
-}
-
-interface INavbarProps {
-    friends: IFriend[];
 }
 
 const StyledRightDiv = styled.div`
@@ -63,14 +58,14 @@ const StyledModalButtonsContainer = styled.div`
     gap: 0.5rem;
 `;
 
-export const Navbar: FC<INavbarProps> = ({ friends }) => {
+export const Navbar: FC = () => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
 
-    const onClick = () => {
+    const onClick = useCallback(() => {
         dispatch(setFriendIdActiveKey(DEFAULT_ACTIVE_KEY));
-    };
+    }, [dispatch]);
 
     return (
         <StyledHeader>
@@ -80,11 +75,11 @@ export const Navbar: FC<INavbarProps> = ({ friends }) => {
                         <MemoTitle />
                         <StyledModalButtonsContainer>
                             <AddFriend />
-                            <SearchFriend friends={friends} friendIdActiveKey={friendIdActiveKey} />
+                            <SearchFriend />
                         </StyledModalButtonsContainer>
                     </>
                 ) : (
-                    <ZeroPaddingButton icon={<LeftOutlined />} type="link" onClick={onClick}>
+                    <ZeroPaddingButton icon={<ArrowLeft />} type="link" onClick={onClick}>
                         Back
                     </ZeroPaddingButton>
                 )}
