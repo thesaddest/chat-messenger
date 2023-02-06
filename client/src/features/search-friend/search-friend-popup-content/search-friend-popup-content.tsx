@@ -59,7 +59,7 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
                     return (
                         modalSearchInputValue.length > 0 && (
                             <SearchPopupListItem
-                                item={item}
+                                friend={item}
                                 setIsModalOpen={setIsModalOpen}
                                 setModalSearchInputValue={setModalSearchInputValue}
                             />

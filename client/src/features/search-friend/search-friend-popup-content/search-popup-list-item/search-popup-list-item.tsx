@@ -7,7 +7,7 @@ import { FriendSidebarCard } from "../../../friend-sidebar-card";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 
 interface IFriendPopupItemProps {
-    item: IFriend;
+    friend: IFriend;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     setModalSearchInputValue: Dispatch<SetStateAction<string>>;
 }
@@ -16,12 +16,16 @@ const StyledListItem = styled(List.Item)`
     cursor: pointer;
 `;
 
-export const SearchPopupListItem: FC<IFriendPopupItemProps> = ({ item, setIsModalOpen, setModalSearchInputValue }) => {
+export const SearchPopupListItem: FC<IFriendPopupItemProps> = ({
+    friend,
+    setIsModalOpen,
+    setModalSearchInputValue,
+}) => {
     const messages = useAppSelector((state) => state.message.messages);
     const dispatch = useAppDispatch();
 
     const handleClick = () => {
-        dispatch(setFriendIdActiveKey(item.userBehindFriend));
+        dispatch(setFriendIdActiveKey(friend.userBehindFriend));
         setIsModalOpen(false);
         setModalSearchInputValue("");
     };
@@ -29,7 +33,7 @@ export const SearchPopupListItem: FC<IFriendPopupItemProps> = ({ item, setIsModa
     return (
         messages && (
             <StyledListItem onClick={handleClick}>
-                <FriendSidebarCard friend={item} messages={messages} />
+                <FriendSidebarCard friend={friend} messages={messages} />
             </StyledListItem>
         )
     );
