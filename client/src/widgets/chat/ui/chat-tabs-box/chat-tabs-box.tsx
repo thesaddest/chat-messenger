@@ -104,15 +104,15 @@ export const ChatTabsBox = memo(() => {
         }
     }, 1000);
 
-    return friends && messages && friends.length > 0 ? (
+    return friends && friends.length > 0 ? (
         <StyledChatBoxTabs
             onTabScroll={scrollHandler}
             tabPosition="left"
             items={friends.map((friend) => {
                 return {
-                    label: <FriendSidebarCard friend={friend} messages={messages} />,
+                    label: messages && <FriendSidebarCard friend={friend} messages={messages} />,
                     key: `${friend.userBehindFriend}`,
-                    children: <ChatTabsContent messages={messages} friend={friend} />,
+                    children: messages && <ChatTabsContent messages={messages} friend={friend} />,
                 };
             })}
             activeKey={friendIdActiveKey}
