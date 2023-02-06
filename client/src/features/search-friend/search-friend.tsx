@@ -1,4 +1,4 @@
-import { memo, SyntheticEvent, useCallback, useEffect, useRef, useState } from "react";
+import { memo, SyntheticEvent, useCallback, useRef, useState } from "react";
 import { Button, InputRef, Modal } from "antd";
 
 import { IFriend } from "../../entities/friend";
@@ -26,11 +26,6 @@ export const SearchFriend = memo<ISearchFriend>(({ friends, friendIdActiveKey })
         setModalSearchInputValue("");
     }, []);
 
-    useEffect(() => {
-        setIsModalOpen(false);
-        setModalSearchInputValue("");
-    }, [friendIdActiveKey]);
-
     return (
         <>
             <Button type={"primary"} onClick={showModal}>
@@ -42,6 +37,7 @@ export const SearchFriend = memo<ISearchFriend>(({ friends, friendIdActiveKey })
                     friends={friends}
                     modalSearchInputValue={modalSearchInputValue}
                     setModalSearchInputValue={setModalSearchInputValue}
+                    setIsModalOpen={setIsModalOpen}
                 />
             </Modal>
         </>

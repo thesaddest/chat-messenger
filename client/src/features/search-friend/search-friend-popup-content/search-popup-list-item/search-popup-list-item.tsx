@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { Dispatch, FC, SetStateAction } from "react";
 import { List } from "antd";
 import styled from "styled-components";
 
@@ -10,17 +10,26 @@ import { IMessage } from "../../../../entities/message";
 interface IFriendPopupItemProps {
     item: IFriend;
     messages: IMessage[];
+    setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+    setModalSearchInputValue: Dispatch<SetStateAction<string>>;
 }
 
 const StyledListItem = styled(List.Item)`
     cursor: pointer;
 `;
 
-export const SearchPopupListItem: FC<IFriendPopupItemProps> = ({ item, messages }) => {
+export const SearchPopupListItem: FC<IFriendPopupItemProps> = ({
+    item,
+    messages,
+    setIsModalOpen,
+    setModalSearchInputValue,
+}) => {
     const dispatch = useAppDispatch();
 
     const handleClick = () => {
         dispatch(setFriendIdActiveKey(item.userBehindFriend));
+        setIsModalOpen(false);
+        setModalSearchInputValue("");
     };
 
     return (

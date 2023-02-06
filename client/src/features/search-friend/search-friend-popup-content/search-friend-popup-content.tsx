@@ -12,6 +12,7 @@ interface ISearchFriendPopupContentProps {
     modalSearchInputValue: string;
     setModalSearchInputValue: Dispatch<SetStateAction<string>>;
     modalInputRef: RefObject<InputRef>;
+    setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
@@ -19,6 +20,7 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
     modalSearchInputValue,
     setModalSearchInputValue,
     modalInputRef,
+    setIsModalOpen,
 }) => {
     const dispatch = useAppDispatch();
     const messages = useAppSelector((state) => state.message.messages);
@@ -59,7 +61,14 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
                 renderItem={(item) => {
                     return (
                         messages &&
-                        modalSearchInputValue.length > 0 && <SearchPopupListItem item={item} messages={messages} />
+                        modalSearchInputValue.length > 0 && (
+                            <SearchPopupListItem
+                                item={item}
+                                messages={messages}
+                                setIsModalOpen={setIsModalOpen}
+                                setModalSearchInputValue={setModalSearchInputValue}
+                            />
+                        )
                     );
                 }}
             />
