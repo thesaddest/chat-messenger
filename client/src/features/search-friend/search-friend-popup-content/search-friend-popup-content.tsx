@@ -1,7 +1,7 @@
-import { ChangeEvent, Dispatch, FC, RefObject, SetStateAction, useEffect, useMemo } from "react";
+import { ChangeEvent, Dispatch, FC, RefObject, SetStateAction, useCallback, useEffect, useMemo } from "react";
 import { Input, InputRef, List } from "antd";
 
-import { useAppDispatch } from "../../../shared/lib/hooks";
+import { useAppDispatch, useDebounce } from "../../../shared/lib/hooks";
 import { getAllRemainingFriends, getFriendsBySearchValue, IFriend } from "../../../entities/friend";
 import { Search } from "../../../shared/ui";
 
@@ -29,13 +29,10 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
         [friends, modalSearchInputValue],
     );
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const debouncedChangeHandler = useDebounce((e: ChangeEvent<HTMLInputElement>) => {
         setModalSearchInputValue(e.target.value);
-    };
-
-    useEffect(() => {
-        friends && dispatch(getAllRemainingFriends({ skip: friends.length }));
-    }, []);
+        dispatch(getAllRemainingFriends({ skip: friends.length }));
+    }, 300);
 
     useEffect(() => {
         if (modalInputRef.current) {
@@ -48,9 +45,8 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
             <Input
                 prefix={<Search />}
                 placeholder="Enter friend's username"
-                onChange={handleChange}
+                onChange={debouncedChangeHandler}
                 ref={modalInputRef}
-                value={modalSearchInputValue}
             />
             <List
                 locale={NO_FRIENDS_FOUND_LOCALE}
