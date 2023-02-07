@@ -1,8 +1,8 @@
-import { ChangeEvent, Dispatch, FC, RefObject, SetStateAction, useCallback, useEffect, useMemo } from "react";
+import { ChangeEvent, Dispatch, FC, RefObject, SetStateAction, useEffect, useMemo } from "react";
 import { Input, InputRef, List } from "antd";
 
 import { useAppDispatch, useDebounce } from "../../../shared/lib/hooks";
-import { getAllRemainingFriends, getFriendsBySearchValue, IFriend } from "../../../entities/friend";
+import { getFriendsBySearchQuery, getFriendsBySearchValue, IFriend } from "../../../entities/friend";
 import { Search } from "../../../shared/ui";
 
 import { SearchPopupListItem } from "./search-popup-list-item";
@@ -31,8 +31,8 @@ export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
 
     const debouncedChangeHandler = useDebounce((e: ChangeEvent<HTMLInputElement>) => {
         setModalSearchInputValue(e.target.value);
-        dispatch(getAllRemainingFriends({ skip: friends.length }));
-    }, 300);
+        dispatch(getFriendsBySearchQuery({ searchQuery: e.target.value }));
+    }, 1000);
 
     useEffect(() => {
         if (modalInputRef.current) {

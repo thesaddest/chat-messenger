@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 
-import { IAddFriendValues, IFriend, IGetMoreFriends } from "../model";
+import { IAddFriendValues, IFriend, IGetFriendsBySearchQuery, IGetMoreFriends } from "../model";
 import api from "../../../shared/api/axios-instance";
 
 export default class FriendService {
@@ -16,7 +16,7 @@ export default class FriendService {
         return api.post<IFriend>("/friend/addFriend", username);
     }
 
-    static async getAllRemainingFriends({ skip }: IGetMoreFriends): Promise<AxiosResponse<IFriend[]>> {
-        return api.get<IFriend[]>("/friend/getAllRemainingFriends", { params: { skip } });
+    static async getFriendsBySearchQuery({ searchQuery }: IGetFriendsBySearchQuery): Promise<AxiosResponse<IFriend[]>> {
+        return api.get<IFriend[]>("/friend/getFriendsBySearchQuery", { params: { searchQuery } });
     }
 }

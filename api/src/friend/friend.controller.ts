@@ -60,7 +60,7 @@ class FriendController {
         }
     }
 
-    async getAllRemainingFriends(req: Request, res: Response, next: NextFunction) {
+    async getFriendsBySearchQuery(req: Request, res: Response, next: NextFunction) {
         try {
             const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
 
@@ -68,12 +68,9 @@ class FriendController {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            let { skip } = req.query;
-            // @ts-ignore
-            skip = skip || 0;
+            const { searchQuery } = req.query;
 
-            // @ts-ignore
-            const userFriends = await friendService.getAllRemainingFriends(user, skip);
+            const userFriends = await friendService.getFriendsBySearchQuery(user, String(searchQuery));
             const friends = await friendService.getConnectedFriends(userFriends);
 
             return res.json(friends);

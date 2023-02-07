@@ -9,13 +9,13 @@ import { IMessage } from "./interfaces";
 
 interface MessageState {
     messages: IMessage[] | null;
-    loading: boolean;
+    isLoading: boolean;
     error: string | null;
 }
 
 const initialState: MessageState = {
     messages: null,
-    loading: true,
+    isLoading: true,
     error: null,
 };
 
@@ -72,12 +72,12 @@ export const messageModel = createSlice({
         builder
             .addCase(getMessages.fulfilled, (state, action) => {
                 state.messages = action.payload;
-                state.loading = false;
+                state.isLoading = false;
                 state.error = null;
             })
             .addCase(getMessages.pending, (state) => {
                 state.messages = null;
-                state.loading = true;
+                state.isLoading = true;
                 state.error = null;
             })
             .addCase(getMessages.rejected, (state, action) => {
@@ -86,18 +86,18 @@ export const messageModel = createSlice({
                 }
                 state.error = action.payload;
                 state.messages = null;
-                state.loading = false;
+                state.isLoading = false;
             })
             .addCase(sendMessage.fulfilled, (state, action) => {
                 if (!state.messages) {
                     return;
                 }
                 state.messages.push(action.payload);
-                state.loading = false;
+                state.isLoading = false;
                 state.error = null;
             })
             .addCase(sendMessage.pending, (state) => {
-                state.loading = true;
+                state.isLoading = true;
                 state.error = null;
             })
             .addCase(sendMessage.rejected, (state, action) => {
@@ -105,7 +105,7 @@ export const messageModel = createSlice({
                     return;
                 }
                 state.error = action.payload;
-                state.loading = false;
+                state.isLoading = false;
             });
     },
 });

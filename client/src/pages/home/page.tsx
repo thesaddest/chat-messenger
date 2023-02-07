@@ -40,7 +40,7 @@ const StyledDivider = styled(Divider)`
 export const HomePage: FC = () => {
     useSocket();
 
-    const isFriendsLoading = useAppSelector((state) => state.friend.loading);
+    const isFriendsLoading = useAppSelector((state) => state.friend.isLoading);
 
     return (
         <StyledHomeContainer>

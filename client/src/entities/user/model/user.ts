@@ -8,14 +8,14 @@ import { IUser } from "./interfaces";
 
 interface AuthState {
     user: IUser | null;
-    loading: boolean;
+    isLoading: boolean;
     error: string | null;
     isAuth: boolean;
 }
 
 const initialState: AuthState = {
     user: null,
-    loading: false,
+    isLoading: false,
     error: null,
     isAuth: false,
 };
@@ -56,7 +56,7 @@ export const userModel = createSlice({
     reducers: {
         socketError(state, action: PayloadAction<string>) {
             state.user = null;
-            state.loading = false;
+            state.isLoading = false;
             state.error = action.payload;
             state.isAuth = false;
         },
@@ -65,25 +65,25 @@ export const userModel = createSlice({
         builder
             .addCase(login.fulfilled, (state, action) => {
                 state.user = action.payload;
-                state.loading = false;
+                state.isLoading = false;
                 state.error = null;
                 state.isAuth = true;
             })
             .addCase(register.fulfilled, (state, action) => {
                 state.user = action.payload;
-                state.loading = false;
+                state.isLoading = false;
                 state.error = null;
                 state.isAuth = true;
             })
             .addCase(login.pending, (state) => {
                 state.user = null;
-                state.loading = true;
+                state.isLoading = true;
                 state.error = null;
                 state.isAuth = false;
             })
             .addCase(register.pending, (state) => {
                 state.user = null;
-                state.loading = true;
+                state.isLoading = true;
                 state.error = null;
                 state.isAuth = false;
             });

@@ -3,18 +3,18 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import FriendService from "../api/friend.service";
 import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 
-import { IAddFriendValues, IFriend, IFriendStatus, IGetMoreFriends } from "./interfaces";
+import { IAddFriendValues, IFriend, IFriendStatus, IGetFriendsBySearchQuery, IGetMoreFriends } from "./interfaces";
 
 interface FriendState {
     friends: IFriend[] | null;
-    loading: boolean;
+    isLoading: boolean;
     error: string | null;
     friendIdActiveKey: string;
 }
 
 const initialState: FriendState = {
     friends: null,
-    loading: true,
+    isLoading: true,
     error: null,
     friendIdActiveKey: DEFAULT_ACTIVE_KEY,
 };
@@ -25,11 +25,17 @@ export const getFriendsBySearchValue = (searchValue: string, friends: IFriend[])
     });
 };
 
-export const getAllRemainingFriends = createAsyncThunk<IFriend[], IGetMoreFriends, { rejectValue: string }>(
-    "friends/getAllRemainingFriends",
-    async function (moreFriendsData, { rejectWithValue }) {
+const setFriendsStateWithUniqueValues = (friends: IFriend[], action: PayloadAction<IFriend[]>): IFriend[] => {
+    return friends.concat(
+        action.payload.filter(({ username }) => !friends.find((friend) => friend.username === username)),
+    );
+};
+
+export const getFriendsBySearchQuery = createAsyncThunk<IFriend[], IGetFriendsBySearchQuery, { rejectValue: string }>(
+    "friends/getFriendsBySearchQuery",
+    async function (searchQuery, { rejectWithValue }) {
         try {
-            const { data } = await FriendService.getAllRemainingFriends(moreFriendsData);
+            const { data } = await FriendService.getFriendsBySearchQuery(searchQuery);
 
             return data;
         } catch (e: any) {
@@ -52,7 +58,7 @@ export const getFriends = createAsyncThunk<IFriend[], undefined, { rejectValue: 
 );
 
 export const getFriendsWithLimit = createAsyncThunk<IFriend[], IGetMoreFriends, { rejectValue: string }>(
-    "friends/getMoreFriends",
+    "friends/getFriendsWithLimit",
     async function (moreFriendsData, { rejectWithValue }) {
         try {
             const { data } = await FriendService.getMoreFriends(moreFriendsData);
@@ -98,11 +104,11 @@ export const friendModel = createSlice({
         builder
             .addCase(getFriends.fulfilled, (state, action) => {
                 state.friends = action.payload;
-                state.loading = false;
+                state.isLoading = false;
                 state.error = null;
             })
             .addCase(getFriends.pending, (state) => {
-                state.loading = true;
+                state.isLoading = true;
                 state.error = null;
             })
             .addCase(getFriends.rejected, (state, action) => {
@@ -111,30 +117,30 @@ export const friendModel = createSlice({
                 }
                 state.friends = null;
                 state.error = action.payload;
-                state.loading = false;
+                state.isLoading = false;
             })
-            .addCase(getAllRemainingFriends.fulfilled, (state, action) => {
-                if (!state.friends) {
+            .addCase(getFriendsBySearchQuery.fulfilled, (state, action) => {
+                if (!state.friends || action.payload.length === 0) {
                     return;
                 }
-                state.friends = state.friends.concat(action.payload);
-                state.loading = false;
+                state.friends = setFriendsStateWithUniqueValues(state.friends, action);
+                state.isLoading = false;
                 state.error = null;
             })
-            .addCase(getAllRemainingFriends.rejected, (state, action) => {
+            .addCase(getFriendsBySearchQuery.rejected, (state, action) => {
                 if (!action.payload) {
                     return;
                 }
                 state.friends = null;
                 state.error = action.payload;
-                state.loading = false;
+                state.isLoading = false;
             })
             .addCase(getFriendsWithLimit.fulfilled, (state, action) => {
                 if (!state.friends || action.payload.length === 0) {
                     return;
                 }
-                state.friends = state.friends.concat(action.payload);
-                state.loading = false;
+                state.friends = setFriendsStateWithUniqueValues(state.friends, action);
+                state.isLoading = false;
                 state.error = null;
             })
             .addCase(getFriendsWithLimit.rejected, (state, action) => {
@@ -142,14 +148,14 @@ export const friendModel = createSlice({
                     return;
                 }
                 state.error = action.payload;
-                state.loading = false;
+                state.isLoading = false;
             })
             .addCase(addFriend.fulfilled, (state, action) => {
                 if (!state.friends) {
                     return;
                 }
                 state.friends.push(action.payload);
-                state.loading = false;
+                state.isLoading = false;
                 state.error = null;
             })
             .addCase(addFriend.rejected, (state, action) => {
@@ -157,7 +163,7 @@ export const friendModel = createSlice({
                     return;
                 }
                 state.error = action.payload;
-                state.loading = false;
+                state.isLoading = false;
             });
     },
 });

@@ -1,3 +1,4 @@
+import { Like } from "typeorm";
 import { User } from "./../user/user.entity.js";
 import { Friend } from "./friend.entity.js";
 import { AppDataSource } from "../db/database.js";
@@ -82,11 +83,10 @@ class FriendService {
         return connectedFriends;
     }
 
-    async getAllRemainingFriends(user: User, skip: string): Promise<FriendDto[]> {
+    async getFriendsBySearchQuery(user: User, searchQuery: string): Promise<FriendDto[]> {
         const friendRepository = AppDataSource.getRepository(Friend);
         const friends = await friendRepository.find({
-            where: { addedBy: user.username },
-            skip: Number(skip),
+            where: { addedBy: user.username, username: Like(`%${searchQuery}%`) },
         });
 
         return friends.map((friend) => {

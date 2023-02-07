@@ -17,3 +17,7 @@ export interface IAddFriendValues {
 export interface IGetMoreFriends {
     skip: number;
 }
+
+export interface IGetFriendsBySearchQuery {
+    searchQuery: string;
+}
