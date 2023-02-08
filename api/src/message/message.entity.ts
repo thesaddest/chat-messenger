@@ -11,6 +11,9 @@ export class Message extends BaseEntity {
     }
 
     @Column({ nullable: false })
+    messageId: string;
+
+    @Column({ nullable: false })
     to: string;
 
     @Column({ nullable: true })
@@ -19,6 +22,6 @@ export class Message extends BaseEntity {
     @Column({ nullable: false })
     content: string;
 
-    @ManyToOne(() => Friend, friend => friend.messages)
+    @ManyToOne(() => Friend, (friend) => friend.messages)
     friend: Relation<Friend>;
 }

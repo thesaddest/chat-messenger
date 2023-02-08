@@ -14,3 +14,4 @@ router.get("/friend/getFriendsBySearchQuery", friendController.getFriendsBySearc
 
 router.get("/message/getMessages", messageController.getMessages);
 router.post("/message/sendMessage", messageController.sendMessage);
+router.post("/message/deleteMessage", messageController.deleteMessage);

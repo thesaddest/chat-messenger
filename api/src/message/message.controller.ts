@@ -3,8 +3,9 @@ import { userService } from "../user/user.service.js";
 import { ErrorException } from "../error-handler/error-exception.js";
 import { messageService } from "./message.service.js";
 import { MessageDto } from "./message.dto.js";
+import { IDeleteMessageRequest } from "./interfaces.js";
 
-interface ISendMessageRequest<T> extends Request {
+interface ITypedRequest<T> extends Request {
     body: T;
 }
 
@@ -18,18 +19,54 @@ class MessageController {
             }
 
             const messages = await messageService.getUserMessages(user);
+
             return res.json(messages);
         } catch (e) {
             next(e);
         }
     }
 
-    async sendMessage(req: ISendMessageRequest<MessageDto>, res: Response, next: NextFunction) {
+    async sendMessage(req: ITypedRequest<MessageDto>, res: Response, next: NextFunction) {
         try {
-            const messageDto = req.body;
-            const message = await messageService.createMessage(messageDto);
+            const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
 
-            return res.json({ to: message.to, from: message.from, content: message.content });
+            if (!user) {
+                return next(ErrorException.UnauthorizedError());
+            }
+
+            const messageDto = req.body;
+            const message = await messageService.createMessage(messageDto, user);
+
+            return res.json({
+                messageId: message.messageId,
+                to: message.to,
+                from: message.from,
+                content: message.content,
+            });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async deleteMessage(req: ITypedRequest<IDeleteMessageRequest>, res: Response, next: NextFunction) {
+        try {
+            const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
+
+            if (!user) {
+                return next(ErrorException.UnauthorizedError());
+            }
+
+            const { messageIds } = req.body;
+            const deletedMessages = await messageService.deleteMessages(messageIds);
+
+            return res.json(
+                deletedMessages.map((message) => ({
+                    messageId: message.messageId,
+                    to: message.to,
+                    from: message.from,
+                    content: message.content,
+                })),
+            );
         } catch (e) {
             next(e);
         }
