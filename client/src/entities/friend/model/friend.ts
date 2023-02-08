@@ -31,6 +31,12 @@ const setFriendsStateWithUniqueValues = (friends: IFriend[], action: PayloadActi
     );
 };
 
+const isFriendsStateNeedUpdate = (friends: IFriend[], action: PayloadAction<IFriend[]>): boolean => {
+    return !action.payload.every((friendInPayload) =>
+        friends.some((friendInState) => friendInPayload.username === friendInState.username),
+    );
+};
+
 export const getFriendsBySearchQuery = createAsyncThunk<IFriend[], IGetFriendsBySearchQuery, { rejectValue: string }>(
     "friends/getFriendsBySearchQuery",
     async function (searchQuery, { rejectWithValue }) {
@@ -120,7 +126,7 @@ export const friendModel = createSlice({
                 state.isLoading = false;
             })
             .addCase(getFriendsBySearchQuery.fulfilled, (state, action) => {
-                if (!state.friends || action.payload.length === 0) {
+                if (!state.friends || action.payload.length === 0 || !isFriendsStateNeedUpdate(state.friends, action)) {
                     return;
                 }
                 state.friends = setFriendsStateWithUniqueValues(state.friends, action);
