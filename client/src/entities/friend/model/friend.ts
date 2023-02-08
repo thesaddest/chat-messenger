@@ -61,7 +61,7 @@ export const getFriendsWithLimit = createAsyncThunk<IFriend[], IGetMoreFriends, 
     "friends/getFriendsWithLimit",
     async function (moreFriendsData, { rejectWithValue }) {
         try {
-            const { data } = await FriendService.getMoreFriends(moreFriendsData);
+            const { data } = await FriendService.getFriendsWithLimit(moreFriendsData);
 
             return data;
         } catch (e: any) {

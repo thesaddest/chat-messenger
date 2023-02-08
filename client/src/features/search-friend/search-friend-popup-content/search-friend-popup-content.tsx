@@ -1,68 +1,47 @@
-import { ChangeEvent, Dispatch, FC, RefObject, SetStateAction, useEffect, useMemo } from "react";
-import { Input, InputRef, List } from "antd";
+import { Dispatch, memo, SetStateAction, useMemo } from "react";
+import { Form, FormInstance, List } from "antd";
 
-import { useAppDispatch, useDebounce } from "../../../shared/lib/hooks";
-import { getFriendsBySearchQuery, getFriendsBySearchValue, IFriend } from "../../../entities/friend";
-import { Search } from "../../../shared/ui";
+import { getFriendsBySearchValue, IFriend } from "../../../entities/friend";
 
 import { SearchPopupListItem } from "./search-popup-list-item";
+import { ModalSearchInput } from "./modal-search-input";
 
 interface ISearchFriendPopupContentProps {
-    friends: IFriend[];
     modalSearchInputValue: string;
     setModalSearchInputValue: Dispatch<SetStateAction<string>>;
-    modalInputRef: RefObject<InputRef>;
+    friends: IFriend[];
+    form: FormInstance;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const SearchFriendPopupContent: FC<ISearchFriendPopupContentProps> = ({
-    friends,
-    modalSearchInputValue,
-    setModalSearchInputValue,
-    modalInputRef,
-    setIsModalOpen,
-}) => {
-    const dispatch = useAppDispatch();
-    const NO_FRIENDS_FOUND_LOCALE = useMemo(() => ({ emptyText: "No friends found" }), []);
-    const friendsBySearchValue = useMemo(
-        () => getFriendsBySearchValue(modalSearchInputValue, friends),
-        [friends, modalSearchInputValue],
-    );
+export const SearchFriendPopupContent = memo<ISearchFriendPopupContentProps>(
+    ({ modalSearchInputValue, setModalSearchInputValue, friends, form, setIsModalOpen }) => {
+        const NO_FRIENDS_FOUND_LOCALE = useMemo(() => ({ emptyText: "No friends found" }), []);
+        const friendsBySearchValue = useMemo(
+            () => getFriendsBySearchValue(modalSearchInputValue, friends),
+            [friends, modalSearchInputValue],
+        );
 
-    const debouncedChangeHandler = useDebounce((e: ChangeEvent<HTMLInputElement>) => {
-        setModalSearchInputValue(e.target.value);
-        dispatch(getFriendsBySearchQuery({ searchQuery: e.target.value }));
-    }, 1000);
+        return (
+            <>
+                <Form form={form} name="search-friend-form">
+                    <Form.Item name="username">
+                        <ModalSearchInput value={modalSearchInputValue} onChange={setModalSearchInputValue} />
+                    </Form.Item>
+                </Form>
 
-    useEffect(() => {
-        if (modalInputRef.current) {
-            modalInputRef.current.focus();
-        }
-    });
-
-    return (
-        <>
-            <Input
-                prefix={<Search />}
-                placeholder="Enter friend's username"
-                onChange={debouncedChangeHandler}
-                ref={modalInputRef}
-            />
-            <List
-                locale={NO_FRIENDS_FOUND_LOCALE}
-                dataSource={friendsBySearchValue}
-                renderItem={(item) => {
-                    return (
-                        modalSearchInputValue.length > 0 && (
-                            <SearchPopupListItem
-                                friend={item}
-                                setIsModalOpen={setIsModalOpen}
-                                setModalSearchInputValue={setModalSearchInputValue}
-                            />
-                        )
-                    );
-                }}
-            />
-        </>
-    );
-};
+                <List
+                    locale={NO_FRIENDS_FOUND_LOCALE}
+                    dataSource={friendsBySearchValue}
+                    renderItem={(item) => {
+                        return (
+                            modalSearchInputValue.length > 0 && (
+                                <SearchPopupListItem friend={item} setIsModalOpen={setIsModalOpen} />
+                            )
+                        );
+                    }}
+                />
+            </>
+        );
+    },
+);

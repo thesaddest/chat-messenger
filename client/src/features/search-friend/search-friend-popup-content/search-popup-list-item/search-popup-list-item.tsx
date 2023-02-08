@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, memo, SetStateAction, useCallback } from "react";
 import { List } from "antd";
 import styled from "styled-components";
 
@@ -9,26 +9,20 @@ import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 interface IFriendPopupItemProps {
     friend: IFriend;
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
-    setModalSearchInputValue: Dispatch<SetStateAction<string>>;
 }
 
 const StyledListItem = styled(List.Item)`
     cursor: pointer;
 `;
 
-export const SearchPopupListItem: FC<IFriendPopupItemProps> = ({
-    friend,
-    setIsModalOpen,
-    setModalSearchInputValue,
-}) => {
+export const SearchPopupListItem = memo<IFriendPopupItemProps>(({ friend, setIsModalOpen }) => {
     const messages = useAppSelector((state) => state.message.messages);
     const dispatch = useAppDispatch();
 
-    const handleClick = () => {
+    const handleClick = useCallback(() => {
         dispatch(setFriendIdActiveKey(friend.userBehindFriend));
         setIsModalOpen(false);
-        setModalSearchInputValue("");
-    };
+    }, [dispatch, friend.userBehindFriend, setIsModalOpen]);
 
     return (
         messages && (
@@ -37,4 +31,4 @@ export const SearchPopupListItem: FC<IFriendPopupItemProps> = ({
             </StyledListItem>
         )
     );
-};
+});
