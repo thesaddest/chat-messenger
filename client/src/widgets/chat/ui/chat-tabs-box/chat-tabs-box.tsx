@@ -90,6 +90,7 @@ const StyledChatBoxTabs = styled(Tabs)`
 
 export const ChatTabsBox = memo(() => {
     const messages = useAppSelector((state) => state.message.messages);
+    console.log(messages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const friends = useAppSelector((state) => state.friend.friends);
     const dispatch = useAppDispatch();

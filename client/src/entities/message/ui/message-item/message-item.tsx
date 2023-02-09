@@ -23,7 +23,8 @@ const StyledContainer = styled.div<MessageItemProps>`
     padding: 0.5rem;
     max-width: 50%;
     word-break: break-word;
-    filter: ${(props) => props.isMessageSelected && "grayscale(80%)"};
+    filter: ${(props) => props.isMessageSelected && "blur(2px)"};
+    cursor: pointer;
 `;
 
 export const MessageItem: FC<MessageItemProps> = ({ friendId, to, from, content, messageId }) => {

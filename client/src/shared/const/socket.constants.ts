@@ -4,6 +4,7 @@ export const SOCKET_EVENTS = {
     GET_ALL_MESSAGES: "get_all_messages",
     ADD_FRIEND: "add_friend",
     SEND_MESSAGE: "send_message",
+    DELETE_MESSAGES: "delete_messages",
     ERROR: "connect_error",
     ON_DISCONNECT: "on_disconnect",
 };

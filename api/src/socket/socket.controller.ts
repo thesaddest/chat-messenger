@@ -26,6 +26,12 @@ export const sendMessage = async (socket: Socket, messageDto: MessageDto): Promi
     socket.to(messageDto.to).emit(SOCKET_EVENTS.SEND_MESSAGE, messageDto);
 };
 
+export const deleteMessages = async (socket: Socket, messageDtos: MessageDto[]): Promise<void> => {
+    for (const messageDto of messageDtos) {
+        socket.to(messageDto.to).emit(SOCKET_EVENTS.DELETE_MESSAGES, messageDto);
+    }
+};
+
 export const getMessages = async (socket: Socket): Promise<void> => {
     socket.emit(SOCKET_EVENTS.GET_ALL_MESSAGES);
 };

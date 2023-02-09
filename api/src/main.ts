@@ -1,4 +1,11 @@
-import { getFriends, onDeinitUser, sendMessage, getMessages, onInitUser } from "./socket/socket.controller.js";
+import {
+    getFriends,
+    onDeinitUser,
+    sendMessage,
+    getMessages,
+    onInitUser,
+    deleteMessages,
+} from "./socket/socket.controller.js";
 import express from "express";
 import helmet from "helmet";
 import http from "http";
@@ -38,6 +45,10 @@ io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
 
     socket.on(SOCKET_EVENTS.SEND_MESSAGE, (messageDto: MessageDto) => {
         sendMessage(socket, messageDto);
+    });
+
+    socket.on(SOCKET_EVENTS.DELETE_MESSAGES, (messageDtos: MessageDto[]) => {
+        deleteMessages(socket, messageDtos);
     });
 
     socket.on(SOCKET_EVENTS.ON_DISCONNECT, () => {

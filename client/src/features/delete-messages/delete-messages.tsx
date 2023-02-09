@@ -9,6 +9,7 @@ interface IDeleteMessagesProps {
     selectedMessages: IDeleteMessage[];
 }
 
+//TODO: add logic to delete somebody's message with immediately emitting to them
 export const DeleteMessages = memo<IDeleteMessagesProps>(({ selectedMessages }) => {
     const dispatch = useAppDispatch();
 

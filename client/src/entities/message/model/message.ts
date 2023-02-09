@@ -36,9 +36,8 @@ export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: s
     "messages/sendMessage",
     async function (messageData, { rejectWithValue }) {
         try {
-            socket.emit(SOCKET_EVENTS.SEND_MESSAGE, messageData);
             const { data } = await MessageService.sendMessage(messageData);
-
+            socket.emit(SOCKET_EVENTS.SEND_MESSAGE, data);
             return data;
         } catch (e) {
             return rejectWithValue("Error while sending message");
@@ -65,9 +64,10 @@ export const deleteMessages = createAsyncThunk<IMessage[], IDeleteMessageData, {
         const { data } = await MessageService.deleteMessages(messageIds);
 
         if (!data) {
-            return rejectWithValue("Error while getting messages");
+            return rejectWithValue("Error while deleting messages");
         }
 
+        socket.emit(SOCKET_EVENTS.DELETE_MESSAGES, data);
         return data;
     },
 );
@@ -80,7 +80,16 @@ export const messageModel = createSlice({
             if (!state.messages) {
                 return;
             }
+            console.log(action.payload);
             state.messages.push(action.payload);
+        },
+        deleteMessage: (state, action: PayloadAction<IMessage>) => {
+            if (!state.messages) {
+                return;
+            }
+            state.messages = state.messages.filter(
+                (messageInState) => messageInState.messageId !== action.payload.messageId,
+            );
         },
         selectMessage: (state, action: PayloadAction<IDeleteMessage>) => {
             state.selectedMessages.push(action.payload);
@@ -156,6 +165,7 @@ export const messageModel = createSlice({
     },
 });
 
-export const { addMessage, selectMessage, deselectMessage, deselectAllSelectedMessages } = messageModel.actions;
+export const { addMessage, deleteMessage, selectMessage, deselectMessage, deselectAllSelectedMessages } =
+    messageModel.actions;
 
 export const reducer = messageModel.reducer;
