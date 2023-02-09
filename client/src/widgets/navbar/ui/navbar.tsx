@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { setFriendIdActiveKey } from "../../../entities/friend";
 import { AddFriend } from "../../../features/add-friend";
 import { SearchFriend } from "../../../features/search-friend";
+import { DeleteMessages } from "../../../features/delete-messages";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
@@ -16,8 +17,11 @@ interface IStyledLeftDivProps {
 const StyledRightDiv = styled.div`
     display: flex;
     flex: 2;
+    justify-content: end;
+    padding-right: 1rem;
 
     @media only screen and (max-width: 425px) {
+        padding-right: 0;
         flex: 0;
     }
 `;
@@ -62,6 +66,7 @@ export const Navbar: FC = () => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
+    const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
 
     const onClick = useCallback(() => {
         dispatch(setFriendIdActiveKey(DEFAULT_ACTIVE_KEY));
@@ -72,7 +77,7 @@ export const Navbar: FC = () => {
             <StyledLeftDiv friendIdActiveKey={friendIdActiveKey}>
                 {width >= 426 || friendIdActiveKey === DEFAULT_ACTIVE_KEY ? (
                     <>
-                        <MemoTitle />
+                        <MemoTitle title={"Chat"} />
                         <StyledModalButtonsContainer>
                             <AddFriend />
                             <SearchFriend />
@@ -84,7 +89,9 @@ export const Navbar: FC = () => {
                     </ZeroPaddingButton>
                 )}
             </StyledLeftDiv>
-            <StyledRightDiv />
+            <StyledRightDiv>
+                {selectedMessages.length > 0 && <DeleteMessages selectedMessages={selectedMessages} />}
+            </StyledRightDiv>
         </StyledHeader>
     );
 };

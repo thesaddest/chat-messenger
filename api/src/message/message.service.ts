@@ -6,13 +6,18 @@ import { User } from "../user/user.entity.js";
 import { IDeleteMessage } from "./interfaces.js";
 
 class MessageService {
-    async createMessage({ to, from, content }: MessageDto, user: User): Promise<Message> {
+    async createMessage({ to, from, content }: MessageDto, user: User): Promise<MessageDto> {
         const messageRepository = AppDataSource.getRepository(Message);
         const newMessage = { messageId: uuidv4(), to: to, from: from, content: content, friend: user };
         const message = messageRepository.create(newMessage);
         await messageRepository.save(message);
 
-        return message;
+        return {
+            messageId: message.messageId,
+            to: message.to,
+            from: message.from,
+            content: message.content,
+        };
     }
 
     async getUserMessages(user: User): Promise<MessageDto[]> {
@@ -36,13 +41,20 @@ class MessageService {
         return messages;
     }
 
-    async deleteMessages(messageIds: IDeleteMessage[]): Promise<Message[]> {
+    async deleteMessages(messageIds: IDeleteMessage[]): Promise<MessageDto[]> {
         const messageRepository = AppDataSource.getRepository(Message);
         const messagesToDelete = await Promise.all(
             messageIds.map(({ messageId }) => messageRepository.findOneBy({ messageId: messageId })),
         );
 
-        return await messageRepository.remove(messagesToDelete);
+        const deletedMessages = await messageRepository.remove(messagesToDelete);
+
+        return deletedMessages.map((message) => ({
+            messageId: message.messageId,
+            to: message.to,
+            from: message.from,
+            content: message.content,
+        }));
     }
 }
 

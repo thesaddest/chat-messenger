@@ -36,7 +36,7 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
 
     const onFinish = (values: IMessageValues) => {
         if (userId) {
-            const message: IMessage = { to: friendId, from: userId, content: values.message };
+            const message: IMessage = { to: friendId, from: userId, content: values.message, messageId: "" };
             dispatch(sendMessage(message));
             form.resetFields();
         }

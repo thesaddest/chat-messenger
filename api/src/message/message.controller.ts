@@ -37,18 +37,13 @@ class MessageController {
             const messageDto = req.body;
             const message = await messageService.createMessage(messageDto, user);
 
-            return res.json({
-                messageId: message.messageId,
-                to: message.to,
-                from: message.from,
-                content: message.content,
-            });
+            return res.json(message);
         } catch (e) {
             next(e);
         }
     }
 
-    async deleteMessage(req: ITypedRequest<IDeleteMessageRequest>, res: Response, next: NextFunction) {
+    async deleteMessages(req: ITypedRequest<IDeleteMessageRequest>, res: Response, next: NextFunction) {
         try {
             const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
 
@@ -59,14 +54,7 @@ class MessageController {
             const { messageIds } = req.body;
             const deletedMessages = await messageService.deleteMessages(messageIds);
 
-            return res.json(
-                deletedMessages.map((message) => ({
-                    messageId: message.messageId,
-                    to: message.to,
-                    from: message.from,
-                    content: message.content,
-                })),
-            );
+            return res.json(deletedMessages);
         } catch (e) {
             next(e);
         }
