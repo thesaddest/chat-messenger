@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { FC, useCallback } from "react";
+import { memo, useCallback } from "react";
 
 import { deselectAllSelectedMessages, deleteMessages, IDeleteMessage } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
@@ -9,7 +9,7 @@ interface IDeleteMessagesProps {
     selectedMessages: IDeleteMessage[];
 }
 
-export const DeleteMessages: FC<IDeleteMessagesProps> = ({ selectedMessages }) => {
+export const DeleteMessages = memo<IDeleteMessagesProps>(({ selectedMessages }) => {
     const dispatch = useAppDispatch();
 
     const handleClick = useCallback(() => {
@@ -24,4 +24,4 @@ export const DeleteMessages: FC<IDeleteMessagesProps> = ({ selectedMessages }) =
             </Button>
         </div>
     );
-};
+});

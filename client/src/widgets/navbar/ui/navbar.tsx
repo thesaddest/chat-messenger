@@ -21,7 +21,7 @@ const StyledRightDiv = styled.div`
     padding-right: 1rem;
 
     @media only screen and (max-width: 425px) {
-        padding-right: 0;
+        padding-right: 0.25rem;
         flex: 0;
     }
 `;
@@ -77,7 +77,7 @@ export const Navbar: FC = () => {
             <StyledLeftDiv friendIdActiveKey={friendIdActiveKey}>
                 {width >= 426 || friendIdActiveKey === DEFAULT_ACTIVE_KEY ? (
                     <>
-                        <MemoTitle title={"Chat"} />
+                        <MemoTitle title="Chat" />
                         <StyledModalButtonsContainer>
                             <AddFriend />
                             <SearchFriend />

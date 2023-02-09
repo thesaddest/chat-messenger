@@ -18,7 +18,6 @@ const StyledWrapper = styled.div`
     justify-content: center;
     align-items: center;
     height: 5vh;
-    padding-top: 1rem;
 `;
 
 const StyledForm = styled(Form)`
@@ -27,6 +26,7 @@ const StyledForm = styled(Form)`
     align-items: center;
     width: 100%;
     background: lightgray;
+    margin-top: 1rem;
 `;
 
 export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {

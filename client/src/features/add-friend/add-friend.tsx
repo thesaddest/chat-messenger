@@ -28,7 +28,7 @@ export const AddFriend = memo(() => {
 
     return (
         <>
-            <Button onClick={showModal} type={"primary"}>
+            <Button onClick={showModal} type="primary">
                 <AddFriendGroup />
             </Button>
             <Modal

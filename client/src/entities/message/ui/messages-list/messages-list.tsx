@@ -16,7 +16,7 @@ const StyledWrapper = styled.div`
     display: flex;
     flex-direction: column;
     text-align: center;
-    padding: 0 1rem;
+    padding: 1rem 1rem 0 1rem;
 
     @media only screen and (max-width: 425px) {
         height: 80vh;

@@ -30,7 +30,7 @@ export const SearchFriend = memo(() => {
     return (
         friends && (
             <>
-                <Button type={"primary"} onClick={showModal}>
+                <Button type="primary" onClick={showModal}>
                     <Search />
                 </Button>
                 <Modal

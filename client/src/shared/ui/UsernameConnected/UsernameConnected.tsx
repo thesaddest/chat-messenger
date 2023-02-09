@@ -14,7 +14,7 @@ const StyledUsernameConnectedContainer = styled.div`
     span.anticon.anticon-minus-circle {
         margin-top: 0.5rem;
         margin-left: 0.3rem;
-        color: #eb2f96;
+        color: #f5222d;
     }
 
     span.anticon.anticon-check-circle {
