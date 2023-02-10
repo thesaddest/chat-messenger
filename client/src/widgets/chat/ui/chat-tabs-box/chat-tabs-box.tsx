@@ -1,11 +1,12 @@
 import { Tabs } from "antd";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
 import styled from "styled-components";
 
 import { getFriendsWithLimit, setFriendIdActiveKey } from "../../../../entities/friend";
 import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
 import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
+import { ScrollToSeeMore } from "../../../../shared/ui";
 
 import { ChatTabsContent } from "./chat-tabs-content";
 
@@ -89,6 +90,7 @@ const StyledChatBoxTabs = styled(Tabs)`
 `;
 
 export const ChatTabsBox = memo(() => {
+    const [isScroll, setIsScroll] = useState<boolean>(false);
     const messages = useAppSelector((state) => state.message.messages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const friends = useAppSelector((state) => state.friend.friends);
@@ -104,6 +106,7 @@ export const ChatTabsBox = memo(() => {
 
     const scrollHandler = useDebounce((e: ITabsSrcollDirection) => {
         if (e.direction === "bottom" && friends) {
+            setIsScroll(true);
             dispatch(getFriendsWithLimit({ skip: friends.length }));
         }
     }, 1000);
@@ -121,6 +124,7 @@ export const ChatTabsBox = memo(() => {
             })}
             activeKey={friendIdActiveKey}
             onChange={onTabChange}
+            tabBarExtraContent={!isScroll && <ScrollToSeeMore />}
         />
     ) : (
         <StyledChatBoxTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
