@@ -1,4 +1,4 @@
-import { FC, useState, useCallback } from "react";
+import { FC, useCallback } from "react";
 import styled from "styled-components";
 
 import { useAppDispatch } from "../../../../shared/lib/hooks";
@@ -10,7 +10,7 @@ interface MessageItemProps {
     from: string;
     content: string;
     messageId: string;
-    isMessageSelected?: boolean;
+    isMessageSelected: boolean;
 }
 
 const StyledContainer = styled.div<MessageItemProps>`
@@ -27,19 +27,32 @@ const StyledContainer = styled.div<MessageItemProps>`
     cursor: pointer;
 `;
 
-export const MessageItem: FC<MessageItemProps> = ({ friendId, to, from, content, messageId }) => {
-    const [isMessageSelected, setIsMessageSelected] = useState<boolean>(false);
+export const MessageItem: FC<MessageItemProps> = ({ friendId, to, from, content, messageId, isMessageSelected }) => {
     const dispatch = useAppDispatch();
 
     const handleClick = useCallback(() => {
         if (!isMessageSelected) {
-            dispatch(selectMessage({ messageId: messageId }));
-            setIsMessageSelected(true);
+            dispatch(
+                selectMessage({
+                    from: from,
+                    to: to,
+                    messageId: messageId,
+                    content: content,
+                    isMessageSelected: true,
+                }),
+            );
         } else {
-            dispatch(deselectMessage({ messageId: messageId }));
-            setIsMessageSelected(false);
+            dispatch(
+                deselectMessage({
+                    from: from,
+                    to: to,
+                    messageId: messageId,
+                    content: content,
+                    isMessageSelected: false,
+                }),
+            );
         }
-    }, [dispatch, isMessageSelected, messageId]);
+    }, [content, dispatch, from, isMessageSelected, messageId, to]);
 
     return (
         <StyledContainer

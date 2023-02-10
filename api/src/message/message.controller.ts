@@ -3,7 +3,6 @@ import { userService } from "../user/user.service.js";
 import { ErrorException } from "../error-handler/error-exception.js";
 import { messageService } from "./message.service.js";
 import { MessageDto } from "./message.dto.js";
-import { IDeleteMessageRequest } from "./interfaces.js";
 
 interface ITypedRequest<T> extends Request {
     body: T;
@@ -43,7 +42,7 @@ class MessageController {
         }
     }
 
-    async deleteMessages(req: ITypedRequest<IDeleteMessageRequest>, res: Response, next: NextFunction) {
+    async deleteMessages(req: ITypedRequest<MessageDto[]>, res: Response, next: NextFunction) {
         try {
             const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
 
@@ -51,8 +50,8 @@ class MessageController {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            const { messageIds } = req.body;
-            const deletedMessages = await messageService.deleteMessages(messageIds);
+            const messages = req.body;
+            const deletedMessages = await messageService.deleteMessages(messages);
 
             return res.json(deletedMessages);
         } catch (e) {

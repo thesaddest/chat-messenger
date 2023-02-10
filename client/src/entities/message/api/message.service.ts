@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 
 import api from "../../../shared/api/axios-instance";
-import { IDeleteMessageData, IMessage } from "../model";
+import { IMessage } from "../model";
 
 export default class MessageService {
     static async getMessages(): Promise<AxiosResponse<IMessage[]>> {
@@ -12,7 +12,7 @@ export default class MessageService {
         return api.post<IMessage>("/message/sendMessage", messageData);
     }
 
-    static async deleteMessages(messageIds: IDeleteMessageData): Promise<AxiosResponse<IMessage[]>> {
+    static async deleteMessages(messageIds: IMessage[]): Promise<AxiosResponse<IMessage[]>> {
         return api.post<IMessage[]>("/message/deleteMessages", messageIds);
     }
 }

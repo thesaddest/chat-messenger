@@ -5,13 +5,13 @@ import { IFriend } from "../../friend";
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
 
-import { IDeleteMessage, IDeleteMessageData, IMessage } from "./interfaces";
+import { IMessage } from "./interfaces";
 
 interface MessageState {
     messages: IMessage[] | null;
     isLoading: boolean;
     error: string | null;
-    selectedMessages: IDeleteMessage[];
+    selectedMessages: IMessage[];
 }
 
 const initialState: MessageState = {
@@ -58,10 +58,10 @@ export const getMessages = createAsyncThunk<IMessage[], undefined, { rejectValue
     },
 );
 
-export const deleteMessages = createAsyncThunk<IMessage[], IDeleteMessageData, { rejectValue: string }>(
+export const deleteMessages = createAsyncThunk<IMessage[], IMessage[], { rejectValue: string }>(
     "messages/deleteMessages",
-    async function (messageIds, { rejectWithValue }) {
-        const { data } = await MessageService.deleteMessages(messageIds);
+    async function (messages, { rejectWithValue }) {
+        const { data } = await MessageService.deleteMessages(messages);
 
         if (!data) {
             return rejectWithValue("Error while deleting messages");
@@ -82,8 +82,7 @@ export const messageModel = createSlice({
             }
             state.messages.push(action.payload);
         },
-        deleteMessage: (state, action: PayloadAction<IDeleteMessage>) => {
-            console.log(action.payload);
+        deleteMessage: (state, action: PayloadAction<IMessage>) => {
             if (!state.messages) {
                 return;
             }
@@ -91,15 +90,51 @@ export const messageModel = createSlice({
                 (messageInState) => messageInState.messageId !== action.payload.messageId,
             );
         },
-        selectMessage: (state, action: PayloadAction<IDeleteMessage>) => {
+        selectMessage: (state, action: PayloadAction<IMessage>) => {
+            if (!state.messages) {
+                return;
+            }
+
+            const messageInState = state.messages.find(
+                (messageInState) => messageInState.messageId === action.payload.messageId,
+            );
+
+            if (!messageInState) {
+                return;
+            }
+
+            messageInState.isMessageSelected = action.payload.isMessageSelected;
             state.selectedMessages.push(action.payload);
         },
-        deselectMessage: (state, action: PayloadAction<IDeleteMessage>) => {
+        deselectMessage: (state, action: PayloadAction<IMessage>) => {
+            if (!state.messages) {
+                return;
+            }
+
+            const messageInState = state.messages.find(
+                (messageInState) => messageInState.messageId === action.payload.messageId,
+            );
+
+            if (!messageInState) {
+                return;
+            }
+
+            messageInState.isMessageSelected = action.payload.isMessageSelected;
             state.selectedMessages = state.selectedMessages.filter(
                 (messageInState) => messageInState.messageId !== action.payload.messageId,
             );
         },
-        deselectAllSelectedMessages: (state) => {
+        deselectAllSelectedMessages: (state, action: PayloadAction<IMessage[]>) => {
+            if (!state.messages) {
+                return;
+            }
+            for (const messageInState of state.messages) {
+                for (const messageInPayload of action.payload) {
+                    if (messageInState.messageId === messageInPayload.messageId) {
+                        messageInState.isMessageSelected = false;
+                    }
+                }
+            }
             state.selectedMessages = [];
         },
     },

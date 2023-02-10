@@ -1,28 +1,43 @@
 import { Button } from "antd";
 import { memo, useCallback } from "react";
+import styled from "styled-components";
 
-import { deselectAllSelectedMessages, deleteMessages, IDeleteMessage } from "../../entities/message";
+import { deselectAllSelectedMessages, deleteMessages, IMessage } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
 import { Delete } from "../../shared/ui";
 
 interface IDeleteMessagesProps {
-    selectedMessages: IDeleteMessage[];
+    selectedMessages: IMessage[];
 }
 
-//TODO: add logic to delete somebody's message with immediately emitting to them
+const StyledButtonContainer = styled.div`
+    padding: 0.25rem;
+`;
+
 export const DeleteMessages = memo<IDeleteMessagesProps>(({ selectedMessages }) => {
     const dispatch = useAppDispatch();
 
-    const handleClick = useCallback(() => {
-        dispatch(deleteMessages({ messageIds: selectedMessages }));
-        dispatch(deselectAllSelectedMessages());
+    const handleDelete = useCallback(() => {
+        dispatch(deleteMessages(selectedMessages));
+        dispatch(deselectAllSelectedMessages(selectedMessages));
+    }, [dispatch, selectedMessages]);
+
+    const handleCancel = useCallback(() => {
+        dispatch(deselectAllSelectedMessages(selectedMessages));
     }, [dispatch, selectedMessages]);
 
     return (
-        <div>
-            <Button type="primary" danger onClick={handleClick}>
-                Delete messages <Delete />
-            </Button>
-        </div>
+        <>
+            <StyledButtonContainer>
+                <Button type="primary" danger onClick={handleDelete}>
+                    <Delete />
+                </Button>
+            </StyledButtonContainer>
+            <StyledButtonContainer>
+                <Button type="dashed" onClick={handleCancel}>
+                    Cancel
+                </Button>
+            </StyledButtonContainer>
+        </>
     );
 });

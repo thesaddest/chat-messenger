@@ -1,5 +1,5 @@
 import { Tabs } from "antd";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import styled from "styled-components";
 
 import { getFriendsWithLimit, setFriendIdActiveKey } from "../../../../entities/friend";
@@ -92,11 +92,15 @@ export const ChatTabsBox = memo(() => {
     const messages = useAppSelector((state) => state.message.messages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const friends = useAppSelector((state) => state.friend.friends);
+
     const dispatch = useAppDispatch();
 
-    const onTabChange = (activeKey: string) => {
-        dispatch(setFriendIdActiveKey(activeKey));
-    };
+    const onTabChange = useCallback(
+        (activeKey: string) => {
+            dispatch(setFriendIdActiveKey(activeKey));
+        },
+        [dispatch],
+    );
 
     const scrollHandler = useDebounce((e: ITabsSrcollDirection) => {
         if (e.direction === "bottom" && friends) {

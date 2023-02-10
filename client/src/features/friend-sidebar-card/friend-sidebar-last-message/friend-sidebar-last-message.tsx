@@ -1,10 +1,8 @@
-import { FC } from "react";
+import { memo } from "react";
 import styled from "styled-components";
 
-import { IMessage } from "../../../entities/message";
-
 interface FriendCardProps {
-    message: IMessage;
+    messageContent: string;
 }
 
 const StyledLastMessageDiv = styled.div`
@@ -18,10 +16,10 @@ const StyledLastMessageDiv = styled.div`
     }
 `;
 
-export const FriendSidebarLastMessage: FC<FriendCardProps> = ({ message }) => {
+export const FriendSidebarLastMessage = memo<FriendCardProps>(({ messageContent }) => {
     return (
         <StyledLastMessageDiv>
-            <p>{message && message.content}</p>
+            <p>{messageContent}</p>
         </StyledLastMessageDiv>
     );
-};
+});

@@ -36,7 +36,7 @@ export const FriendSidebarCard = memo<FriendSidebarCardProps>(({ friend, message
             </div>
             <StyledUsernameConnectedMessageContainer>
                 <UsernameConnected friend={friend} />
-                <FriendSidebarLastMessage message={memoizedLastMessage} />
+                <FriendSidebarLastMessage messageContent={memoizedLastMessage && memoizedLastMessage.content} />
             </StyledUsernameConnectedMessageContainer>
         </StyledFriendsCardDiv>
     );

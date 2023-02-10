@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
 import { getFriends, IFriendStatus, initUser } from "../../../entities/friend";
-import { addMessage, deleteMessage, getMessages, IDeleteMessage, IMessage } from "../../../entities/message";
+import { addMessage, deleteMessage, getMessages, IMessage } from "../../../entities/message";
 import { socketError } from "../../../entities/user";
 
 export const useSocket = () => {
@@ -35,8 +35,8 @@ export const useSocket = () => {
             dispatch(addMessage(message));
         });
 
-        socket.on(SOCKET_EVENTS.DELETE_MESSAGES, (messageId: IDeleteMessage) => {
-            dispatch(deleteMessage(messageId));
+        socket.on(SOCKET_EVENTS.DELETE_MESSAGES, (message: IMessage) => {
+            dispatch(deleteMessage(message));
         });
 
         socket.on(SOCKET_EVENTS.ON_DISCONNECT, (friendStatus: IFriendStatus) => {

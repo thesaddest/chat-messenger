@@ -3,16 +3,9 @@ export interface IMessage {
     from: string;
     content: string;
     messageId: string;
+    isMessageSelected: boolean;
 }
 
 export interface IMessageValues {
     message: string;
-}
-
-export interface IDeleteMessage {
-    messageId: string;
-}
-
-export interface IDeleteMessageData {
-    messageIds: IDeleteMessage[];
 }

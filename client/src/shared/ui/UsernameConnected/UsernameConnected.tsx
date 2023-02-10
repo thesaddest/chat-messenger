@@ -11,18 +11,6 @@ interface IUsernameConnectedProps {
 const StyledUsernameConnectedContainer = styled.div`
     display: flex;
 
-    span.anticon.anticon-minus-circle {
-        margin-top: 0.5rem;
-        margin-left: 0.3rem;
-        color: #f5222d;
-    }
-
-    span.anticon.anticon-check-circle {
-        margin-top: 0.5rem;
-        margin-left: 0.3rem;
-        color: #52c41a;
-    }
-
     p {
         font-size: 18px;
         white-space: nowrap;
@@ -39,11 +27,26 @@ const StyledUsernameConnectedContainer = styled.div`
     }
 `;
 
+const StyledConnected = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 0.25rem;
+
+    span.anticon.anticon-minus-circle {
+        color: #f5222d;
+    }
+
+    span.anticon.anticon-check-circle {
+        color: #52c41a;
+    }
+`;
+
 export const UsernameConnected = memo<IUsernameConnectedProps>(({ friend }) => {
     return (
         <StyledUsernameConnectedContainer>
             <p>{friend.username}</p>
-            <div>{friend.connected ? <CheckCircleOutlined /> : <MinusCircleOutlined />}</div>
+            <StyledConnected>{friend.connected ? <CheckCircleOutlined /> : <MinusCircleOutlined />}</StyledConnected>
         </StyledUsernameConnectedContainer>
     );
 });
