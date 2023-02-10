@@ -80,10 +80,10 @@ export const messageModel = createSlice({
             if (!state.messages) {
                 return;
             }
-            console.log(action.payload);
             state.messages.push(action.payload);
         },
-        deleteMessage: (state, action: PayloadAction<IMessage>) => {
+        deleteMessage: (state, action: PayloadAction<IDeleteMessage>) => {
+            console.log(action.payload);
             if (!state.messages) {
                 return;
             }

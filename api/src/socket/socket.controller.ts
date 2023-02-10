@@ -28,7 +28,8 @@ export const sendMessage = async (socket: Socket, messageDto: MessageDto): Promi
 
 export const deleteMessages = async (socket: Socket, messageDtos: MessageDto[]): Promise<void> => {
     for (const messageDto of messageDtos) {
-        socket.to(messageDto.to).emit(SOCKET_EVENTS.DELETE_MESSAGES, messageDto);
+        socket.to(messageDto.to).emit(SOCKET_EVENTS.DELETE_MESSAGES, { messageId: messageDto.messageId });
+        socket.to(messageDto.from).emit(SOCKET_EVENTS.DELETE_MESSAGES, { messageId: messageDto.messageId });
     }
 };
 
