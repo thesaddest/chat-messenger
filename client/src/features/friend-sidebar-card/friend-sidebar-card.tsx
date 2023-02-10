@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import styled from "styled-components";
 
 import { IFriend } from "../../entities/friend";
@@ -26,7 +26,7 @@ const StyledFriendsCardDiv = styled.div`
     overflow: hidden;
 `;
 
-export const FriendSidebarCard = memo<FriendSidebarCardProps>(({ friend, messages }) => {
+export const FriendSidebarCard: FC<FriendSidebarCardProps> = ({ friend, messages }) => {
     const memoizedLastMessage = useMemo(() => getLastMessageBySender(messages, friend), [messages, friend]);
 
     return (
@@ -40,4 +40,4 @@ export const FriendSidebarCard = memo<FriendSidebarCardProps>(({ friend, message
             </StyledUsernameConnectedMessageContainer>
         </StyledFriendsCardDiv>
     );
-});
+};
