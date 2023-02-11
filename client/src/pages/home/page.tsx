@@ -2,11 +2,13 @@ import { FC } from "react";
 import styled from "styled-components";
 import { Divider } from "antd";
 
-import { useAppSelector } from "../../shared/lib/hooks";
+import { useAppSelector, useWindowSize } from "../../shared/lib/hooks";
 import { Navbar } from "../../widgets/navbar";
 import { ChatTabsBox } from "../../widgets/chat";
 import { useSocket } from "../../app/lib/hooks";
 import { SkeletonChat } from "../../features/skeleton-chat";
+import { SelectChatToStartMessaging } from "../../shared/ui";
+import { DEFAULT_ACTIVE_KEY } from "../../shared/const";
 
 const StyledHomeContainer = styled.div`
     height: 100vh;
@@ -39,8 +41,10 @@ const StyledDivider = styled(Divider)`
 
 export const HomePage: FC = () => {
     useSocket();
+    const { width } = useWindowSize();
 
     const isFriendsLoading = useAppSelector((state) => state.friend.isLoading);
+    const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
 
     return (
         <StyledHomeContainer>
@@ -51,6 +55,7 @@ export const HomePage: FC = () => {
                     <>
                         <Navbar />
                         <StyledDivider />
+                        {width >= 426 && friendIdActiveKey === DEFAULT_ACTIVE_KEY && <SelectChatToStartMessaging />}
                         <ChatTabsBox />
                     </>
                 )}
