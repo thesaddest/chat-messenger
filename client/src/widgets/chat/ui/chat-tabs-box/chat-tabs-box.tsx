@@ -124,7 +124,7 @@ export const ChatTabsBox = memo(() => {
             })}
             activeKey={friendIdActiveKey}
             onChange={onTabChange}
-            tabBarExtraContent={!isScroll && <ScrollToSeeMore />}
+            tabBarExtraContent={!isScroll && friends.length > 8 && <ScrollToSeeMore />}
         />
     ) : (
         <StyledChatBoxTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
