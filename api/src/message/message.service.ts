@@ -5,9 +5,16 @@ import { MessageDto } from "./message.dto.js";
 import { User } from "../user/user.entity.js";
 
 class MessageService {
-    async createMessage({ to, from, content }: MessageDto, user: User): Promise<MessageDto> {
+    async createMessage({ to, from, content, isMessageRead }: MessageDto, user: User): Promise<MessageDto> {
         const messageRepository = AppDataSource.getRepository(Message);
-        const newMessage = { messageId: uuidv4(), to: to, from: from, content: content, friend: user };
+        const newMessage = {
+            messageId: uuidv4(),
+            to: to,
+            from: from,
+            content: content,
+            friend: user,
+            isMessageRead: isMessageRead,
+        };
         const message = messageRepository.create(newMessage);
         await messageRepository.save(message);
 
@@ -17,6 +24,7 @@ class MessageService {
             from: message.from,
             content: message.content,
             isMessageSelected: false,
+            isMessageRead: isMessageRead,
         };
     }
 
@@ -36,6 +44,7 @@ class MessageService {
                 from: message.from,
                 content: message.content,
                 isMessageSelected: false,
+                isMessageRead: message.isMessageRead,
             });
         }
 
@@ -56,7 +65,26 @@ class MessageService {
             from: message.from,
             content: message.content,
             isMessageSelected: false,
+            isMessageRead: message.isMessageRead,
         }));
+    }
+
+    async readMessages(messages: MessageDto[]): Promise<MessageDto[]> {
+        const messageRepository = AppDataSource.getRepository(Message);
+        const messagesToRead = await Promise.all(
+            messages.map(({ messageId }) => messageRepository.findOneBy({ messageId: messageId })),
+        );
+        const readMessages = messagesToRead.map((messageToRead) => {
+            return {
+                messageId: messageToRead.messageId,
+                to: messageToRead.to,
+                from: messageToRead.from,
+                content: messageToRead.content,
+                isMessageSelected: false,
+                isMessageRead: true,
+            };
+        });
+        return messageRepository.save(readMessages);
     }
 }
 

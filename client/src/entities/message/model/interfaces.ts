@@ -4,6 +4,7 @@ export interface IMessage {
     content: string;
     messageId: string;
     isMessageSelected: boolean;
+    isMessageRead: boolean;
 }
 
 export interface IMessageValues {

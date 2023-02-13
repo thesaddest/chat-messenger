@@ -42,6 +42,7 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
                 content: values.message,
                 messageId: "",
                 isMessageSelected: false,
+                isMessageRead: false,
             };
             dispatch(sendMessage(message));
             form.resetFields();

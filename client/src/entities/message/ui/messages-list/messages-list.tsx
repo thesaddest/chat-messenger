@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 import { MessageItem } from "../message-item";
 import { IFriend } from "../../../friend";
-import { filterMessageBySender, IMessage } from "../../model";
+import { filterMessageBySender, IMessage, readMessages, readMessagesBackend } from "../../model";
+import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 
 interface IMessagesListProps {
     friend: IFriend;
@@ -24,8 +25,10 @@ const StyledWrapper = styled.div`
 `;
 
 export const MessagesList = memo<IMessagesListProps>(({ friend, messages }) => {
+    const dispatch = useAppDispatch();
+    const user = useAppSelector((state) => state.auth.user);
+    const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const bottomDiv = useRef<HTMLDivElement>(null);
-
     const memoizedFilteredMessages = useMemo(() => filterMessageBySender(messages, friend), [messages, friend]);
 
     useEffect(() => {
@@ -33,6 +36,13 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages }) => {
             bottomDiv.current.scrollIntoView({ behavior: "smooth" });
         }
     });
+
+    useEffect(() => {
+        if (memoizedFilteredMessages.length > 0 && user && friendIdActiveKey === friend.userBehindFriend) {
+            dispatch(readMessages({ messages: memoizedFilteredMessages, user: user }));
+            dispatch(readMessagesBackend(memoizedFilteredMessages));
+        }
+    }, [dispatch, friend.userBehindFriend, friendIdActiveKey, memoizedFilteredMessages, user]);
 
     return (
         <StyledWrapper>

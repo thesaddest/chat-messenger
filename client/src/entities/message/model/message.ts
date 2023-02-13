@@ -4,14 +4,21 @@ import MessageService from "../api/message.service";
 import { IFriend } from "../../friend";
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
+import { IUser } from "../../user";
 
 import { IMessage } from "./interfaces";
+
+interface IReadMessagePayload {
+    messages: IMessage[];
+    user: IUser;
+}
 
 interface MessageState {
     messages: IMessage[] | null;
     isLoading: boolean;
     error: string | null;
     selectedMessages: IMessage[];
+    readMessages: IMessage[];
 }
 
 const initialState: MessageState = {
@@ -19,6 +26,7 @@ const initialState: MessageState = {
     isLoading: true,
     error: null,
     selectedMessages: [],
+    readMessages: [],
 };
 
 export const filterMessageBySender = (messages: IMessage[], friend: IFriend): IMessage[] => {
@@ -30,6 +38,43 @@ export const filterMessageBySender = (messages: IMessage[], friend: IFriend): IM
 export const getLastMessageBySender = (messages: IMessage[], friend: IFriend): IMessage => {
     const filteredMessages = filterMessageBySender(messages, friend);
     return filteredMessages[filteredMessages.length - 1];
+};
+
+export const getUnreadMessageAmount = (readMessages: IMessage[], messages: IMessage[], friend: IFriend): number => {
+    const allMessagesInChat = filterMessageBySender(messages, friend);
+    const messagesSentFromFriend = getMessagesSentFromFriend(allMessagesInChat, friend);
+    const unreadMessages = messagesSentFromFriend.filter(
+        (messageSentFromFriend) => !readMessages.find(({ messageId }) => messageSentFromFriend.messageId === messageId),
+    );
+    return unreadMessages.length;
+};
+
+const getMessagesSentFromFriend = (messages: IMessage[], friend: IFriend): IMessage[] => {
+    return messages.filter(({ from }) => from === friend.userBehindFriend);
+};
+
+const setReadMessagesStateWithUniqueValues = (
+    readMessagesInState: IMessage[],
+    readMessagesInPayload: IMessage[],
+): IMessage[] => {
+    return readMessagesInState.concat(
+        readMessagesInPayload.filter(
+            ({ messageId }) => !readMessagesInState.find((messageInState) => messageInState.messageId === messageId),
+        ),
+    );
+};
+
+const setIsMessageReadTrue = (messages: IMessage[]): IMessage[] => {
+    return messages.map(({ to, from, messageId, isMessageSelected, content }) => {
+        return {
+            to: to,
+            from: from,
+            messageId: messageId,
+            isMessageRead: true,
+            isMessageSelected: isMessageSelected,
+            content: content,
+        };
+    });
 };
 
 export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
@@ -68,6 +113,19 @@ export const deleteMessages = createAsyncThunk<IMessage[], IMessage[], { rejectV
         }
 
         socket.emit(SOCKET_EVENTS.DELETE_MESSAGES, data);
+        return data;
+    },
+);
+
+export const readMessagesBackend = createAsyncThunk<IMessage[], IMessage[], { rejectValue: string }>(
+    "messages/readMessages",
+    async function (messages, { rejectWithValue }) {
+        const { data } = await MessageService.readMessages(messages);
+
+        if (!data) {
+            return rejectWithValue("Error while deleting messages");
+        }
+
         return data;
     },
 );
@@ -137,6 +195,22 @@ export const messageModel = createSlice({
             }
             state.selectedMessages = [];
         },
+        readMessages: (state, { payload }: PayloadAction<IReadMessagePayload>) => {
+            if (!state.messages) {
+                return;
+            }
+            const { messages, user } = payload;
+            const uniqueReadMessagesValues = setReadMessagesStateWithUniqueValues(state.readMessages, messages);
+            const uniqueReadMessages = setIsMessageReadTrue(uniqueReadMessagesValues);
+            for (const messageInState of state.messages) {
+                for (const messageInUniqueReadMessages of uniqueReadMessages) {
+                    if (messageInState.messageId === messageInUniqueReadMessages.messageId) {
+                        messageInState.isMessageRead = true;
+                    }
+                }
+            }
+            state.readMessages = uniqueReadMessages.filter((readMessage) => readMessage.to === user.userId);
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -196,11 +270,22 @@ export const messageModel = createSlice({
                 }
                 state.error = action.payload;
                 state.isLoading = false;
+            })
+            .addCase(readMessagesBackend.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(readMessagesBackend.rejected, (state, action) => {
+                if (!action.payload) {
+                    return;
+                }
+                state.error = action.payload;
+                state.isLoading = false;
             });
     },
 });
 
-export const { addMessage, deleteMessage, selectMessage, deselectMessage, deselectAllSelectedMessages } =
+export const { addMessage, deleteMessage, selectMessage, deselectMessage, deselectAllSelectedMessages, readMessages } =
     messageModel.actions;
 
 export const reducer = messageModel.reducer;

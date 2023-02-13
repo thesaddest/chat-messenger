@@ -22,6 +22,9 @@ export class Message extends BaseEntity {
     @Column({ nullable: false })
     content: string;
 
+    @Column({ nullable: false })
+    isMessageRead: boolean;
+
     @ManyToOne(() => Friend, (friend) => friend.messages)
     friend: Relation<Friend>;
 }

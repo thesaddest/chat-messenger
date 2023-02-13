@@ -11,6 +11,7 @@ interface MessageItemProps {
     content: string;
     messageId: string;
     isMessageSelected: boolean;
+    isMessageRead: boolean;
 }
 
 const StyledContainer = styled.div<MessageItemProps>`
@@ -27,7 +28,15 @@ const StyledContainer = styled.div<MessageItemProps>`
     cursor: pointer;
 `;
 
-export const MessageItem: FC<MessageItemProps> = ({ friendId, to, from, content, messageId, isMessageSelected }) => {
+export const MessageItem: FC<MessageItemProps> = ({
+    friendId,
+    to,
+    from,
+    content,
+    messageId,
+    isMessageSelected,
+    isMessageRead,
+}) => {
     const dispatch = useAppDispatch();
 
     const handleClick = useCallback(() => {
@@ -39,6 +48,7 @@ export const MessageItem: FC<MessageItemProps> = ({ friendId, to, from, content,
                     messageId: messageId,
                     content: content,
                     isMessageSelected: true,
+                    isMessageRead: isMessageRead,
                 }),
             );
         } else {
@@ -49,10 +59,11 @@ export const MessageItem: FC<MessageItemProps> = ({ friendId, to, from, content,
                     messageId: messageId,
                     content: content,
                     isMessageSelected: false,
+                    isMessageRead: isMessageRead,
                 }),
             );
         }
-    }, [content, dispatch, from, isMessageSelected, messageId, to]);
+    }, [content, dispatch, from, isMessageSelected, messageId, to, isMessageRead]);
 
     return (
         <StyledContainer
@@ -63,6 +74,7 @@ export const MessageItem: FC<MessageItemProps> = ({ friendId, to, from, content,
             messageId={messageId}
             onClick={handleClick}
             isMessageSelected={isMessageSelected}
+            isMessageRead={isMessageRead}
         >
             <p>{content}</p>
         </StyledContainer>

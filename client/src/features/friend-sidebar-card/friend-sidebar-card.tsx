@@ -1,10 +1,12 @@
-import { FC, memo, useMemo } from "react";
+import { FC, useMemo } from "react";
 import styled from "styled-components";
 
 import { IFriend } from "../../entities/friend";
-import { getLastMessageBySender, IMessage } from "../../entities/message";
-import { SharedAvatar } from "../../shared/ui";
+import { getLastMessageBySender, getUnreadMessageAmount, IMessage } from "../../entities/message";
+import { MessagesCountBadge, SharedAvatar } from "../../shared/ui";
 import { UsernameConnected } from "../../shared/ui";
+
+import { useAppSelector } from "../../shared/lib/hooks";
 
 import { FriendSidebarLastMessage } from "./friend-sidebar-last-message";
 
@@ -27,13 +29,18 @@ const StyledFriendsCardDiv = styled.div`
 `;
 
 export const FriendSidebarCard: FC<FriendSidebarCardProps> = ({ friend, messages }) => {
+    const readMessages = useAppSelector((state) => state.message.readMessages);
     const memoizedLastMessage = useMemo(() => getLastMessageBySender(messages, friend), [messages, friend]);
+    const memoizedUnreadMessageAmount = useMemo(
+        () => getUnreadMessageAmount(readMessages, messages, friend),
+        [readMessages, messages, friend],
+    );
 
     return (
         <StyledFriendsCardDiv>
-            <div>
+            <MessagesCountBadge count={memoizedUnreadMessageAmount}>
                 <SharedAvatar />
-            </div>
+            </MessagesCountBadge>
             <StyledUsernameConnectedMessageContainer>
                 <UsernameConnected friend={friend} />
                 <FriendSidebarLastMessage messageContent={memoizedLastMessage && memoizedLastMessage.content} />

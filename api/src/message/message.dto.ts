@@ -20,4 +20,8 @@ export class MessageDto {
     @IsBoolean()
     @IsNotEmpty()
     isMessageSelected: boolean;
+
+    @IsBoolean()
+    @IsNotEmpty()
+    isMessageRead: boolean;
 }
