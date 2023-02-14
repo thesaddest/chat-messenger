@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 
 import MessageService from "../api/message.service";
 import { IFriend } from "../../friend";
@@ -42,39 +42,40 @@ export const getLastMessageBySender = (messages: IMessage[], friend: IFriend): I
 
 export const getUnreadMessageAmount = (readMessages: IMessage[], messages: IMessage[], friend: IFriend): number => {
     const allMessagesInChat = filterMessageBySender(messages, friend);
-    const messagesSentFromFriend = getMessagesSentFromFriend(allMessagesInChat, friend);
+    const messagesSentFromFriend = allMessagesInChat.filter(({ from }) => from === friend.userBehindFriend);
     const unreadMessages = messagesSentFromFriend.filter(
         (messageSentFromFriend) => !readMessages.find(({ messageId }) => messageSentFromFriend.messageId === messageId),
     );
     return unreadMessages.length;
 };
 
-const getMessagesSentFromFriend = (messages: IMessage[], friend: IFriend): IMessage[] => {
-    return messages.filter(({ from }) => from === friend.userBehindFriend);
-};
-
 const setReadMessagesStateWithUniqueValues = (
-    readMessagesInState: IMessage[],
-    readMessagesInPayload: IMessage[],
+    readMessagesState: IMessage[],
+    messagesInPayload: IMessage[],
 ): IMessage[] => {
-    return readMessagesInState.concat(
-        readMessagesInPayload.filter(
-            ({ messageId }) => !readMessagesInState.find((messageInState) => messageInState.messageId === messageId),
+    return readMessagesState.concat(
+        messagesInPayload.filter(
+            ({ messageId }) =>
+                !readMessagesState.find((messageInReadState) => messageInReadState.messageId === messageId),
         ),
     );
 };
 
-const setIsMessageReadTrue = (messages: IMessage[]): IMessage[] => {
-    return messages.map(({ to, from, messageId, isMessageSelected, content }) => {
-        return {
-            to: to,
-            from: from,
-            messageId: messageId,
-            isMessageRead: true,
-            isMessageSelected: isMessageSelected,
-            content: content,
-        };
-    });
+const setMessagesStateAfterReadStatusUpdate = (
+    messagesInState: IMessage[],
+    messagesInPayload: IMessage[],
+): IMessage[] => {
+    return messagesInState.map(
+        (messageInState) =>
+            messagesInPayload.find(({ messageId }) => messageId === messageInState.messageId) || messageInState,
+    );
+};
+
+const setMessageStateAfterDeleteMessages = (messagesInState: IMessage[], messagesInPayload: IMessage[]) => {
+    return messagesInState.filter(
+        (messageInState) =>
+            !messagesInPayload.some((messageInPayload) => messageInPayload.messageId === messageInState.messageId),
+    );
 };
 
 export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
@@ -117,15 +118,26 @@ export const deleteMessages = createAsyncThunk<IMessage[], IMessage[], { rejectV
     },
 );
 
-export const readMessagesBackend = createAsyncThunk<IMessage[], IMessage[], { rejectValue: string }>(
+export const readMessages = createAsyncThunk<IMessage[], IReadMessagePayload, { rejectValue: string }>(
     "messages/readMessages",
-    async function (messages, { rejectWithValue }) {
-        const { data } = await MessageService.readMessages(messages);
-
-        if (!data) {
-            return rejectWithValue("Error while deleting messages");
+    async function ({ messages, user }, { rejectWithValue }) {
+        const messagesSentFromFriend = messages.filter((message) => message.from !== user.userId);
+        if (messagesSentFromFriend.length === 0) {
+            return rejectWithValue("No messages to read");
         }
 
+        const messagesToRead = messagesSentFromFriend.filter(({ isMessageRead }) => !isMessageRead);
+        if (messagesToRead.length === 0) {
+            return rejectWithValue("No messages to read");
+        }
+
+        const { data } = await MessageService.readMessages(messagesToRead);
+
+        if (!data) {
+            return rejectWithValue("Error while reading messages");
+        }
+
+        socket.emit(SOCKET_EVENTS.READ_MESSAGES, data);
         return data;
     },
 );
@@ -195,21 +207,22 @@ export const messageModel = createSlice({
             }
             state.selectedMessages = [];
         },
-        readMessages: (state, { payload }: PayloadAction<IReadMessagePayload>) => {
+        getReadMessages: (state) => {
             if (!state.messages) {
                 return;
             }
-            const { messages, user } = payload;
-            const uniqueReadMessagesValues = setReadMessagesStateWithUniqueValues(state.readMessages, messages);
-            const uniqueReadMessages = setIsMessageReadTrue(uniqueReadMessagesValues);
-            for (const messageInState of state.messages) {
-                for (const messageInUniqueReadMessages of uniqueReadMessages) {
-                    if (messageInState.messageId === messageInUniqueReadMessages.messageId) {
-                        messageInState.isMessageRead = true;
-                    }
-                }
+            state.readMessages = current(state.messages).filter(
+                (messageInState) => messageInState.isMessageRead === true,
+            );
+        },
+        readMessage: (state, action: PayloadAction<IMessage>) => {
+            if (!state.messages || !state.readMessages) {
+                return;
             }
-            state.readMessages = uniqueReadMessages.filter((readMessage) => readMessage.to === user.userId);
+            state.readMessages.push(action.payload);
+            state.messages = state.messages.map((messageInState) =>
+                messageInState.messageId === action.payload.messageId ? action.payload : messageInState,
+            );
         },
     },
     extraReducers: (builder) => {
@@ -255,12 +268,8 @@ export const messageModel = createSlice({
                 if (!state.messages) {
                     return;
                 }
-                state.messages = state.messages.filter(
-                    (messageInState) =>
-                        !action.payload.some(
-                            (messageInPayload) => messageInPayload.messageId === messageInState.messageId,
-                        ),
-                );
+                state.messages = setMessageStateAfterDeleteMessages(state.messages, action.payload);
+                state.readMessages = setMessageStateAfterDeleteMessages(state.readMessages, action.payload);
                 state.isLoading = false;
                 state.error = null;
             })
@@ -271,11 +280,16 @@ export const messageModel = createSlice({
                 state.error = action.payload;
                 state.isLoading = false;
             })
-            .addCase(readMessagesBackend.fulfilled, (state, action) => {
+            .addCase(readMessages.fulfilled, (state, action) => {
+                if (!state.messages) {
+                    return;
+                }
+                state.readMessages = setReadMessagesStateWithUniqueValues(state.readMessages, action.payload);
+                state.messages = setMessagesStateAfterReadStatusUpdate(state.messages, action.payload);
                 state.isLoading = false;
                 state.error = null;
             })
-            .addCase(readMessagesBackend.rejected, (state, action) => {
+            .addCase(readMessages.rejected, (state, action) => {
                 if (!action.payload) {
                     return;
                 }
@@ -285,7 +299,14 @@ export const messageModel = createSlice({
     },
 });
 
-export const { addMessage, deleteMessage, selectMessage, deselectMessage, deselectAllSelectedMessages, readMessages } =
-    messageModel.actions;
+export const {
+    addMessage,
+    deleteMessage,
+    selectMessage,
+    deselectMessage,
+    deselectAllSelectedMessages,
+    getReadMessages,
+    readMessage,
+} = messageModel.actions;
 
 export const reducer = messageModel.reducer;

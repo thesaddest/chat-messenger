@@ -33,6 +33,12 @@ export const deleteMessages = async (socket: Socket, messageDtos: MessageDto[]):
     }
 };
 
+export const readMessages = async (socket: Socket, messageDtos: MessageDto[]): Promise<void> => {
+    for (const messageDto of messageDtos) {
+        socket.to(messageDto.from).emit(SOCKET_EVENTS.READ_MESSAGES, messageDto);
+    }
+};
+
 export const getMessages = async (socket: Socket): Promise<void> => {
     socket.emit(SOCKET_EVENTS.GET_ALL_MESSAGES);
 };

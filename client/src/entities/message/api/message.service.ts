@@ -16,7 +16,7 @@ export default class MessageService {
         return api.post<IMessage[]>("/message/deleteMessages", messageIds);
     }
 
-    static async readMessages(messageIds: IMessage[]): Promise<AxiosResponse<IMessage[]>> {
-        return api.post<IMessage[]>("/message/readMessages", messageIds);
+    static async readMessages(messages: IMessage[]): Promise<AxiosResponse<IMessage[]>> {
+        return api.post<IMessage[]>("/message/readMessages", messages);
     }
 }

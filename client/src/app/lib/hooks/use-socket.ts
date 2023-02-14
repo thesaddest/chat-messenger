@@ -4,7 +4,14 @@ import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
 import { getFriends, IFriendStatus, initUser } from "../../../entities/friend";
-import { addMessage, deleteMessage, getMessages, IMessage } from "../../../entities/message";
+import {
+    addMessage,
+    deleteMessage,
+    getMessages,
+    getReadMessages,
+    IMessage,
+    readMessage,
+} from "../../../entities/message";
 import { socketError } from "../../../entities/user";
 
 export const useSocket = () => {
@@ -27,8 +34,9 @@ export const useSocket = () => {
             dispatch(getFriends());
         });
 
-        socket.on(SOCKET_EVENTS.GET_ALL_MESSAGES, () => {
-            dispatch(getMessages());
+        socket.on(SOCKET_EVENTS.GET_ALL_MESSAGES, async () => {
+            await dispatch(getMessages());
+            await dispatch(getReadMessages());
         });
 
         socket.on(SOCKET_EVENTS.SEND_MESSAGE, (message: IMessage) => {
@@ -37,6 +45,10 @@ export const useSocket = () => {
 
         socket.on(SOCKET_EVENTS.DELETE_MESSAGES, (message: IMessage) => {
             dispatch(deleteMessage(message));
+        });
+
+        socket.on(SOCKET_EVENTS.READ_MESSAGES, (message: IMessage) => {
+            dispatch(readMessage(message));
         });
 
         socket.on(SOCKET_EVENTS.ON_DISCONNECT, (friendStatus: IFriendStatus) => {
@@ -58,6 +70,7 @@ export const useSocket = () => {
             socket.off(SOCKET_EVENTS.GET_ALL_FRIENDS);
             socket.off(SOCKET_EVENTS.SEND_MESSAGE);
             socket.off(SOCKET_EVENTS.ADD_FRIEND);
+            socket.off(SOCKET_EVENTS.DELETE_MESSAGES);
             socket.off(SOCKET_EVENTS.ERROR);
             socket.off(SOCKET_EVENTS.ON_DISCONNECT);
         };

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { MessageItem } from "../message-item";
 import { IFriend } from "../../../friend";
-import { filterMessageBySender, IMessage, readMessages, readMessagesBackend } from "../../model";
+import { filterMessageBySender, IMessage, readMessages } from "../../model";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 
 interface IMessagesListProps {
@@ -35,12 +35,11 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages }) => {
         if (bottomDiv.current) {
             bottomDiv.current.scrollIntoView({ behavior: "smooth" });
         }
-    });
+    }, [messages.length]);
 
     useEffect(() => {
         if (memoizedFilteredMessages.length > 0 && user && friendIdActiveKey === friend.userBehindFriend) {
             dispatch(readMessages({ messages: memoizedFilteredMessages, user: user }));
-            dispatch(readMessagesBackend(memoizedFilteredMessages));
         }
     }, [dispatch, friend.userBehindFriend, friendIdActiveKey, memoizedFilteredMessages, user]);
 

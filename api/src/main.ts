@@ -5,6 +5,7 @@ import {
     getMessages,
     onInitUser,
     deleteMessages,
+    readMessages,
 } from "./socket/socket.controller.js";
 import express from "express";
 import helmet from "helmet";
@@ -49,6 +50,10 @@ io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
 
     socket.on(SOCKET_EVENTS.DELETE_MESSAGES, (messageDtos: MessageDto[]) => {
         deleteMessages(socket, messageDtos);
+    });
+
+    socket.on(SOCKET_EVENTS.READ_MESSAGES, (messageDtos: MessageDto[]) => {
+        readMessages(socket, messageDtos);
     });
 
     socket.on(SOCKET_EVENTS.ON_DISCONNECT, () => {

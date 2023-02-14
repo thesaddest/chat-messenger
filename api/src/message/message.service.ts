@@ -71,20 +71,21 @@ class MessageService {
 
     async readMessages(messages: MessageDto[]): Promise<MessageDto[]> {
         const messageRepository = AppDataSource.getRepository(Message);
-        const messagesToRead = await Promise.all(
-            messages.map(({ messageId }) => messageRepository.findOneBy({ messageId: messageId })),
+        return await Promise.all(
+            messages.map(async ({ messageId }) => {
+                const messageInRepository = await messageRepository.findOneBy({ messageId: messageId });
+                messageInRepository.isMessageRead = true;
+                const savedReadMessage = await messageRepository.save(messageInRepository);
+                return {
+                    messageId: savedReadMessage.messageId,
+                    to: savedReadMessage.to,
+                    from: savedReadMessage.from,
+                    content: savedReadMessage.content,
+                    isMessageSelected: false,
+                    isMessageRead: savedReadMessage.isMessageRead,
+                };
+            }),
         );
-        const readMessages = messagesToRead.map((messageToRead) => {
-            return {
-                messageId: messageToRead.messageId,
-                to: messageToRead.to,
-                from: messageToRead.from,
-                content: messageToRead.content,
-                isMessageSelected: false,
-                isMessageRead: true,
-            };
-        });
-        return messageRepository.save(readMessages);
     }
 }
 
