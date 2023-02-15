@@ -3,9 +3,13 @@ import { Message } from "./message.entity.js";
 import { AppDataSource } from "../db/database.js";
 import { MessageDto } from "./message.dto.js";
 import { User } from "../user/user.entity.js";
+import { userService } from "../user/user.service.js";
 
 class MessageService {
-    async createMessage({ to, from, content, isMessageRead }: MessageDto, user: User): Promise<MessageDto> {
+    async createMessage(
+        { to, from, content, isMessageRead, isMessageForwarded, isMessageSelected }: MessageDto,
+        user: User,
+    ): Promise<MessageDto> {
         const messageRepository = AppDataSource.getRepository(Message);
         const newMessage = {
             messageId: uuidv4(),
@@ -14,6 +18,7 @@ class MessageService {
             content: content,
             friend: user,
             isMessageRead: isMessageRead,
+            isMessageForwarded: isMessageForwarded,
         };
         const message = messageRepository.create(newMessage);
         await messageRepository.save(message);
@@ -23,8 +28,9 @@ class MessageService {
             to: message.to,
             from: message.from,
             content: message.content,
-            isMessageSelected: false,
+            isMessageSelected: isMessageSelected,
             isMessageRead: isMessageRead,
+            isMessageForwarded: isMessageForwarded,
         };
     }
 
@@ -45,6 +51,7 @@ class MessageService {
                 content: message.content,
                 isMessageSelected: false,
                 isMessageRead: message.isMessageRead,
+                isMessageForwarded: message.isMessageForwarded,
             });
         }
 
@@ -66,6 +73,7 @@ class MessageService {
             content: message.content,
             isMessageSelected: false,
             isMessageRead: message.isMessageRead,
+            isMessageForwarded: message.isMessageForwarded,
         }));
     }
 
@@ -83,6 +91,25 @@ class MessageService {
                     content: savedReadMessage.content,
                     isMessageSelected: false,
                     isMessageRead: savedReadMessage.isMessageRead,
+                    isMessageForwarded: savedReadMessage.isMessageForwarded,
+                };
+            }),
+        );
+    }
+
+    async forwardMessages(messages: MessageDto[], user: User): Promise<MessageDto[]> {
+        return await Promise.all(
+            messages.map(async (message) => {
+                const createdForwardedMessage = await this.createMessage(message, user);
+                return {
+                    messageId: createdForwardedMessage.messageId,
+                    to: createdForwardedMessage.to,
+                    from: createdForwardedMessage.from,
+                    content: createdForwardedMessage.content,
+                    isMessageSelected: false,
+                    isMessageRead: createdForwardedMessage.isMessageRead,
+                    isMessageForwarded: createdForwardedMessage.isMessageForwarded,
+                    forwardedFrom: await userService.getUsernameByUserId(createdForwardedMessage.from),
                 };
             }),
         );

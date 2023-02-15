@@ -7,6 +7,7 @@ import { getFriends, IFriendStatus, initUser } from "../../../entities/friend";
 import {
     addMessage,
     deleteMessage,
+    forwardMessage,
     getMessages,
     getReadMessages,
     IMessage,
@@ -51,6 +52,10 @@ export const useSocket = () => {
             dispatch(readMessage(message));
         });
 
+        socket.on(SOCKET_EVENTS.FORWARD_MESSAGES, (message: IMessage) => {
+            dispatch(forwardMessage(message));
+        });
+
         socket.on(SOCKET_EVENTS.ON_DISCONNECT, (friendStatus: IFriendStatus) => {
             dispatch(initUser(friendStatus));
         });
@@ -71,6 +76,7 @@ export const useSocket = () => {
             socket.off(SOCKET_EVENTS.SEND_MESSAGE);
             socket.off(SOCKET_EVENTS.ADD_FRIEND);
             socket.off(SOCKET_EVENTS.DELETE_MESSAGES);
+            socket.off(SOCKET_EVENTS.FORWARD_MESSAGES);
             socket.off(SOCKET_EVENTS.ERROR);
             socket.off(SOCKET_EVENTS.ON_DISCONNECT);
         };

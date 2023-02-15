@@ -75,6 +75,23 @@ class MessageController {
             next(e);
         }
     }
+
+    async forwardMessages(req: ITypedRequest<MessageDto[]>, res: Response, next: NextFunction) {
+        try {
+            const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
+
+            if (!user) {
+                return next(ErrorException.UnauthorizedError());
+            }
+
+            const messages = req.body;
+            const forwardedMessages = await messageService.forwardMessages(messages, user);
+
+            return res.json(forwardedMessages);
+        } catch (e) {
+            next(e);
+        }
+    }
 }
 
 export const messageController = new MessageController();

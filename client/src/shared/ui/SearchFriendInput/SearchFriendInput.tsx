@@ -1,10 +1,9 @@
 import { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
-
 import { Input, InputRef } from "antd";
 
-import { Search } from "../../../../shared/ui";
-import { useAppDispatch, useDebounce } from "../../../../shared/lib/hooks";
-import { getFriendsBySearchQuery } from "../../../../entities/friend";
+import { useAppDispatch, useDebounce } from "../../lib/hooks";
+import { getFriendsBySearchQuery } from "../../../entities/friend";
+import { Search } from "../Icons";
 
 interface ISearchFriendInputProps {
     setModalSearchInputValue: Dispatch<SetStateAction<string>>;

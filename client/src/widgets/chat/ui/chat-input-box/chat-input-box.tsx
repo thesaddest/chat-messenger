@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Form } from "antd";
 import styled from "styled-components";
 
-import { IMessage, IMessageValues } from "../../../../entities/message";
+import { createMessage, IMessageValues } from "../../../../entities/message";
 import { sendMessage } from "../../../../entities/message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 import { SendMessageButton } from "../../../../shared/ui";
@@ -36,14 +36,7 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
 
     const onFinish = (values: IMessageValues) => {
         if (userId) {
-            const message: IMessage = {
-                to: friendId,
-                from: userId,
-                content: values.message,
-                messageId: "",
-                isMessageSelected: false,
-                isMessageRead: false,
-            };
+            const message = createMessage(friendId, userId, values.message);
             dispatch(sendMessage(message));
             form.resetFields();
         }

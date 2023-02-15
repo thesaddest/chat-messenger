@@ -19,4 +19,8 @@ export default class MessageService {
     static async readMessages(messages: IMessage[]): Promise<AxiosResponse<IMessage[]>> {
         return api.post<IMessage[]>("/message/readMessages", messages);
     }
+
+    static async forwardMessages(messages: IMessage[]): Promise<AxiosResponse<IMessage[]>> {
+        return api.post<IMessage[]>("/message/forwardMessages", messages);
+    }
 }

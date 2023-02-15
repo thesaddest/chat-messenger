@@ -24,4 +24,12 @@ export class MessageDto {
     @IsBoolean()
     @IsNotEmpty()
     isMessageRead: boolean;
+
+    @IsBoolean()
+    @IsNotEmpty()
+    isMessageForwarded: boolean;
+
+    @IsString()
+    @IsNotEmpty()
+    forwardedFrom?: string;
 }

@@ -5,6 +5,8 @@ export interface IMessage {
     messageId: string;
     isMessageSelected: boolean;
     isMessageRead: boolean;
+    isMessageForwarded: boolean;
+    forwardedFrom?: string;
 }
 
 export interface IMessageValues {

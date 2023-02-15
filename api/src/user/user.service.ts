@@ -29,6 +29,13 @@ class UserService {
 
         return await userService.getUserByEmail(decodedPayload.payload.email);
     }
+
+    async getUsernameByUserId(id: string): Promise<string> {
+        const userRepository = AppDataSource.getRepository(User);
+        const user = await userRepository.findOne({ where: { userId: id } });
+
+        return user.username;
+    }
 }
 
 export const userService = new UserService();

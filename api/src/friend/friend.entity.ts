@@ -23,6 +23,6 @@ export class Friend extends BaseEntity {
     @ManyToOne(() => User, (user) => user.friends, { nullable: true })
     user: Relation<User>;
 
-    @OneToMany(() => Message, message => message.friend)
+    @OneToMany(() => Message, (message) => message.friend)
     messages: Relation<Message[]>;
 }

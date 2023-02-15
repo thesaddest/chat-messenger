@@ -8,6 +8,8 @@ import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
 import { ScrollToSeeMore } from "../../../../shared/ui";
 
+import { deselectAllSelectedMessages } from "../../../../entities/message";
+
 import { ChatTabsContent } from "./chat-tabs-content";
 
 //TODO: Remove scroll to top
@@ -92,6 +94,7 @@ const StyledChatBoxTabs = styled(Tabs)`
 export const ChatTabsBox = memo(() => {
     const [isScroll, setIsScroll] = useState<boolean>(false);
     const messages = useAppSelector((state) => state.message.messages);
+    const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const friends = useAppSelector((state) => state.friend.friends);
 
@@ -100,8 +103,9 @@ export const ChatTabsBox = memo(() => {
     const onTabChange = useCallback(
         (activeKey: string) => {
             dispatch(setFriendIdActiveKey(activeKey));
+            dispatch(deselectAllSelectedMessages(selectedMessages));
         },
-        [dispatch],
+        [selectedMessages, dispatch],
     );
 
     const scrollHandler = useDebounce((e: ITabsSrcollDirection) => {

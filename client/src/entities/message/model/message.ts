@@ -13,12 +13,18 @@ interface IReadMessagePayload {
     user: IUser;
 }
 
+interface IForwardMessagesPayload {
+    messages: IMessage[];
+    to: string;
+}
+
 interface MessageState {
     messages: IMessage[] | null;
     isLoading: boolean;
     error: string | null;
     selectedMessages: IMessage[];
     readMessages: IMessage[];
+    forwardedMessages: IMessage[];
 }
 
 const initialState: MessageState = {
@@ -27,6 +33,27 @@ const initialState: MessageState = {
     error: null,
     selectedMessages: [],
     readMessages: [],
+    forwardedMessages: [],
+};
+
+export const createMessage = (
+    to: string,
+    from: string,
+    content: string,
+    messageId?: string,
+    isMessageSelected?: boolean,
+    isMessageRead?: boolean,
+    isMessageForwarded?: boolean,
+): IMessage => {
+    return {
+        to: to,
+        from: from,
+        content: content,
+        messageId: messageId !== undefined ? messageId : "",
+        isMessageSelected: isMessageSelected !== undefined ? isMessageSelected : false,
+        isMessageRead: isMessageRead !== undefined ? isMessageRead : false,
+        isMessageForwarded: isMessageForwarded !== undefined ? isMessageForwarded : false,
+    };
 };
 
 export const filterMessageBySender = (messages: IMessage[], friend: IFriend): IMessage[] => {
@@ -76,6 +103,18 @@ const setMessageStateAfterDeleteMessages = (messagesInState: IMessage[], message
         (messageInState) =>
             !messagesInPayload.some((messageInPayload) => messageInPayload.messageId === messageInState.messageId),
     );
+};
+
+const setMessagesForwarded = (messages: IMessage[], to: string): IMessage[] => {
+    return messages.map((message) => ({
+        to: to,
+        from: message.from,
+        content: message.content,
+        messageId: message.messageId,
+        isMessageSelected: message.isMessageSelected,
+        isMessageRead: message.isMessageRead,
+        isMessageForwarded: true,
+    }));
 };
 
 export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
@@ -142,6 +181,20 @@ export const readMessages = createAsyncThunk<IMessage[], IReadMessagePayload, { 
     },
 );
 
+export const forwardMessages = createAsyncThunk<IMessage[], IForwardMessagesPayload, { rejectValue: string }>(
+    "messages/forwardMessages",
+    async function ({ messages, to }, { rejectWithValue }) {
+        const forwardedMessages = setMessagesForwarded(messages, to);
+        const { data } = await MessageService.forwardMessages(forwardedMessages);
+
+        if (!data) {
+            return rejectWithValue("Error while forwarding messages");
+        }
+        socket.emit(SOCKET_EVENTS.FORWARD_MESSAGES, data);
+        return data;
+    },
+);
+
 export const messageModel = createSlice({
     name: "messages",
     initialState,
@@ -160,6 +213,10 @@ export const messageModel = createSlice({
                 (messageInState) => messageInState.messageId !== action.payload.messageId,
             );
             state.readMessages = state.readMessages.filter(
+                (messageInState) => messageInState.messageId !== action.payload.messageId,
+            );
+
+            state.forwardedMessages = state.forwardedMessages.filter(
                 (messageInState) => messageInState.messageId !== action.payload.messageId,
             );
         },
@@ -227,6 +284,13 @@ export const messageModel = createSlice({
                 messageInState.messageId === action.payload.messageId ? action.payload : messageInState,
             );
         },
+        forwardMessage: (state, action: PayloadAction<IMessage>) => {
+            if (!state.messages) {
+                return;
+            }
+            state.forwardedMessages.push(action.payload);
+            state.messages.push(action.payload);
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -273,6 +337,7 @@ export const messageModel = createSlice({
                 }
                 state.messages = setMessageStateAfterDeleteMessages(state.messages, action.payload);
                 state.readMessages = setMessageStateAfterDeleteMessages(state.readMessages, action.payload);
+                state.forwardedMessages = setMessageStateAfterDeleteMessages(state.forwardedMessages, action.payload);
                 state.isLoading = false;
                 state.error = null;
             })
@@ -298,6 +363,22 @@ export const messageModel = createSlice({
                 }
                 state.error = action.payload;
                 state.isLoading = false;
+            })
+            .addCase(forwardMessages.fulfilled, (state, action) => {
+                if (!state.messages) {
+                    return;
+                }
+                state.forwardedMessages = state.forwardedMessages.concat(action.payload);
+                state.messages = state.messages.concat(action.payload);
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(forwardMessages.rejected, (state, action) => {
+                if (!action.payload) {
+                    return;
+                }
+                state.error = action.payload;
+                state.isLoading = false;
             });
     },
 });
@@ -310,6 +391,7 @@ export const {
     deselectAllSelectedMessages,
     getReadMessages,
     readMessage,
+    forwardMessage,
 } = messageModel.actions;
 
 export const reducer = messageModel.reducer;
