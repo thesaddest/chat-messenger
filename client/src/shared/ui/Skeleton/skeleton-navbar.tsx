@@ -18,16 +18,28 @@ const StyledNavbarContainer = styled.div`
 const StyledButtonsContainer = styled.div`
     display: flex;
     gap: 0.5rem;
-    padding-right: 2rem;
+    padding: 0 2rem 0 2rem;
 
-    @media only screen and (min-width: 1024px) {
+    @media only screen and (max-width: 768px) {
+        padding-right: 2rem;
+    }
+
+    @media only screen and (min-width: 768px) {
+        padding: 0;
+    }
+
+    @media only screen and (min-width: 1080px) {
         padding-left: 9rem;
     }
 `;
 
 const StyledInputContainer = styled.div`
     display: flex;
-    padding-left: 3rem;
+    padding-left: 1rem;
+
+    @media only screen and (max-width: 425px) {
+        padding-right: 1.5rem;
+    }
 `;
 
 export const SkeletonNavbar: FC = () => {
