@@ -159,6 +159,9 @@ export const messageModel = createSlice({
             state.messages = state.messages.filter(
                 (messageInState) => messageInState.messageId !== action.payload.messageId,
             );
+            state.readMessages = state.readMessages.filter(
+                (messageInState) => messageInState.messageId !== action.payload.messageId,
+            );
         },
         selectMessage: (state, action: PayloadAction<IMessage>) => {
             if (!state.messages) {
