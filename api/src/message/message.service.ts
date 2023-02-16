@@ -132,7 +132,7 @@ class MessageService {
                     isMessageSelected: false,
                     isMessageRead: createdForwardedMessage.isMessageRead,
                     isMessageForwarded: createdForwardedMessage.isMessageForwarded,
-                    forwardedFrom: await userService.getUsernameByUserId(createdForwardedMessage.from),
+                    forwardedFrom: await userService.getUsernameByUserId(message.from),
                 };
             }),
         );
