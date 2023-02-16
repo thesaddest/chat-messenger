@@ -6,19 +6,16 @@ import { User } from "../user/user.entity.js";
 import { userService } from "../user/user.service.js";
 
 class MessageService {
-    async createMessage(
-        { to, from, content, isMessageRead, isMessageForwarded, isMessageSelected }: MessageDto,
-        user: User,
-    ): Promise<MessageDto> {
+    async createMessage(messageDto: MessageDto, user: User): Promise<MessageDto> {
         const messageRepository = AppDataSource.getRepository(Message);
         const newMessage = {
             messageId: uuidv4(),
-            to: to,
-            from: from,
-            content: content,
+            to: messageDto.to,
+            from: messageDto.from,
+            content: messageDto.content,
             friend: user,
-            isMessageRead: isMessageRead,
-            isMessageForwarded: isMessageForwarded,
+            isMessageRead: messageDto.isMessageRead,
+            isMessageForwarded: messageDto.isMessageForwarded,
         };
         const message = messageRepository.create(newMessage);
         await messageRepository.save(message);
@@ -28,9 +25,9 @@ class MessageService {
             to: message.to,
             from: message.from,
             content: message.content,
-            isMessageSelected: isMessageSelected,
-            isMessageRead: isMessageRead,
-            isMessageForwarded: isMessageForwarded,
+            isMessageSelected: false,
+            isMessageRead: message.isMessageRead,
+            isMessageForwarded: message.isMessageForwarded,
         };
     }
 
@@ -98,10 +95,35 @@ class MessageService {
         );
     }
 
-    async forwardMessages(messages: MessageDto[], user: User): Promise<MessageDto[]> {
+    async createForwardedMessage(messageDto: MessageDto, user: User, to: string) {
+        const messageRepository = AppDataSource.getRepository(Message);
+        const newMessage = {
+            messageId: uuidv4(),
+            to: to,
+            from: messageDto.from,
+            content: messageDto.content,
+            friend: user,
+            isMessageRead: messageDto.isMessageRead,
+            isMessageForwarded: true,
+        };
+        const forwardedMessage = messageRepository.create(newMessage);
+        await messageRepository.save(forwardedMessage);
+
+        return {
+            messageId: forwardedMessage.messageId,
+            to: forwardedMessage.to,
+            from: forwardedMessage.from,
+            content: forwardedMessage.content,
+            isMessageSelected: false,
+            isMessageRead: forwardedMessage.isMessageRead,
+            isMessageForwarded: forwardedMessage.isMessageForwarded,
+        };
+    }
+
+    async forwardMessages(messages: MessageDto[], user: User, to: string): Promise<MessageDto[]> {
         return await Promise.all(
             messages.map(async (message) => {
-                const createdForwardedMessage = await this.createMessage(message, user);
+                const createdForwardedMessage = await this.createForwardedMessage(message, user, to);
                 return {
                     messageId: createdForwardedMessage.messageId,
                     to: createdForwardedMessage.to,

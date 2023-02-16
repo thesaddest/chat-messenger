@@ -6,16 +6,11 @@ import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
 import { IUser } from "../../user";
 
-import { IMessage } from "./interfaces";
+import { IForwardMessagesPayload, IMessage } from "./interfaces";
 
 interface IReadMessagePayload {
     messages: IMessage[];
     user: IUser;
-}
-
-interface IForwardMessagesPayload {
-    messages: IMessage[];
-    to: string;
 }
 
 interface MessageState {
@@ -105,18 +100,6 @@ const setMessageStateAfterDeleteMessages = (messagesInState: IMessage[], message
     );
 };
 
-const setMessagesForwarded = (messages: IMessage[], to: string): IMessage[] => {
-    return messages.map((message) => ({
-        to: to,
-        from: message.from,
-        content: message.content,
-        messageId: message.messageId,
-        isMessageSelected: message.isMessageSelected,
-        isMessageRead: message.isMessageRead,
-        isMessageForwarded: true,
-    }));
-};
-
 export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
     "messages/sendMessage",
     async function (messageData, { rejectWithValue }) {
@@ -183,9 +166,8 @@ export const readMessages = createAsyncThunk<IMessage[], IReadMessagePayload, { 
 
 export const forwardMessages = createAsyncThunk<IMessage[], IForwardMessagesPayload, { rejectValue: string }>(
     "messages/forwardMessages",
-    async function ({ messages, to }, { rejectWithValue }) {
-        const forwardedMessages = setMessagesForwarded(messages, to);
-        const { data } = await MessageService.forwardMessages(forwardedMessages);
+    async function (forwardMessagesPayload, { rejectWithValue }) {
+        const { data } = await MessageService.forwardMessages(forwardMessagesPayload);
 
         if (!data) {
             return rejectWithValue("Error while forwarding messages");

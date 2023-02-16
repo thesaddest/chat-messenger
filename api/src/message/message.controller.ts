@@ -8,6 +8,11 @@ interface ITypedRequest<T> extends Request {
     body: T;
 }
 
+interface IForwardMessagesPayload {
+    messages: MessageDto[];
+    to: string;
+}
+
 class MessageController {
     async getMessages(req: Request, res: Response, next: NextFunction) {
         try {
@@ -76,7 +81,7 @@ class MessageController {
         }
     }
 
-    async forwardMessages(req: ITypedRequest<MessageDto[]>, res: Response, next: NextFunction) {
+    async forwardMessages(req: ITypedRequest<IForwardMessagesPayload>, res: Response, next: NextFunction) {
         try {
             const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
 
@@ -84,8 +89,8 @@ class MessageController {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            const messages = req.body;
-            const forwardedMessages = await messageService.forwardMessages(messages, user);
+            const { messages, to } = req.body;
+            const forwardedMessages = await messageService.forwardMessages(messages, user, to);
 
             return res.json(forwardedMessages);
         } catch (e) {
