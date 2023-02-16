@@ -15,5 +15,6 @@ export interface IMessageValues {
 
 export interface IForwardMessagesPayload {
     messages: IMessage[];
+    from: string;
     to: string;
 }

@@ -95,12 +95,12 @@ class MessageService {
         );
     }
 
-    async createForwardedMessage(messageDto: MessageDto, user: User, to: string) {
+    async createForwardedMessage(messageDto: MessageDto, user: User, from: string, to: string) {
         const messageRepository = AppDataSource.getRepository(Message);
         const newMessage = {
             messageId: uuidv4(),
             to: to,
-            from: messageDto.from,
+            from: from,
             content: messageDto.content,
             friend: user,
             isMessageRead: messageDto.isMessageRead,
@@ -120,10 +120,10 @@ class MessageService {
         };
     }
 
-    async forwardMessages(messages: MessageDto[], user: User, to: string): Promise<MessageDto[]> {
+    async forwardMessages(messages: MessageDto[], user: User, from: string, to: string): Promise<MessageDto[]> {
         return await Promise.all(
             messages.map(async (message) => {
-                const createdForwardedMessage = await this.createForwardedMessage(message, user, to);
+                const createdForwardedMessage = await this.createForwardedMessage(message, user, from, to);
                 return {
                     messageId: createdForwardedMessage.messageId,
                     to: createdForwardedMessage.to,

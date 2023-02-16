@@ -10,6 +10,7 @@ interface ITypedRequest<T> extends Request {
 
 interface IForwardMessagesPayload {
     messages: MessageDto[];
+    from: string;
     to: string;
 }
 
@@ -89,8 +90,8 @@ class MessageController {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            const { messages, to } = req.body;
-            const forwardedMessages = await messageService.forwardMessages(messages, user, to);
+            const { messages, from, to } = req.body;
+            const forwardedMessages = await messageService.forwardMessages(messages, user, from, to);
 
             return res.json(forwardedMessages);
         } catch (e) {

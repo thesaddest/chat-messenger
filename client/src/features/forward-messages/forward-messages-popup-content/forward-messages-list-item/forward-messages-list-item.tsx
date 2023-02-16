@@ -23,15 +23,26 @@ export const ForwardMessagesListItem = memo<IForwardMessagesListItemProps>(
         const messages = useAppSelector((state) => state.message.messages);
         const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
         const dispatch = useAppDispatch();
+        const userId = useAppSelector((state) => state.auth.user?.userId);
 
         const handleClick = useCallback(() => {
-            dispatch(forwardMessages({ messages: selectedMessages, to: friend.userBehindFriend }));
-            dispatch(deselectAllSelectedMessages(selectedMessages));
-            dispatch(setFriendIdActiveKey(friend.userBehindFriend));
-            setIsModalOpen(false);
-            setModalSearchInputValue("");
-            form.resetFields();
-        }, [dispatch, friend.userBehindFriend, selectedMessages, setIsModalOpen, setModalSearchInputValue, form]);
+            if (userId) {
+                dispatch(forwardMessages({ messages: selectedMessages, from: userId, to: friend.userBehindFriend }));
+                dispatch(deselectAllSelectedMessages(selectedMessages));
+                dispatch(setFriendIdActiveKey(friend.userBehindFriend));
+                setIsModalOpen(false);
+                setModalSearchInputValue("");
+                form.resetFields();
+            }
+        }, [
+            userId,
+            dispatch,
+            selectedMessages,
+            friend.userBehindFriend,
+            setIsModalOpen,
+            setModalSearchInputValue,
+            form,
+        ]);
 
         return (
             messages && (
