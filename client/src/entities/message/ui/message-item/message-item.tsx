@@ -1,4 +1,4 @@
-import { memo, useCallback } from "react";
+import { FC, useCallback } from "react";
 import styled from "styled-components";
 
 import { useAppDispatch } from "../../../../shared/lib/hooks";
@@ -45,57 +45,53 @@ const StyledForwarded = styled.p<{ to: string; friendId: string }>`
     color: ${(props) => (props.to === props.friendId ? "whitesmoke" : "black")};
 `;
 
-export const MessageItem = memo<MessageItemProps>(
-    ({
-        friendId,
-        to,
-        from,
-        content,
-        messageId,
-        isMessageSelected,
-        isMessageRead,
-        isMessageForwarded,
-        forwardedFrom,
-    }) => {
-        const dispatch = useAppDispatch();
+export const MessageItem: FC<MessageItemProps> = ({
+    friendId,
+    to,
+    from,
+    content,
+    messageId,
+    isMessageSelected,
+    isMessageRead,
+    isMessageForwarded,
+    forwardedFrom,
+}) => {
+    const dispatch = useAppDispatch();
 
-        const handleClick = useCallback(() => {
-            if (!isMessageSelected) {
-                dispatch(
-                    selectMessage(createMessage(to, from, content, messageId, true, isMessageRead, isMessageForwarded)),
-                );
-            } else {
-                dispatch(
-                    deselectMessage(
-                        createMessage(to, from, content, messageId, false, isMessageRead, isMessageForwarded),
-                    ),
-                );
-            }
-        }, [isMessageSelected, dispatch, to, from, content, messageId, isMessageRead, isMessageForwarded]);
+    const handleClick = useCallback(() => {
+        if (!isMessageSelected) {
+            dispatch(
+                selectMessage(createMessage(to, from, content, messageId, true, isMessageRead, isMessageForwarded)),
+            );
+        } else {
+            dispatch(
+                deselectMessage(createMessage(to, from, content, messageId, false, isMessageRead, isMessageForwarded)),
+            );
+        }
+    }, [isMessageSelected, dispatch, to, from, content, messageId, isMessageRead, isMessageForwarded]);
 
-        return (
-            <StyledContainer
-                friendId={friendId}
-                to={to}
-                from={from}
-                content={content}
-                messageId={messageId}
-                onClick={handleClick}
-                isMessageSelected={isMessageSelected}
-                isMessageRead={isMessageRead}
-                isMessageForwarded={isMessageForwarded}
-                forwardedFrom={forwardedFrom}
-            >
-                {isMessageForwarded && (
-                    <StyledForwarded to={to} friendId={friendId}>
-                        Forwarded from {forwardedFrom}
-                    </StyledForwarded>
-                )}
-                <StyledMessageContentHolder>
-                    <p>{content}</p>
-                </StyledMessageContentHolder>
-                <MessageReadCheck isMessageRead={isMessageRead} />
-            </StyledContainer>
-        );
-    },
-);
+    return (
+        <StyledContainer
+            friendId={friendId}
+            to={to}
+            from={from}
+            content={content}
+            messageId={messageId}
+            onClick={handleClick}
+            isMessageSelected={isMessageSelected}
+            isMessageRead={isMessageRead}
+            isMessageForwarded={isMessageForwarded}
+            forwardedFrom={forwardedFrom}
+        >
+            {isMessageForwarded && (
+                <StyledForwarded to={to} friendId={friendId}>
+                    Forwarded from {forwardedFrom}
+                </StyledForwarded>
+            )}
+            <StyledMessageContentHolder>
+                <p>{content}</p>
+            </StyledMessageContentHolder>
+            <MessageReadCheck isMessageRead={isMessageRead} />
+        </StyledContainer>
+    );
+};

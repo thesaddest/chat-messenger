@@ -190,6 +190,7 @@ export const forwardMessages = createAsyncThunk<IMessage[], IForwardMessagesPayl
         if (!data) {
             return rejectWithValue("Error while forwarding messages");
         }
+
         socket.emit(SOCKET_EVENTS.FORWARD_MESSAGES, data);
         return data;
     },

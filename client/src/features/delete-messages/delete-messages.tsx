@@ -1,10 +1,12 @@
-import { Button } from "antd";
-import { memo, useCallback } from "react";
+import { Button, Modal } from "antd";
+import { memo, useCallback, useState } from "react";
 import styled from "styled-components";
 
-import { deselectAllSelectedMessages, deleteMessages, IMessage } from "../../entities/message";
+import { deselectAllSelectedMessages, IMessage } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
 import { Delete } from "../../shared/ui";
+
+import { DeleteMessagesPopupContent } from "./delete-messages-popup-content";
 
 interface IDeleteMessagesProps {
     selectedMessages: IMessage[];
@@ -15,21 +17,26 @@ const StyledButtonContainer = styled.div`
 `;
 
 export const DeleteMessages = memo<IDeleteMessagesProps>(({ selectedMessages }) => {
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const dispatch = useAppDispatch();
 
-    const handleDelete = useCallback(() => {
-        dispatch(deleteMessages(selectedMessages));
-        dispatch(deselectAllSelectedMessages(selectedMessages));
-    }, [dispatch, selectedMessages]);
+    const handleClick = useCallback(() => {
+        setIsModalOpen(true);
+    }, []);
 
     const handleCancel = useCallback(() => {
         dispatch(deselectAllSelectedMessages(selectedMessages));
     }, [dispatch, selectedMessages]);
 
+    const handleModalCancel = useCallback(() => {
+        dispatch(deselectAllSelectedMessages(selectedMessages));
+        setIsModalOpen(false);
+    }, [dispatch, selectedMessages]);
+
     return (
         <>
             <StyledButtonContainer>
-                <Button type="primary" danger onClick={handleDelete}>
+                <Button type="primary" danger onClick={handleClick}>
                     <Delete />
                 </Button>
             </StyledButtonContainer>
@@ -38,6 +45,9 @@ export const DeleteMessages = memo<IDeleteMessagesProps>(({ selectedMessages }) 
                     Cancel
                 </Button>
             </StyledButtonContainer>
+            <Modal open={isModalOpen} onCancel={handleModalCancel} centered={true} footer={null}>
+                <DeleteMessagesPopupContent selectedMessages={selectedMessages} />
+            </Modal>
         </>
     );
 });

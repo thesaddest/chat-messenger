@@ -92,6 +92,7 @@ class MessageService {
                     isMessageSelected: false,
                     isMessageRead: savedReadMessage.isMessageRead,
                     isMessageForwarded: savedReadMessage.isMessageForwarded,
+                    forwardedFrom: await userService.getUsernameByUserId(savedReadMessage.from),
                 };
             }),
         );
