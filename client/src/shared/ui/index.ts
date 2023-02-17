@@ -4,7 +4,18 @@ export { Loader } from "./Loader";
 export { SharedAvatar } from "./Avatar";
 export { UsernameConnected } from "./UsernameConnected";
 export { SkeletonNavbar, SkeletonFriendSidebarCard } from "./Skeleton";
-export { Search, AddFriendGroup, AddFriend, ArrowLeft, Delete, MessageReadCheck } from "./Icons";
+export {
+    Search,
+    AddFriendGroup,
+    AddFriend,
+    ArrowLeft,
+    Delete,
+    MessageReadCheck,
+    ForwardMessage,
+    Reply,
+    VerticalPipe,
+    Close,
+} from "./Icons";
 export { MemoTitle } from "./Title";
 export { ScrollToSeeMore } from "./ScrollToSeeMore";
 export { SelectChatToStartMessaging } from "./SelectChatToStartMessaging";

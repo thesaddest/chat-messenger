@@ -17,7 +17,6 @@ const StyledWrapper = styled.div`
     display: flex;
     flex-direction: column;
     text-align: center;
-    padding: 1rem 1rem 0 1rem;
 
     @media only screen and (max-width: 425px) {
         height: 80vh;
@@ -47,7 +46,9 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages }) => {
         <StyledWrapper>
             {messages &&
                 memoizedFilteredMessages.map((msg, msgIndex) => (
-                    <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} {...msg} />
+                    <>
+                        <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} {...msg} />
+                    </>
                 ))}
             <div ref={bottomDiv}></div>
         </StyledWrapper>

@@ -14,7 +14,7 @@ const StyledButton = styled(Button)`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1.5rem;
+    padding: 1.25rem;
     border-radius: 45%;
 `;
 

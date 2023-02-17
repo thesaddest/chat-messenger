@@ -1,12 +1,16 @@
 import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 
 import MessageService from "../api/message.service";
-import { IFriend } from "../../friend";
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
 import { IUser } from "../../user";
 
 import { IForwardMessagesPayload, IMessage } from "./interfaces";
+import {
+    setMessagesStateAfterReadStatusUpdate,
+    setMessageStateAfterDeleteMessages,
+    setReadMessagesStateWithUniqueValues,
+} from "./helpers";
 
 interface IReadMessagePayload {
     messages: IMessage[];
@@ -20,6 +24,7 @@ interface MessageState {
     selectedMessages: IMessage[];
     readMessages: IMessage[];
     forwardedMessages: IMessage[];
+    repliedMessage: IMessage | null;
 }
 
 const initialState: MessageState = {
@@ -29,6 +34,7 @@ const initialState: MessageState = {
     selectedMessages: [],
     readMessages: [],
     forwardedMessages: [],
+    repliedMessage: null,
 };
 
 export const createMessage = (
@@ -49,55 +55,6 @@ export const createMessage = (
         isMessageRead: isMessageRead !== undefined ? isMessageRead : false,
         isMessageForwarded: isMessageForwarded !== undefined ? isMessageForwarded : false,
     };
-};
-
-export const filterMessageBySender = (messages: IMessage[], friend: IFriend): IMessage[] => {
-    return messages.filter(
-        (message) => message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
-    );
-};
-
-export const getLastMessageBySender = (messages: IMessage[], friend: IFriend): IMessage => {
-    const filteredMessages = filterMessageBySender(messages, friend);
-    return filteredMessages[filteredMessages.length - 1];
-};
-
-export const getUnreadMessageAmount = (readMessages: IMessage[], messages: IMessage[], friend: IFriend): number => {
-    const allMessagesInChat = filterMessageBySender(messages, friend);
-    const messagesSentFromFriend = allMessagesInChat.filter(({ from }) => from === friend.userBehindFriend);
-    const unreadMessages = messagesSentFromFriend.filter(
-        (messageSentFromFriend) => !readMessages.find(({ messageId }) => messageSentFromFriend.messageId === messageId),
-    );
-    return unreadMessages.length;
-};
-
-const setReadMessagesStateWithUniqueValues = (
-    readMessagesState: IMessage[],
-    messagesInPayload: IMessage[],
-): IMessage[] => {
-    return readMessagesState.concat(
-        messagesInPayload.filter(
-            ({ messageId }) =>
-                !readMessagesState.find((messageInReadState) => messageInReadState.messageId === messageId),
-        ),
-    );
-};
-
-const setMessagesStateAfterReadStatusUpdate = (
-    messagesInState: IMessage[],
-    messagesInPayload: IMessage[],
-): IMessage[] => {
-    return messagesInState.map(
-        (messageInState) =>
-            messagesInPayload.find(({ messageId }) => messageId === messageInState.messageId) || messageInState,
-    );
-};
-
-const setMessageStateAfterDeleteMessages = (messagesInState: IMessage[], messagesInPayload: IMessage[]) => {
-    return messagesInState.filter(
-        (messageInState) =>
-            !messagesInPayload.some((messageInPayload) => messageInPayload.messageId === messageInState.messageId),
-    );
 };
 
 export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
@@ -232,7 +189,7 @@ export const messageModel = createSlice({
                 return;
             }
 
-            messageInState.isMessageSelected = action.payload.isMessageSelected;
+            messageInState.isMessageSelected = false;
             state.selectedMessages = state.selectedMessages.filter(
                 (messageInState) => messageInState.messageId !== action.payload.messageId,
             );
@@ -273,6 +230,12 @@ export const messageModel = createSlice({
             }
             state.forwardedMessages.push(action.payload);
             state.messages.push(action.payload);
+        },
+        replyToMessage: (state, action: PayloadAction<IMessage>) => {
+            state.repliedMessage = action.payload;
+        },
+        clearReplyToMessage: (state) => {
+            state.repliedMessage = null;
         },
     },
     extraReducers: (builder) => {
@@ -375,6 +338,8 @@ export const {
     getReadMessages,
     readMessage,
     forwardMessage,
+    replyToMessage,
+    clearReplyToMessage,
 } = messageModel.actions;
 
 export const reducer = messageModel.reducer;

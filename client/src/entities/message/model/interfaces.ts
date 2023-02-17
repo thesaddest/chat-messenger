@@ -7,6 +7,7 @@ export interface IMessage {
     isMessageRead: boolean;
     isMessageForwarded: boolean;
     forwardedFrom?: string;
+    isMessageReplied?: boolean;
 }
 
 export interface IMessageValues {

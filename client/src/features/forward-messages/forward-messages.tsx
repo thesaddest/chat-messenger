@@ -1,10 +1,9 @@
-import { FC, SyntheticEvent, useCallback, useState } from "react";
-import { ExportOutlined } from "@ant-design/icons";
+import { memo, SyntheticEvent, useCallback, useState } from "react";
 import { Button, Form, Modal } from "antd";
 import styled from "styled-components";
 
 import { IMessage } from "../../entities/message";
-
+import { ForwardMessage } from "../../shared/ui";
 import { useAppSelector } from "../../shared/lib/hooks";
 
 import { ForwardMessagesPopupContent } from "./forward-messages-popup-content";
@@ -17,7 +16,7 @@ const StyledButtonContainer = styled.div`
     padding: 0.25rem;
 `;
 
-export const ForwardMessages: FC<IForwardMessages> = () => {
+export const ForwardMessages = memo<IForwardMessages>(() => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [modalSearchInputValue, setModalSearchInputValue] = useState<string>("");
@@ -41,7 +40,7 @@ export const ForwardMessages: FC<IForwardMessages> = () => {
         friends && (
             <StyledButtonContainer>
                 <Button onClick={showModal} type="primary">
-                    Forward <ExportOutlined />
+                    <ForwardMessage />
                 </Button>
                 <Modal title="Forward to..." open={isModalOpen} onCancel={handleCancel} centered={true} footer={null}>
                     <ForwardMessagesPopupContent
@@ -55,4 +54,4 @@ export const ForwardMessages: FC<IForwardMessages> = () => {
             </StyledButtonContainer>
         )
     );
-};
+});

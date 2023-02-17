@@ -35,6 +35,7 @@ const StyledFormItemTextAreaContainer = styled(Form.Item)`
         resize: none;
         border-color: transparent;
         background: lightgray;
+        line-height: 0;
 
         .ant-input-status-success {
             border-color: transparent;

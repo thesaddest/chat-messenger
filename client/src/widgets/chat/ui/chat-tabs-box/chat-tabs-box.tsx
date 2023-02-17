@@ -8,7 +8,7 @@ import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
 import { ScrollToSeeMore } from "../../../../shared/ui";
 
-import { deselectAllSelectedMessages } from "../../../../entities/message";
+import { clearReplyToMessage, deselectAllSelectedMessages } from "../../../../entities/message";
 
 import { ChatTabsContent } from "./chat-tabs-content";
 
@@ -104,6 +104,7 @@ export const ChatTabsBox = memo(() => {
         (activeKey: string) => {
             dispatch(setFriendIdActiveKey(activeKey));
             dispatch(deselectAllSelectedMessages(selectedMessages));
+            dispatch(clearReplyToMessage());
         },
         [selectedMessages, dispatch],
     );
