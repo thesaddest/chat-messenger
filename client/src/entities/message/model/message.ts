@@ -9,7 +9,7 @@ import { IForwardMessagesPayload, IMessage } from "./interfaces";
 import {
     setMessagesStateAfterReadStatusUpdate,
     setMessageStateAfterDeleteMessages,
-    setReadMessagesStateWithUniqueValues,
+    setMessagesStateWithUniqueValues,
 } from "./helpers";
 
 interface IReadMessagePayload {
@@ -24,7 +24,8 @@ interface MessageState {
     selectedMessages: IMessage[];
     readMessages: IMessage[];
     forwardedMessages: IMessage[];
-    repliedMessage: IMessage | null;
+    selectedMessageToReply: IMessage | null;
+    repliedMessages: IMessage[];
 }
 
 const initialState: MessageState = {
@@ -34,26 +35,20 @@ const initialState: MessageState = {
     selectedMessages: [],
     readMessages: [],
     forwardedMessages: [],
-    repliedMessage: null,
+    selectedMessageToReply: null,
+    repliedMessages: [],
 };
 
-export const createMessage = (
-    to: string,
-    from: string,
-    content: string,
-    messageId?: string,
-    isMessageSelected?: boolean,
-    isMessageRead?: boolean,
-    isMessageForwarded?: boolean,
-): IMessage => {
+export const createMessage = (message: IMessage): IMessage => {
     return {
-        to: to,
-        from: from,
-        content: content,
-        messageId: messageId !== undefined ? messageId : "",
-        isMessageSelected: isMessageSelected !== undefined ? isMessageSelected : false,
-        isMessageRead: isMessageRead !== undefined ? isMessageRead : false,
-        isMessageForwarded: isMessageForwarded !== undefined ? isMessageForwarded : false,
+        to: message.to,
+        from: message.from,
+        content: message.content,
+        messageId: message.messageId !== undefined ? message.messageId : "",
+        isMessageSelected: message.isMessageSelected !== undefined ? message.isMessageSelected : false,
+        isMessageRead: message.isMessageRead !== undefined ? message.isMessageRead : false,
+        isMessageForwarded: message.isMessageForwarded !== undefined ? message.isMessageForwarded : false,
+        isPrevMessageReplied: message.isPrevMessageReplied !== undefined ? message.isPrevMessageReplied : false,
     };
 };
 
@@ -231,11 +226,14 @@ export const messageModel = createSlice({
             state.forwardedMessages.push(action.payload);
             state.messages.push(action.payload);
         },
-        replyToMessage: (state, action: PayloadAction<IMessage>) => {
-            state.repliedMessage = action.payload;
+        selectMessageToReply: (state, action: PayloadAction<IMessage>) => {
+            state.selectedMessageToReply = action.payload;
         },
-        clearReplyToMessage: (state) => {
-            state.repliedMessage = null;
+        deselectMessageToReply: (state) => {
+            state.selectedMessageToReply = null;
+        },
+        replyToSelectedMessage: (state, action: PayloadAction<IMessage>) => {
+            state.repliedMessages.push(action.payload);
         },
     },
     extraReducers: (builder) => {
@@ -298,7 +296,7 @@ export const messageModel = createSlice({
                 if (!state.messages) {
                     return;
                 }
-                state.readMessages = setReadMessagesStateWithUniqueValues(state.readMessages, action.payload);
+                state.readMessages = setMessagesStateWithUniqueValues(state.readMessages, action.payload);
                 state.messages = setMessagesStateAfterReadStatusUpdate(state.messages, action.payload);
                 state.isLoading = false;
                 state.error = null;
@@ -338,8 +336,9 @@ export const {
     getReadMessages,
     readMessage,
     forwardMessage,
-    replyToMessage,
-    clearReplyToMessage,
+    selectMessageToReply,
+    deselectMessageToReply,
+    replyToSelectedMessage,
 } = messageModel.actions;
 
 export const reducer = messageModel.reducer;

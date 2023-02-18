@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Form } from "antd";
 import styled from "styled-components";
 
-import { createMessage, IMessageValues } from "../../../../entities/message";
+import { createMessage, IMessageValues, replyToSelectedMessage } from "../../../../entities/message";
 import { sendMessage } from "../../../../entities/message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 import { SendMessageButton } from "../../../../shared/ui";
@@ -17,7 +17,7 @@ const StyledWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: auto;
+    height: 5vh;
 `;
 
 const StyledForm = styled(Form)`
@@ -35,10 +35,19 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
     const userId = useAppSelector((state) => state.auth.user?.userId);
+    const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
 
     const onFinish = (values: IMessageValues) => {
         if (userId) {
-            const message = createMessage(friendId, userId, values.message);
+            const message = createMessage({
+                to: friendId,
+                from: userId,
+                content: values.message,
+                isPrevMessageReplied: !!selectedMessageToReply,
+            });
+            if (selectedMessageToReply) {
+                dispatch(replyToSelectedMessage(selectedMessageToReply));
+            }
             dispatch(sendMessage(message));
             form.resetFields();
         }

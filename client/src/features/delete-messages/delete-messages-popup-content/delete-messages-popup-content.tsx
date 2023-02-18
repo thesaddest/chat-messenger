@@ -3,7 +3,12 @@ import { FC, useCallback } from "react";
 
 import styled from "styled-components";
 
-import { clearReplyToMessage, deleteMessages, deselectAllSelectedMessages, IMessage } from "../../../entities/message";
+import {
+    deleteMessages,
+    deselectAllSelectedMessages,
+    deselectMessageToReply,
+    IMessage,
+} from "../../../entities/message";
 import { Delete, MemoTitle } from "../../../shared/ui";
 import { useAppDispatch } from "../../../shared/lib/hooks";
 
@@ -35,7 +40,7 @@ export const DeleteMessagesPopupContent: FC<IDeleteMessagesPopupContentProps> = 
     const handleDelete = useCallback(() => {
         dispatch(deleteMessages(selectedMessages));
         dispatch(deselectAllSelectedMessages(selectedMessages));
-        dispatch(clearReplyToMessage());
+        dispatch(deselectMessageToReply());
     }, [dispatch, selectedMessages]);
 
     return (

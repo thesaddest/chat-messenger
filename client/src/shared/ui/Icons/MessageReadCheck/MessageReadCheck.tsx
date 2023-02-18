@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { memo } from "react";
 
 interface IMessageReadCheckProps {
-    isMessageRead: boolean;
+    isMessageRead?: boolean;
 }
 
 const StyledIsMessageReadContainer = styled.div<IMessageReadCheckProps>`

@@ -22,14 +22,15 @@ export const getUnreadMessageAmount = (readMessages: IMessage[], messages: IMess
     return unreadMessages.length;
 };
 
-export const setReadMessagesStateWithUniqueValues = (
-    readMessagesState: IMessage[],
+// export const getRepliedMessage = (repliedMessages: IMessage[], )
+
+export const setMessagesStateWithUniqueValues = (
+    messagesState: IMessage[],
     messagesInPayload: IMessage[],
 ): IMessage[] => {
-    return readMessagesState.concat(
+    return messagesState.concat(
         messagesInPayload.filter(
-            ({ messageId }) =>
-                !readMessagesState.find((messageInReadState) => messageInReadState.messageId === messageId),
+            ({ messageId }) => !messagesState.find((messageInReadState) => messageInReadState.messageId === messageId),
         ),
     );
 };

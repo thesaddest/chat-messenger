@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, KeyboardEvent } from "react";
-import { Form, FormInstance, Input } from "antd";
+import { Form, FormInstance, Input, InputRef } from "antd";
 import styled from "styled-components";
 
 import { MESSAGE_RULES } from "../../../../../shared/const";
@@ -8,11 +8,9 @@ interface IChatInputProps {
     form: FormInstance;
 }
 
-const { TextArea } = Input;
-
 const StyledFormItemTextAreaContainer = styled(Form.Item)`
     margin: 0;
-    width: 90%;
+    width: 70%;
     height: 100%;
 
     .ant-input {
@@ -30,7 +28,7 @@ const StyledFormItemTextAreaContainer = styled(Form.Item)`
         box-shadow: none;
     }
 
-    textarea {
+    input {
         outline: none;
         resize: none;
         border-color: transparent;
@@ -41,27 +39,23 @@ const StyledFormItemTextAreaContainer = styled(Form.Item)`
             border-color: transparent;
         }
     }
-
-    @media only screen and (max-width: 768px) {
-        width: 70%;
-    }
 `;
 
 export const ChatInput: FC<IChatInputProps> = ({ form }) => {
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const inputRef = useRef<InputRef>(null);
 
-    const onEnterPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    const onEnterPress = (e: KeyboardEvent) => {
         e.preventDefault();
         form.submit();
     };
 
     useEffect(() => {
-        requestAnimationFrame(() => textAreaRef.current?.focus());
+        requestAnimationFrame(() => inputRef.current?.focus());
     });
 
     return (
         <StyledFormItemTextAreaContainer name="message" rules={MESSAGE_RULES.MESSAGE}>
-            <TextArea ref={textAreaRef} placeholder="Write a message..." onPressEnter={onEnterPress} />
+            <Input ref={inputRef} placeholder="Write a message..." onPressEnter={onEnterPress} />
         </StyledFormItemTextAreaContainer>
     );
 };

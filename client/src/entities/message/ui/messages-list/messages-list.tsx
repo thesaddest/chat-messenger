@@ -12,7 +12,7 @@ interface IMessagesListProps {
 }
 
 const StyledWrapper = styled.div`
-    height: 60vh;
+    height: 55vh;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -46,9 +46,7 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages }) => {
         <StyledWrapper>
             {messages &&
                 memoizedFilteredMessages.map((msg, msgIndex) => (
-                    <>
-                        <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} {...msg} />
-                    </>
+                    <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} message={msg} />
                 ))}
             <div ref={bottomDiv}></div>
         </StyledWrapper>

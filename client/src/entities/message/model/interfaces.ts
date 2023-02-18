@@ -2,12 +2,12 @@ export interface IMessage {
     to: string;
     from: string;
     content: string;
-    messageId: string;
-    isMessageSelected: boolean;
-    isMessageRead: boolean;
-    isMessageForwarded: boolean;
+    messageId?: string;
+    isMessageSelected?: boolean;
+    isMessageRead?: boolean;
+    isMessageForwarded?: boolean;
     forwardedFrom?: string;
-    isMessageReplied?: boolean;
+    isPrevMessageReplied?: boolean;
 }
 
 export interface IMessageValues {

@@ -16,6 +16,7 @@ class MessageService {
             friend: user,
             isMessageRead: messageDto.isMessageRead,
             isMessageForwarded: messageDto.isMessageForwarded,
+            isPrevMessageReplied: messageDto.isPrevMessageReplied,
         };
         const message = messageRepository.create(newMessage);
         await messageRepository.save(message);
@@ -28,6 +29,7 @@ class MessageService {
             isMessageSelected: false,
             isMessageRead: message.isMessageRead,
             isMessageForwarded: message.isMessageForwarded,
+            isPrevMessageReplied: message.isPrevMessageReplied,
         };
     }
 
@@ -49,6 +51,7 @@ class MessageService {
                 isMessageSelected: false,
                 isMessageRead: message.isMessageRead,
                 isMessageForwarded: message.isMessageForwarded,
+                isPrevMessageReplied: message.isPrevMessageReplied,
             });
         }
 
@@ -71,6 +74,7 @@ class MessageService {
             isMessageSelected: false,
             isMessageRead: message.isMessageRead,
             isMessageForwarded: message.isMessageForwarded,
+            isPrevMessageReplied: message.isPrevMessageReplied,
         }));
     }
 
@@ -90,6 +94,7 @@ class MessageService {
                     isMessageRead: savedReadMessage.isMessageRead,
                     isMessageForwarded: savedReadMessage.isMessageForwarded,
                     forwardedFrom: await userService.getUsernameByUserId(savedReadMessage.from),
+                    isPrevMessageReplied: savedReadMessage.isPrevMessageReplied,
                 };
             }),
         );
@@ -105,6 +110,7 @@ class MessageService {
             friend: user,
             isMessageRead: messageDto.isMessageRead,
             isMessageForwarded: true,
+            isPrevMessageReplied: messageDto.isPrevMessageReplied,
         };
         const forwardedMessage = messageRepository.create(newMessage);
         await messageRepository.save(forwardedMessage);
@@ -117,6 +123,7 @@ class MessageService {
             isMessageSelected: false,
             isMessageRead: forwardedMessage.isMessageRead,
             isMessageForwarded: forwardedMessage.isMessageForwarded,
+            isPrevMessageReplied: forwardedMessage.isPrevMessageReplied,
         };
     }
 
@@ -133,6 +140,7 @@ class MessageService {
                     isMessageRead: createdForwardedMessage.isMessageRead,
                     isMessageForwarded: createdForwardedMessage.isMessageForwarded,
                     forwardedFrom: await userService.getUsernameByUserId(message.from),
+                    isPrevMessageReplied: createdForwardedMessage.isPrevMessageReplied,
                 };
             }),
         );

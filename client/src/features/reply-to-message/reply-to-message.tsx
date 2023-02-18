@@ -3,7 +3,7 @@ import { Button } from "antd";
 import styled from "styled-components";
 
 import { Reply } from "../../shared/ui";
-import { deselectMessage, IMessage, replyToMessage } from "../../entities/message";
+import { deselectMessage, IMessage, selectMessageToReply } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
 
 interface IReplyToMessageProps {
@@ -19,7 +19,7 @@ export const ReplyToMessage = memo<IReplyToMessageProps>(({ selectedMessage }) =
 
     const onClick = useCallback(() => {
         dispatch(deselectMessage(selectedMessage));
-        dispatch(replyToMessage(selectedMessage));
+        dispatch(selectMessageToReply(selectedMessage));
     }, [dispatch, selectedMessage]);
 
     return (

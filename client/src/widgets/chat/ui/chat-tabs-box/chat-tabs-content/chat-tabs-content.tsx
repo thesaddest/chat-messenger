@@ -19,13 +19,13 @@ const StyledChatTabsContent = styled.div`
 `;
 
 export const ChatTabsContent: FC<IChatTabsContentProps> = ({ friend, messages }) => {
-    const repliedMessage = useAppSelector((state) => state.message.repliedMessage);
+    const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
 
     return (
         <StyledChatTabsContent>
             <ChatInfo friend={friend} />
             <MessagesList friend={friend} messages={messages} />
-            {repliedMessage && <RepliedMessage friend={friend} repliedMessage={repliedMessage} />}
+            <RepliedMessage friend={friend} selectedMessageToReply={selectedMessageToReply} />
             <ChatInputBox friendId={friend.userBehindFriend} />
         </StyledChatTabsContent>
     );
