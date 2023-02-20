@@ -22,7 +22,7 @@ const StyledWrapper = styled.div`
 
 const StyledForm = styled(Form)`
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     height: 100%;
     width: 100%;

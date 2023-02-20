@@ -8,15 +8,13 @@ interface IChatInputProps {
     form: FormInstance;
 }
 
-const StyledFormItemTextAreaContainer = styled(Form.Item)`
+const StyledInputContainer = styled(Form.Item)`
     margin: 0;
-    width: 70%;
+    width: 85%;
     height: 100%;
-
-    .ant-input {
-        border-color: transparent;
-        box-shadow: none;
-    }
+    display: flex;
+    justify-content: start;
+    align-items: center;
 
     .ant-input:hover {
         border-color: transparent;
@@ -28,16 +26,57 @@ const StyledFormItemTextAreaContainer = styled(Form.Item)`
         box-shadow: none;
     }
 
+    .ant-form-item-row {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+
+        .ant-form-item-control {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+
+            .ant-form-item-control-input {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                width: 100%;
+
+                .ant-form-item-control-input-content {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100%;
+                }
+            }
+        }
+    }
+
     input {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
         outline: none;
         resize: none;
         border-color: transparent;
         background: lightgray;
         line-height: 0;
+        box-shadow: none;
+        padding: 0 0 0.2rem 0.5rem;
 
         .ant-input-status-success {
             border-color: transparent;
         }
+    }
+
+    @media only screen and (min-width: 1080px) {
+        width: 90%;
     }
 `;
 
@@ -54,8 +93,8 @@ export const ChatInput: FC<IChatInputProps> = ({ form }) => {
     });
 
     return (
-        <StyledFormItemTextAreaContainer name="message" rules={MESSAGE_RULES.MESSAGE}>
-            <Input ref={inputRef} placeholder="Write a message..." onPressEnter={onEnterPress} />
-        </StyledFormItemTextAreaContainer>
+        <StyledInputContainer name="message" rules={MESSAGE_RULES.MESSAGE}>
+            <Input ref={inputRef} placeholder="Write a message..." onPressEnter={onEnterPress} autoComplete="off" />
+        </StyledInputContainer>
     );
 };

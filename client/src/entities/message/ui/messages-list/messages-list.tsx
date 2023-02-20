@@ -19,7 +19,7 @@ const StyledWrapper = styled.div`
     text-align: center;
 
     @media only screen and (max-width: 425px) {
-        height: 80vh;
+        height: 100%;
     }
 `;
 
