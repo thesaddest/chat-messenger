@@ -36,4 +36,12 @@ export class MessageDto {
     @IsBoolean()
     @IsNotEmpty()
     isPrevMessageReplied?: boolean;
+
+    @IsString()
+    @IsNotEmpty()
+    prevMessageContent?: string;
+
+    @IsString()
+    @IsNotEmpty()
+    prevMessageFrom?: string;
 }

@@ -46,6 +46,10 @@ export const forwardMessages = async (socket: Socket, messageDtos: MessageDto[])
     }
 };
 
+export const replyToMessage = async (socket: Socket, messageDto: MessageDto): Promise<void> => {
+    socket.to(messageDto.to).emit(SOCKET_EVENTS.REPLY_TO_MESSAGE, messageDto);
+};
+
 export const getMessages = async (socket: Socket): Promise<void> => {
     socket.emit(SOCKET_EVENTS.GET_ALL_MESSAGES);
 };

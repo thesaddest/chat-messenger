@@ -5,11 +5,13 @@ import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
 import { IUser } from "../../user";
 
-import { IForwardMessagesPayload, IMessage } from "./interfaces";
+import { IForwardMessagesPayload, IMessage, IReplyToMessagePayload } from "./interfaces";
 import {
     setMessagesStateAfterReadStatusUpdate,
     setMessageStateAfterDeleteMessages,
     setMessagesStateWithUniqueValues,
+    setMessageStateWithUniqueValue,
+    deleteMessageFromState,
 } from "./helpers";
 
 interface IReadMessagePayload {
@@ -44,11 +46,13 @@ export const createMessage = (message: IMessage): IMessage => {
         to: message.to,
         from: message.from,
         content: message.content,
-        messageId: message.messageId !== undefined ? message.messageId : "",
+        messageId: message.messageId !== undefined ? message.messageId : undefined,
         isMessageSelected: message.isMessageSelected !== undefined ? message.isMessageSelected : false,
         isMessageRead: message.isMessageRead !== undefined ? message.isMessageRead : false,
         isMessageForwarded: message.isMessageForwarded !== undefined ? message.isMessageForwarded : false,
         isPrevMessageReplied: message.isPrevMessageReplied !== undefined ? message.isPrevMessageReplied : false,
+        prevMessageContent: message.prevMessageContent !== undefined ? message.prevMessageContent : undefined,
+        prevMessageFrom: message.prevMessageFrom !== undefined ? message.prevMessageFrom : undefined,
     };
 };
 
@@ -130,6 +134,20 @@ export const forwardMessages = createAsyncThunk<IMessage[], IForwardMessagesPayl
     },
 );
 
+export const replyToMessage = createAsyncThunk<IMessage, IReplyToMessagePayload, { rejectValue: string }>(
+    "messages/replyToMessage",
+    async function (repliedMessagePayload, { rejectWithValue }) {
+        const { data } = await MessageService.replyToMessage(repliedMessagePayload);
+
+        if (!data) {
+            return rejectWithValue("Error while replying to message");
+        }
+
+        socket.emit(SOCKET_EVENTS.REPLY_TO_MESSAGE, data);
+        return data;
+    },
+);
+
 export const messageModel = createSlice({
     name: "messages",
     initialState,
@@ -144,16 +162,10 @@ export const messageModel = createSlice({
             if (!state.messages) {
                 return;
             }
-            state.messages = state.messages.filter(
-                (messageInState) => messageInState.messageId !== action.payload.messageId,
-            );
-            state.readMessages = state.readMessages.filter(
-                (messageInState) => messageInState.messageId !== action.payload.messageId,
-            );
-
-            state.forwardedMessages = state.forwardedMessages.filter(
-                (messageInState) => messageInState.messageId !== action.payload.messageId,
-            );
+            state.messages = deleteMessageFromState(state.messages, action.payload);
+            state.readMessages = deleteMessageFromState(state.readMessages, action.payload);
+            state.forwardedMessages = deleteMessageFromState(state.forwardedMessages, action.payload);
+            state.repliedMessages = deleteMessageFromState(state.repliedMessages, action.payload);
         },
         selectMessage: (state, action: PayloadAction<IMessage>) => {
             if (!state.messages) {
@@ -214,10 +226,8 @@ export const messageModel = createSlice({
             if (!state.messages || !state.readMessages) {
                 return;
             }
-            state.readMessages.push(action.payload);
-            state.messages = state.messages.map((messageInState) =>
-                messageInState.messageId === action.payload.messageId ? action.payload : messageInState,
-            );
+            state.readMessages = setMessageStateWithUniqueValue(state.readMessages, action.payload);
+            state.messages = setMessageStateWithUniqueValue(state.messages, action.payload);
         },
         forwardMessage: (state, action: PayloadAction<IMessage>) => {
             if (!state.messages) {
@@ -232,8 +242,15 @@ export const messageModel = createSlice({
         deselectMessageToReply: (state) => {
             state.selectedMessageToReply = null;
         },
-        replyToSelectedMessage: (state, action: PayloadAction<IMessage>) => {
+        addToRepliedMessages: (state, action: PayloadAction<IMessage>) => {
+            if (!state.messages) {
+                return;
+            }
+            state.messages.push(action.payload);
             state.repliedMessages.push(action.payload);
+        },
+        deleteMessagesToReply: (state, action: PayloadAction<IMessage[]>) => {
+            state.repliedMessages = setMessageStateAfterDeleteMessages(state.repliedMessages, action.payload);
         },
     },
     extraReducers: (builder) => {
@@ -323,6 +340,22 @@ export const messageModel = createSlice({
                 }
                 state.error = action.payload;
                 state.isLoading = false;
+            })
+            .addCase(replyToMessage.fulfilled, (state, action) => {
+                if (!state.messages) {
+                    return;
+                }
+                state.repliedMessages.push(action.payload);
+                state.messages.push(action.payload);
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(replyToMessage.rejected, (state, action) => {
+                if (!action.payload) {
+                    return;
+                }
+                state.error = action.payload;
+                state.isLoading = false;
             });
     },
 });
@@ -338,7 +371,8 @@ export const {
     forwardMessage,
     selectMessageToReply,
     deselectMessageToReply,
-    replyToSelectedMessage,
+    deleteMessagesToReply,
+    addToRepliedMessages,
 } = messageModel.actions;
 
 export const reducer = messageModel.reducer;

@@ -7,6 +7,7 @@ import {
     deleteMessages,
     readMessages,
     forwardMessages,
+    replyToMessage,
 } from "./socket/socket.controller.js";
 import express from "express";
 import helmet from "helmet";
@@ -59,6 +60,10 @@ io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
 
     socket.on(SOCKET_EVENTS.FORWARD_MESSAGES, (messageDtos: MessageDto[]) => {
         forwardMessages(socket, messageDtos);
+    });
+
+    socket.on(SOCKET_EVENTS.REPLY_TO_MESSAGE, (messageDto: MessageDto) => {
+        replyToMessage(socket, messageDto);
     });
 
     socket.on(SOCKET_EVENTS.ON_DISCONNECT, () => {

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { MessageItem } from "../message-item";
 import { IFriend } from "../../../friend";
-import { filterMessageBySender, IMessage, readMessages } from "../../model";
+import { getFilteredMessageBySender, IMessage, readMessages } from "../../model";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 
 interface IMessagesListProps {
@@ -28,7 +28,7 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages }) => {
     const user = useAppSelector((state) => state.auth.user);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const bottomDiv = useRef<HTMLDivElement>(null);
-    const memoizedFilteredMessages = useMemo(() => filterMessageBySender(messages, friend), [messages, friend]);
+    const memoizedFilteredMessages = useMemo(() => getFilteredMessageBySender(messages, friend), [messages, friend]);
 
     useEffect(() => {
         if (bottomDiv.current) {
@@ -46,7 +46,7 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages }) => {
         <StyledWrapper>
             {messages &&
                 memoizedFilteredMessages.map((msg, msgIndex) => (
-                    <MessageItem friendId={friend.userBehindFriend} key={msgIndex + msg.content} message={msg} />
+                    <MessageItem friend={friend} key={msgIndex + msg.content} message={msg} />
                 ))}
             <div ref={bottomDiv}></div>
         </StyledWrapper>

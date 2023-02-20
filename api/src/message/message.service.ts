@@ -17,6 +17,8 @@ class MessageService {
             isMessageRead: messageDto.isMessageRead,
             isMessageForwarded: messageDto.isMessageForwarded,
             isPrevMessageReplied: messageDto.isPrevMessageReplied,
+            prevMessageContent: messageDto.prevMessageContent,
+            prevMessageFrom: messageDto.prevMessageFrom,
         };
         const message = messageRepository.create(newMessage);
         await messageRepository.save(message);
@@ -30,6 +32,8 @@ class MessageService {
             isMessageRead: message.isMessageRead,
             isMessageForwarded: message.isMessageForwarded,
             isPrevMessageReplied: message.isPrevMessageReplied,
+            prevMessageContent: message.prevMessageContent,
+            prevMessageFrom: message.prevMessageFrom,
         };
     }
 
@@ -52,6 +56,8 @@ class MessageService {
                 isMessageRead: message.isMessageRead,
                 isMessageForwarded: message.isMessageForwarded,
                 isPrevMessageReplied: message.isPrevMessageReplied,
+                prevMessageContent: message.prevMessageContent,
+                prevMessageFrom: message.prevMessageFrom,
             });
         }
 
@@ -75,6 +81,8 @@ class MessageService {
             isMessageRead: message.isMessageRead,
             isMessageForwarded: message.isMessageForwarded,
             isPrevMessageReplied: message.isPrevMessageReplied,
+            prevMessageContent: message.prevMessageContent,
+            prevMessageFrom: message.prevMessageFrom,
         }));
     }
 
@@ -95,6 +103,8 @@ class MessageService {
                     isMessageForwarded: savedReadMessage.isMessageForwarded,
                     forwardedFrom: await userService.getUsernameByUserId(savedReadMessage.from),
                     isPrevMessageReplied: savedReadMessage.isPrevMessageReplied,
+                    prevMessageContent: savedReadMessage.prevMessageContent,
+                    prevMessageFrom: savedReadMessage.prevMessageFrom,
                 };
             }),
         );
@@ -111,6 +121,8 @@ class MessageService {
             isMessageRead: messageDto.isMessageRead,
             isMessageForwarded: true,
             isPrevMessageReplied: messageDto.isPrevMessageReplied,
+            prevMessageContent: messageDto.prevMessageContent,
+            prevMessageFrom: messageDto.prevMessageFrom,
         };
         const forwardedMessage = messageRepository.create(newMessage);
         await messageRepository.save(forwardedMessage);
@@ -124,6 +136,8 @@ class MessageService {
             isMessageRead: forwardedMessage.isMessageRead,
             isMessageForwarded: forwardedMessage.isMessageForwarded,
             isPrevMessageReplied: forwardedMessage.isPrevMessageReplied,
+            prevMessageContent: forwardedMessage.prevMessageContent,
+            prevMessageFrom: forwardedMessage.prevMessageFrom,
         };
     }
 
@@ -141,9 +155,42 @@ class MessageService {
                     isMessageForwarded: createdForwardedMessage.isMessageForwarded,
                     forwardedFrom: await userService.getUsernameByUserId(message.from),
                     isPrevMessageReplied: createdForwardedMessage.isPrevMessageReplied,
+                    prevMessageContent: createdForwardedMessage.prevMessageContent,
+                    prevMessageFrom: createdForwardedMessage.prevMessageFrom,
                 };
             }),
         );
+    }
+
+    async replyToMessage(newMessage: MessageDto, repliedMessage: MessageDto, user: User): Promise<MessageDto> {
+        const repliedMessageToSaveInDb = {
+            messageId: newMessage.messageId,
+            to: newMessage.to,
+            from: newMessage.from,
+            content: newMessage.content,
+            isMessageSelected: false,
+            isMessageRead: newMessage.isMessageRead,
+            isMessageForwarded: newMessage.isMessageForwarded,
+            forwardedFrom: newMessage.forwardedFrom,
+            isPrevMessageReplied: true,
+            prevMessageContent: repliedMessage.content,
+            prevMessageFrom: await userService.getUsernameByUserId(repliedMessage.from),
+        };
+
+        const messageInDb = await this.createMessage(repliedMessageToSaveInDb, user);
+        return {
+            messageId: messageInDb.messageId,
+            to: messageInDb.to,
+            from: messageInDb.from,
+            content: messageInDb.content,
+            isMessageSelected: false,
+            isMessageRead: messageInDb.isMessageRead,
+            isMessageForwarded: messageInDb.isMessageForwarded,
+            forwardedFrom: messageInDb.forwardedFrom,
+            isPrevMessageReplied: messageInDb.isPrevMessageReplied,
+            prevMessageContent: messageInDb.prevMessageContent,
+            prevMessageFrom: messageInDb.prevMessageFrom,
+        };
     }
 }
 

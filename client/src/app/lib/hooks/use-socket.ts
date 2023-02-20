@@ -6,6 +6,7 @@ import { SOCKET_EVENTS } from "../../../shared/const";
 import { getFriends, IFriendStatus, initUser } from "../../../entities/friend";
 import {
     addMessage,
+    addToRepliedMessages,
     deleteMessage,
     forwardMessage,
     getMessages,
@@ -54,6 +55,10 @@ export const useSocket = () => {
 
         socket.on(SOCKET_EVENTS.FORWARD_MESSAGES, (message: IMessage) => {
             dispatch(forwardMessage(message));
+        });
+
+        socket.on(SOCKET_EVENTS.REPLY_TO_MESSAGE, (message: IMessage) => {
+            dispatch(addToRepliedMessages(message));
         });
 
         socket.on(SOCKET_EVENTS.ON_DISCONNECT, (friendStatus: IFriendStatus) => {

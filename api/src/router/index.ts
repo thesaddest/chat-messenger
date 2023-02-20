@@ -17,3 +17,4 @@ router.post("/message/sendMessage", messageController.sendMessage);
 router.post("/message/deleteMessages", messageController.deleteMessages);
 router.post("/message/readMessages", messageController.readMessages);
 router.post("/message/forwardMessages", messageController.forwardMessages);
+router.post("/message/replyToMessage", messageController.replyToMessage);

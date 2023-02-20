@@ -14,6 +14,11 @@ interface IForwardMessagesPayload {
     to: string;
 }
 
+interface IReplyToMessagePayload {
+    newMessage: MessageDto;
+    repliedMessage: MessageDto;
+}
+
 class MessageController {
     async getMessages(req: Request, res: Response, next: NextFunction) {
         try {
@@ -94,6 +99,23 @@ class MessageController {
             const forwardedMessages = await messageService.forwardMessages(messages, user, from, to);
 
             return res.json(forwardedMessages);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async replyToMessage(req: ITypedRequest<IReplyToMessagePayload>, res: Response, next: NextFunction) {
+        try {
+            const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
+
+            if (!user) {
+                return next(ErrorException.UnauthorizedError());
+            }
+
+            const { newMessage, repliedMessage } = req.body;
+            const createdRepliedMessage = await messageService.replyToMessage(newMessage, repliedMessage, user);
+
+            return res.json(createdRepliedMessage);
         } catch (e) {
             next(e);
         }

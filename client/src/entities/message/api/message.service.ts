@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 
 import api from "../../../shared/api/axios-instance";
-import { IForwardMessagesPayload, IMessage } from "../model";
+import { IForwardMessagesPayload, IMessage, IReplyToMessagePayload } from "../model";
 
 export default class MessageService {
     static async getMessages(): Promise<AxiosResponse<IMessage[]>> {
@@ -22,5 +22,9 @@ export default class MessageService {
 
     static async forwardMessages(forwardMessagesPayload: IForwardMessagesPayload): Promise<AxiosResponse<IMessage[]>> {
         return api.post<IMessage[]>("/message/forwardMessages", forwardMessagesPayload);
+    }
+
+    static async replyToMessage(replyToMessagePayload: IReplyToMessagePayload): Promise<AxiosResponse<IMessage>> {
+        return api.post<IMessage>("/message/replyToMessage", replyToMessagePayload);
     }
 }

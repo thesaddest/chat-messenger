@@ -68,7 +68,7 @@ export const RepliedMessage: FC<IRepliedMessageProps> = ({ selectedMessageToRepl
                 </StyledReplyContainer>
                 <StyledUsernameMessageContainer>
                     <p>{friend.username}</p>
-                    {selectedMessageToReply && selectedMessageToReply.content}
+                    <span>{selectedMessageToReply && selectedMessageToReply.content}</span>
                 </StyledUsernameMessageContainer>
                 <div>
                     <StyledButton onClick={onClick}>

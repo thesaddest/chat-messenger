@@ -1,12 +1,15 @@
 import { FC, useCallback } from "react";
 import styled from "styled-components";
 
-import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
+import { useAppDispatch } from "../../../../shared/lib/hooks";
 import { selectMessage, deselectMessage, createMessage, IMessage } from "../../model";
 import { MessageReadCheck } from "../../../../shared/ui";
+import { IFriend } from "../../../friend";
+
+import { RepliedMessageItem } from "./replied-message-item";
 
 interface MessageItemProps {
-    friendId: string;
+    friend: IFriend;
     message: IMessage;
 }
 
@@ -16,13 +19,14 @@ interface ForwardedProps {
 }
 
 const StyledContainer = styled.div<MessageItemProps>`
-    background: ${({ message, friendId }) => (message.to !== friendId ? "#1677ff" : "lightgray")};
-    color: ${({ message, friendId }) => (message.to !== friendId ? "whitesmoke" : "black")};
-    border: 1px solid ${({ message, friendId }) => (message.to !== friendId ? "#1677ff" : "lightgray")};
+    background: ${({ message, friend }) => (message.to !== friend.userBehindFriend ? "#1677ff" : "lightgray")};
+    color: ${({ message, friend }) => (message.to !== friend.userBehindFriend ? "whitesmoke" : "black")};
+    border: 1px solid ${({ message, friend }) => (message.to !== friend.userBehindFriend ? "#1677ff" : "lightgray")};
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     border-radius: 20px;
-    margin: ${({ message, friendId }) => (message.to === friendId ? "0 0 1rem auto" : "0 auto 1rem 0")};
-    padding: 0.5rem 1rem 0.5rem 0.5rem;
+    margin: ${({ message, friend }) =>
+        message.to === friend.userBehindFriend ? "0.5rem 0.5rem 1rem auto" : "0.5rem auto 1rem 0.5rem"};
+    padding: 0.5rem 1rem;
     max-width: 50%;
     word-break: break-word;
     filter: ${({ message }) => message.isMessageSelected && "blur(2px)"};
@@ -32,25 +36,31 @@ const StyledContainer = styled.div<MessageItemProps>`
 const StyledMessageContentHolder = styled.div`
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
     flex-direction: column;
     padding-right: 0.2rem;
 `;
 
 const StyledForwarded = styled.p<ForwardedProps>`
-  font-size: 16px;
-  font-style: italic;
-  color: ${({ to, from }) => (to === from ? "whitesmoke" : "black")})}
-
-;
+    font-size: 16px;
+    font-style: italic;
+    color: ${({ to, from }) => (to === from ? "whitesmoke" : "black")};
 `;
 
-export const MessageItem: FC<MessageItemProps> = ({ friendId, message }) => {
-    const { to, from, content, messageId, isMessageRead, isMessageForwarded, isPrevMessageReplied, isMessageSelected } =
-        message;
+export const MessageItem: FC<MessageItemProps> = ({ friend, message }) => {
+    const {
+        to,
+        from,
+        content,
+        messageId,
+        isMessageRead,
+        isMessageForwarded,
+        isPrevMessageReplied,
+        isMessageSelected,
+        prevMessageContent,
+        prevMessageFrom,
+    } = message;
     const dispatch = useAppDispatch();
-    const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
-
     const handleClick = useCallback(() => {
         if (!isMessageSelected) {
             dispatch(
@@ -64,6 +74,8 @@ export const MessageItem: FC<MessageItemProps> = ({ friendId, message }) => {
                         isMessageRead: isMessageRead,
                         isMessageForwarded: isMessageForwarded,
                         isPrevMessageReplied: isPrevMessageReplied,
+                        prevMessageContent: prevMessageContent,
+                        prevMessageFrom: prevMessageFrom,
                     }),
                 ),
             );
@@ -79,6 +91,8 @@ export const MessageItem: FC<MessageItemProps> = ({ friendId, message }) => {
                         isMessageRead: isMessageRead,
                         isMessageForwarded: isMessageForwarded,
                         isPrevMessageReplied: isPrevMessageReplied,
+                        prevMessageContent: prevMessageContent,
+                        prevMessageFrom: prevMessageFrom,
                     }),
                 ),
             );
@@ -93,16 +107,20 @@ export const MessageItem: FC<MessageItemProps> = ({ friendId, message }) => {
         isMessageSelected,
         messageId,
         to,
+        prevMessageContent,
+        prevMessageFrom,
     ]);
 
     return (
-        <StyledContainer friendId={friendId} message={message} onClick={handleClick}>
+        <StyledContainer friend={friend} message={message} onClick={handleClick}>
             {isMessageForwarded && (
                 <StyledForwarded to={message.to} from={message.from}>
                     Forwarded from {message.forwardedFrom}
                 </StyledForwarded>
             )}
-            {isPrevMessageReplied && <div>{selectedMessageToReply?.content}</div>}
+            {isPrevMessageReplied && message.prevMessageContent && message.prevMessageFrom && (
+                <RepliedMessageItem prevMessageFrom={message.prevMessageFrom} content={message.prevMessageContent} />
+            )}
             <StyledMessageContentHolder>
                 <p>{message.content}</p>
             </StyledMessageContentHolder>

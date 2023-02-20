@@ -31,6 +31,12 @@ export class Message extends BaseEntity {
     @Column({ nullable: true })
     isPrevMessageReplied: boolean;
 
+    @Column({ nullable: true })
+    prevMessageContent: string;
+
+    @Column({ nullable: true })
+    prevMessageFrom: string;
+
     @ManyToOne(() => Friend, (friend) => friend.messages)
     friend: Relation<Friend>;
 }

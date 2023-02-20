@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import {
     deleteMessages,
+    deleteMessagesToReply,
     deselectAllSelectedMessages,
     deselectMessageToReply,
     IMessage,
@@ -41,6 +42,7 @@ export const DeleteMessagesPopupContent: FC<IDeleteMessagesPopupContentProps> = 
         dispatch(deleteMessages(selectedMessages));
         dispatch(deselectAllSelectedMessages(selectedMessages));
         dispatch(deselectMessageToReply());
+        dispatch(deleteMessagesToReply(selectedMessages));
     }, [dispatch, selectedMessages]);
 
     return (

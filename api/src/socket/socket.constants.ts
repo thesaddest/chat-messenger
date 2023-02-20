@@ -7,6 +7,7 @@ export const SOCKET_EVENTS = {
     DELETE_MESSAGES: "delete_messages",
     READ_MESSAGES: "read_messages",
     FORWARD_MESSAGES: "forward_messages",
+    REPLY_TO_MESSAGE: "reply_to_message",
     ON_INIT_USER: "on_connect",
     ON_DEINIT_USER: "on_disconnect",
     ON_DISCONNECT: "disconnecting",

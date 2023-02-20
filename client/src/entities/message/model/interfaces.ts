@@ -8,6 +8,8 @@ export interface IMessage {
     isMessageForwarded?: boolean;
     forwardedFrom?: string;
     isPrevMessageReplied?: boolean;
+    prevMessageContent?: string;
+    prevMessageFrom?: string;
 }
 
 export interface IMessageValues {
@@ -18,4 +20,9 @@ export interface IForwardMessagesPayload {
     messages: IMessage[];
     from: string;
     to: string;
+}
+
+export interface IReplyToMessagePayload {
+    newMessage: IMessage;
+    repliedMessage: IMessage;
 }
