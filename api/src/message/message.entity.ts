@@ -29,9 +29,6 @@ export class Message extends BaseEntity {
     isMessageForwarded: boolean;
 
     @Column({ nullable: true })
-    isPrevMessageReplied: boolean;
-
-    @Column({ nullable: true })
     prevMessageContent: string;
 
     @Column({ nullable: true })

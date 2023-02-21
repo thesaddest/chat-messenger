@@ -16,7 +16,6 @@ class MessageService {
             friend: user,
             isMessageRead: messageDto.isMessageRead,
             isMessageForwarded: messageDto.isMessageForwarded,
-            isPrevMessageReplied: messageDto.isPrevMessageReplied,
             prevMessageContent: messageDto.prevMessageContent,
             prevMessageFrom: messageDto.prevMessageFrom,
         };
@@ -31,7 +30,6 @@ class MessageService {
             isMessageSelected: false,
             isMessageRead: message.isMessageRead,
             isMessageForwarded: message.isMessageForwarded,
-            isPrevMessageReplied: message.isPrevMessageReplied,
             prevMessageContent: message.prevMessageContent,
             prevMessageFrom: message.prevMessageFrom,
         };
@@ -55,7 +53,6 @@ class MessageService {
                 isMessageSelected: false,
                 isMessageRead: message.isMessageRead,
                 isMessageForwarded: message.isMessageForwarded,
-                isPrevMessageReplied: message.isPrevMessageReplied,
                 prevMessageContent: message.prevMessageContent,
                 prevMessageFrom: message.prevMessageFrom,
             });
@@ -80,7 +77,6 @@ class MessageService {
             isMessageSelected: false,
             isMessageRead: message.isMessageRead,
             isMessageForwarded: message.isMessageForwarded,
-            isPrevMessageReplied: message.isPrevMessageReplied,
             prevMessageContent: message.prevMessageContent,
             prevMessageFrom: message.prevMessageFrom,
         }));
@@ -102,7 +98,6 @@ class MessageService {
                     isMessageRead: savedReadMessage.isMessageRead,
                     isMessageForwarded: savedReadMessage.isMessageForwarded,
                     forwardedFrom: await userService.getUsernameByUserId(savedReadMessage.from),
-                    isPrevMessageReplied: savedReadMessage.isPrevMessageReplied,
                     prevMessageContent: savedReadMessage.prevMessageContent,
                     prevMessageFrom: savedReadMessage.prevMessageFrom,
                 };
@@ -120,7 +115,6 @@ class MessageService {
             friend: user,
             isMessageRead: messageDto.isMessageRead,
             isMessageForwarded: true,
-            isPrevMessageReplied: messageDto.isPrevMessageReplied,
             prevMessageContent: messageDto.prevMessageContent,
             prevMessageFrom: messageDto.prevMessageFrom,
         };
@@ -135,7 +129,6 @@ class MessageService {
             isMessageSelected: false,
             isMessageRead: forwardedMessage.isMessageRead,
             isMessageForwarded: forwardedMessage.isMessageForwarded,
-            isPrevMessageReplied: forwardedMessage.isPrevMessageReplied,
             prevMessageContent: forwardedMessage.prevMessageContent,
             prevMessageFrom: forwardedMessage.prevMessageFrom,
         };
@@ -154,7 +147,6 @@ class MessageService {
                     isMessageRead: createdForwardedMessage.isMessageRead,
                     isMessageForwarded: createdForwardedMessage.isMessageForwarded,
                     forwardedFrom: await userService.getUsernameByUserId(message.from),
-                    isPrevMessageReplied: createdForwardedMessage.isPrevMessageReplied,
                     prevMessageContent: createdForwardedMessage.prevMessageContent,
                     prevMessageFrom: createdForwardedMessage.prevMessageFrom,
                 };
@@ -187,7 +179,6 @@ class MessageService {
             isMessageRead: messageInDb.isMessageRead,
             isMessageForwarded: messageInDb.isMessageForwarded,
             forwardedFrom: messageInDb.forwardedFrom,
-            isPrevMessageReplied: messageInDb.isPrevMessageReplied,
             prevMessageContent: messageInDb.prevMessageContent,
             prevMessageFrom: messageInDb.prevMessageFrom,
         };

@@ -55,7 +55,6 @@ export const MessageItem: FC<MessageItemProps> = ({ friend, message }) => {
         messageId,
         isMessageRead,
         isMessageForwarded,
-        isPrevMessageReplied,
         isMessageSelected,
         prevMessageContent,
         prevMessageFrom,
@@ -73,7 +72,6 @@ export const MessageItem: FC<MessageItemProps> = ({ friend, message }) => {
                         isMessageSelected: true,
                         isMessageRead: isMessageRead,
                         isMessageForwarded: isMessageForwarded,
-                        isPrevMessageReplied: isPrevMessageReplied,
                         prevMessageContent: prevMessageContent,
                         prevMessageFrom: prevMessageFrom,
                     }),
@@ -90,7 +88,6 @@ export const MessageItem: FC<MessageItemProps> = ({ friend, message }) => {
                         isMessageSelected: false,
                         isMessageRead: isMessageRead,
                         isMessageForwarded: isMessageForwarded,
-                        isPrevMessageReplied: isPrevMessageReplied,
                         prevMessageContent: prevMessageContent,
                         prevMessageFrom: prevMessageFrom,
                     }),
@@ -103,7 +100,6 @@ export const MessageItem: FC<MessageItemProps> = ({ friend, message }) => {
         from,
         isMessageForwarded,
         isMessageRead,
-        isPrevMessageReplied,
         isMessageSelected,
         messageId,
         to,
@@ -118,7 +114,7 @@ export const MessageItem: FC<MessageItemProps> = ({ friend, message }) => {
                     Forwarded from {message.forwardedFrom}
                 </StyledForwarded>
             )}
-            {isPrevMessageReplied && message.prevMessageContent && message.prevMessageFrom && (
+            {message.prevMessageContent && message.prevMessageFrom && (
                 <RepliedMessageItem prevMessageFrom={message.prevMessageFrom} content={message.prevMessageContent} />
             )}
             <StyledMessageContentHolder>

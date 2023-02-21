@@ -43,7 +43,6 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
                 to: friendId,
                 from: userId,
                 content: values.message,
-                isPrevMessageReplied: !!selectedMessageToReply,
             });
             if (selectedMessageToReply) {
                 dispatch(replyToMessage({ newMessage: message, repliedMessage: selectedMessageToReply }));

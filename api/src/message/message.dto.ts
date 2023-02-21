@@ -33,10 +33,6 @@ export class MessageDto {
     @IsNotEmpty()
     forwardedFrom?: string;
 
-    @IsBoolean()
-    @IsNotEmpty()
-    isPrevMessageReplied?: boolean;
-
     @IsString()
     @IsNotEmpty()
     prevMessageContent?: string;

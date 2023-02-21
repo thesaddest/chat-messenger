@@ -25,7 +25,7 @@ export const ChatTabsContent: FC<IChatTabsContentProps> = ({ friend, messages })
         <StyledChatTabsContent>
             <ChatInfo friend={friend} />
             <MessagesList friend={friend} messages={messages} />
-            <RepliedMessage friend={friend} selectedMessageToReply={selectedMessageToReply} />
+            <RepliedMessage selectedMessageToReply={selectedMessageToReply} friend={friend} />
             <ChatInputBox friendId={friend.userBehindFriend} />
         </StyledChatTabsContent>
     );

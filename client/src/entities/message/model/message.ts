@@ -50,7 +50,6 @@ export const createMessage = (message: IMessage): IMessage => {
         isMessageSelected: message.isMessageSelected !== undefined ? message.isMessageSelected : false,
         isMessageRead: message.isMessageRead !== undefined ? message.isMessageRead : false,
         isMessageForwarded: message.isMessageForwarded !== undefined ? message.isMessageForwarded : false,
-        isPrevMessageReplied: message.isPrevMessageReplied !== undefined ? message.isPrevMessageReplied : false,
         prevMessageContent: message.prevMessageContent !== undefined ? message.prevMessageContent : undefined,
         prevMessageFrom: message.prevMessageFrom !== undefined ? message.prevMessageFrom : undefined,
     };
