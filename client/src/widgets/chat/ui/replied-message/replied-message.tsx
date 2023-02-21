@@ -47,6 +47,13 @@ const StyledUsernameMessageContainer = styled.div`
         font-weight: 600;
         color: #1677ff;
     }
+
+    span {
+        width: 35vw;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
 `;
 
 const StyledReplyContainer = styled.div`
