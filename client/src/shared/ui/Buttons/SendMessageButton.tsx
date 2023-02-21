@@ -14,12 +14,13 @@ const StyledFormItemButtonContainer = styled(Form.Item)`
 
     @media only screen and (min-width: 1080px) {
         width: 10%;
-        display: flex;
+        .ant-form-item-row {
+            width: 40px;
+        }
     }
 `;
 
 const StyledButton = styled(Button)`
-    display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
@@ -27,6 +28,7 @@ const StyledButton = styled(Button)`
     height: 36px;
 
     @media only screen and (min-width: 1080px) {
+        display: flex;
         height: 40px;
         width: 40px;
     }
