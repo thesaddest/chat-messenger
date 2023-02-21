@@ -9,10 +9,15 @@ import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 interface IMessagesListProps {
     friend: IFriend;
     messages: IMessage[];
+    selectedMessageToReply: IMessage | null;
 }
 
-const StyledWrapper = styled.div`
-    height: 55vh;
+interface IStyledWrapperProps {
+    selectedMessageToReply: IMessage | null;
+}
+
+const StyledWrapper = styled.div<IStyledWrapperProps>`
+    height: ${({ selectedMessageToReply }) => (selectedMessageToReply ? "55vh" : "60vh")};
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -23,7 +28,7 @@ const StyledWrapper = styled.div`
     }
 `;
 
-export const MessagesList = memo<IMessagesListProps>(({ friend, messages }) => {
+export const MessagesList = memo<IMessagesListProps>(({ friend, messages, selectedMessageToReply }) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
@@ -43,7 +48,7 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages }) => {
     }, [dispatch, friend.userBehindFriend, friendIdActiveKey, memoizedFilteredMessages, user]);
 
     return (
-        <StyledWrapper>
+        <StyledWrapper selectedMessageToReply={selectedMessageToReply}>
             {messages &&
                 memoizedFilteredMessages.map((msg, msgIndex) => (
                     <MessageItem friend={friend} key={msgIndex + msg.content} message={msg} />
