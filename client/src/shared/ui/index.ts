@@ -15,6 +15,7 @@ export {
     Reply,
     VerticalPipe,
     Close,
+    Down,
 } from "./Icons";
 export { MemoTitle } from "./Title";
 export { ScrollToSeeMore } from "./ScrollToSeeMore";

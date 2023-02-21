@@ -13,12 +13,10 @@ interface IRepliedMessageProps {
 }
 
 const StyledWrapper = styled.div<IRepliedMessageProps>`
-    //display: flex;
     display: ${({ selectedMessageToReply }) => (selectedMessageToReply ? "" : "none")};
     justify-content: center;
     align-items: center;
     height: 5vh;
-    //visibility: ${({ selectedMessageToReply }) => (selectedMessageToReply ? "" : "hidden")};
 `;
 
 const StyledContainer = styled.div`

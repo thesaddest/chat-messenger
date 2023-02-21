@@ -1,10 +1,11 @@
-import { memo, useEffect, useMemo, useRef } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { MessageItem } from "../message-item";
 import { IFriend } from "../../../friend";
 import { getFilteredMessageBySender, IMessage, readMessages } from "../../model";
-import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
+import { useAppDispatch, useAppSelector, useIsInViewport } from "../../../../shared/lib/hooks";
+import { ScrollToBottom } from "../../../../features/scroll-to-bottom";
 
 interface IMessagesListProps {
     friend: IFriend;
@@ -34,6 +35,17 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages, select
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const bottomDiv = useRef<HTMLDivElement>(null);
     const memoizedFilteredMessages = useMemo(() => getFilteredMessageBySender(messages, friend), [messages, friend]);
+    const isInViewport = useIsInViewport(bottomDiv);
+
+    const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (!isInViewport) {
+            setIsButtonVisible(true);
+        } else {
+            setIsButtonVisible(false);
+        }
+    }, [isInViewport]);
 
     useEffect(() => {
         if (bottomDiv.current) {
@@ -53,6 +65,7 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages, select
                 memoizedFilteredMessages.map((msg, msgIndex) => (
                     <MessageItem friend={friend} key={msgIndex + msg.content} message={msg} />
                 ))}
+            {isButtonVisible && <ScrollToBottom bottomDiv={bottomDiv} />}
             <div ref={bottomDiv}></div>
         </StyledWrapper>
     );

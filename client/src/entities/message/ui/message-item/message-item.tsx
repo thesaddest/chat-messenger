@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react";
+import { memo, useCallback } from "react";
 import styled from "styled-components";
 
 import { useAppDispatch } from "../../../../shared/lib/hooks";
@@ -47,7 +47,7 @@ const StyledForwarded = styled.p<ForwardedProps>`
     color: ${({ to, from }) => (to === from ? "whitesmoke" : "black")};
 `;
 
-export const MessageItem: FC<MessageItemProps> = ({ friend, message }) => {
+export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
     const {
         to,
         from,
@@ -123,4 +123,4 @@ export const MessageItem: FC<MessageItemProps> = ({ friend, message }) => {
             <MessageReadCheck isMessageRead={message.isMessageRead} />
         </StyledContainer>
     );
-};
+});

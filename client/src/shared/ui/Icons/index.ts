@@ -8,3 +8,4 @@ export * from "./ForwardMessage";
 export * from "./ReplyToMessage";
 export * from "./VerticalPipe";
 export * from "./Close";
+export * from "./Down";
