@@ -16,17 +16,8 @@ const StyledInputContainer = styled(Form.Item)`
     justify-content: start;
     align-items: center;
 
-    .ant-input:hover {
-        border-color: transparent;
-        box-shadow: none;
-    }
-
-    .ant-input:focus {
-        border-color: transparent;
-        box-shadow: none;
-    }
-
     .ant-input {
+        box-shadow: none !important;
         border-color: transparent !important;
     }
 
@@ -77,10 +68,6 @@ const StyledInputContainer = styled(Form.Item)`
         line-height: 0;
         box-shadow: none;
         padding: 0 0 0.2rem 0.5rem;
-
-        .ant-input-status-error {
-            border-color: transparent;
-        }
     }
 
     @media only screen and (min-width: 1080px) {
