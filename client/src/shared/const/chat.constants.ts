@@ -8,7 +8,7 @@ export const DEFAULT_ACTIVE_KEY = "START";
 
 export const MESSAGE_RULES: IChatRules = {
     MESSAGE: [
-        { type: "string", required: true, message: "Please enter at least 1 character", whitespace: true },
+        { required: true, whitespace: true },
         { min: 1, message: "Please enter at least 1 character" },
     ],
 };

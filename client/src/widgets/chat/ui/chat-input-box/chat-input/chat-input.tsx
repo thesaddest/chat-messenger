@@ -26,6 +26,10 @@ const StyledInputContainer = styled(Form.Item)`
         box-shadow: none;
     }
 
+    .ant-input {
+        border-color: transparent !important;
+    }
+
     .ant-form-item-row {
         height: 100%;
         display: flex;
@@ -38,6 +42,10 @@ const StyledInputContainer = styled(Form.Item)`
             justify-content: center;
             align-items: center;
             height: 100%;
+
+            .ant-form-item-explain {
+                display: none;
+            }
 
             .ant-form-item-control-input {
                 display: flex;
@@ -70,7 +78,7 @@ const StyledInputContainer = styled(Form.Item)`
         box-shadow: none;
         padding: 0 0 0.2rem 0.5rem;
 
-        .ant-input-status-success {
+        .ant-input-status-error {
             border-color: transparent;
         }
     }
