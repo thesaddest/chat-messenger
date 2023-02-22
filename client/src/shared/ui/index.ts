@@ -1,5 +1,5 @@
 export { ErrorAlert } from "./Alert";
-export { ZeroPaddingButton, SendMessageButton } from "./Buttons";
+export { ZeroPaddingButton, SendMessageButton, NavbarButton } from "./Buttons";
 export { Loader } from "./Loader";
 export { SharedAvatar } from "./Avatar";
 export { UsernameConnected } from "./UsernameConnected";
@@ -16,6 +16,7 @@ export {
     VerticalPipe,
     Close,
     Down,
+    Copy,
 } from "./Icons";
 export { MemoTitle } from "./Title";
 export { ScrollToSeeMore } from "./ScrollToSeeMore";

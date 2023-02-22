@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { memo } from "react";
 import styled from "styled-components";
 
 import { VerticalPipe } from "../../../../../shared/ui";
@@ -30,7 +30,7 @@ const StyledUsernameMessageContainer = styled.div`
     }
 `;
 
-export const RepliedMessageItem: FC<IRepliedMessageItemProps> = ({ prevMessageFrom, content }) => {
+export const RepliedMessageItem = memo<IRepliedMessageItemProps>(({ prevMessageFrom, content }) => {
     return (
         <StyledContainer>
             <VerticalPipe fontSize={"44px"} />
@@ -40,4 +40,4 @@ export const RepliedMessageItem: FC<IRepliedMessageItemProps> = ({ prevMessageFr
             </StyledUsernameMessageContainer>
         </StyledContainer>
     );
-};
+});

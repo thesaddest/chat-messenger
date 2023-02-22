@@ -12,6 +12,7 @@ import { DeleteMessages } from "../../../features/delete-messages";
 import { ForwardMessages } from "../../../features/forward-messages";
 import { deselectAllSelectedMessages } from "../../../entities/message";
 import { ReplyToMessage } from "../../../features/reply-to-message";
+import { CopyMessage } from "../../../features/copy-message";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
@@ -96,6 +97,7 @@ export const Navbar: FC = () => {
             <StyledRightDiv>
                 {selectedMessages.length > 0 && <ForwardMessages selectedMessages={selectedMessages} />}
                 {selectedMessages.length === 1 && <ReplyToMessage selectedMessage={selectedMessages[0]} />}
+                {selectedMessages.length === 1 && <CopyMessage selectedMessage={selectedMessages[0]} />}
                 {selectedMessages.length > 0 && <DeleteMessages selectedMessages={selectedMessages} />}
             </StyledRightDiv>
         </StyledHeader>

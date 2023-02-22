@@ -9,3 +9,4 @@ export * from "./ReplyToMessage";
 export * from "./VerticalPipe";
 export * from "./Close";
 export * from "./Down";
+export * from "./Copy";

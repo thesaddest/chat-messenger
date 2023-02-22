@@ -1,8 +1,7 @@
 import { memo, useCallback } from "react";
-import { Button } from "antd";
 import styled from "styled-components";
 
-import { Reply } from "../../shared/ui";
+import { NavbarButton, Reply } from "../../shared/ui";
 import { deselectMessage, IMessage, selectMessageToReply } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
 
@@ -24,9 +23,9 @@ export const ReplyToMessage = memo<IReplyToMessageProps>(({ selectedMessage }) =
 
     return (
         <StyledButtonContainer>
-            <Button onClick={onClick} type="primary">
+            <NavbarButton onClick={onClick} type="primary">
                 <Reply />
-            </Button>
+            </NavbarButton>
         </StyledButtonContainer>
     );
 });

@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react";
+import { memo, useCallback } from "react";
 import styled from "styled-components";
 import { Button } from "antd";
 
@@ -49,6 +49,7 @@ const StyledUsernameMessageContainer = styled.div`
 
     span {
         width: 35vw;
+        text-align: center;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
@@ -59,7 +60,7 @@ const StyledReplyContainer = styled.div`
     padding-left: 0.25rem;
 `;
 
-export const RepliedMessage: FC<IRepliedMessageProps> = ({ selectedMessageToReply, friend }) => {
+export const RepliedMessage = memo<IRepliedMessageProps>(({ selectedMessageToReply, friend }) => {
     const dispatch = useAppDispatch();
 
     const onClick = useCallback(() => {
@@ -84,4 +85,4 @@ export const RepliedMessage: FC<IRepliedMessageProps> = ({ selectedMessageToRepl
             </StyledContainer>
         </StyledWrapper>
     );
-};
+});

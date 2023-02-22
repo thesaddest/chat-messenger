@@ -1,10 +1,10 @@
-import { Button, Modal } from "antd";
+import { Modal } from "antd";
 import { memo, useCallback, useState } from "react";
 import styled from "styled-components";
 
 import { deselectAllSelectedMessages, IMessage } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
-import { Delete } from "../../shared/ui";
+import { Delete, NavbarButton } from "../../shared/ui";
 
 import { DeleteMessagesPopupContent } from "./delete-messages-popup-content";
 
@@ -36,14 +36,14 @@ export const DeleteMessages = memo<IDeleteMessagesProps>(({ selectedMessages }) 
     return (
         <>
             <StyledButtonContainer>
-                <Button type="primary" danger onClick={handleClick}>
+                <NavbarButton type="primary" danger onClick={handleClick}>
                     <Delete />
-                </Button>
+                </NavbarButton>
             </StyledButtonContainer>
             <StyledButtonContainer>
-                <Button type="dashed" onClick={handleCancel}>
+                <NavbarButton type="dashed" onClick={handleCancel}>
                     Cancel
-                </Button>
+                </NavbarButton>
             </StyledButtonContainer>
             <Modal open={isModalOpen} onCancel={handleModalCancel} centered={true} footer={null}>
                 <DeleteMessagesPopupContent selectedMessages={selectedMessages} />

@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, KeyboardEvent } from "react";
+import { FC, useEffect, useRef, KeyboardEvent, useCallback } from "react";
 import { Form, FormInstance, Input, InputRef } from "antd";
 import styled from "styled-components";
 
@@ -83,10 +83,13 @@ const StyledInputContainer = styled(Form.Item)`
 export const ChatInput: FC<IChatInputProps> = ({ form }) => {
     const inputRef = useRef<InputRef>(null);
 
-    const onEnterPress = (e: KeyboardEvent) => {
-        e.preventDefault();
-        form.submit();
-    };
+    const onEnterPress = useCallback(
+        (e: KeyboardEvent) => {
+            e.preventDefault();
+            form.submit();
+        },
+        [form],
+    );
 
     useEffect(() => {
         requestAnimationFrame(() => inputRef.current?.focus());
