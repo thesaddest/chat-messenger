@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { deselectAllSelectedMessages, IMessage } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
-import { Delete, NavbarButton } from "../../shared/ui";
+import { Close, Delete, NavbarButton } from "../../shared/ui";
 
 import { DeleteMessagesPopupContent } from "./delete-messages-popup-content";
 
@@ -42,7 +42,7 @@ export const DeleteMessages = memo<IDeleteMessagesProps>(({ selectedMessages }) 
             </StyledButtonContainer>
             <StyledButtonContainer>
                 <NavbarButton type="dashed" onClick={handleCancel}>
-                    Cancel
+                    <Close />
                 </NavbarButton>
             </StyledButtonContainer>
             <Modal open={isModalOpen} onCancel={handleModalCancel} centered={true} footer={null}>

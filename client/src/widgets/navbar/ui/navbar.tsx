@@ -40,6 +40,10 @@ const StyledLeftDiv = styled.div<IStyledLeftDivProps>`
         display: flex;
         justify-content: ${(props) => (props.friendIdActiveKey === DEFAULT_ACTIVE_KEY ? "space-evenly" : "start")};
         flex: 3;
+
+        .ant-btn > .anticon + span {
+            margin-inline-start: 0;
+        }
     }
 `;
 
@@ -89,8 +93,8 @@ export const Navbar: FC = () => {
                         </StyledModalButtonsContainer>
                     </>
                 ) : (
-                    <ZeroPaddingButton icon={<ArrowLeft />} type="link" onClick={onClick}>
-                        Back
+                    <ZeroPaddingButton type="link" onClick={onClick}>
+                        <ArrowLeft /> Back
                     </ZeroPaddingButton>
                 )}
             </StyledLeftDiv>
