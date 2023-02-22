@@ -25,7 +25,7 @@ const StyledWrapper = styled.div<IStyledWrapperProps>`
     text-align: center;
 
     @media only screen and (max-width: 425px) {
-        height: 100%;
+        height: ${({ selectedMessageToReply }) => (selectedMessageToReply ? "75vh" : "80vh")};
     }
 `;
 
