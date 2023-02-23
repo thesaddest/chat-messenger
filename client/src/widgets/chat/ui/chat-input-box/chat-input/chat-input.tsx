@@ -64,7 +64,7 @@ const StyledInputContainer = styled(Form.Item)`
         outline: none;
         resize: none;
         border-color: transparent;
-        background: lightgray;
+        background: transparent;
         line-height: 0;
         box-shadow: none;
         padding: 0 0 0.2rem 0.5rem;

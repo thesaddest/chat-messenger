@@ -1,7 +1,7 @@
 import { memo } from "react";
 import styled from "styled-components";
 
-import { VerticalPipe } from "../../../../../shared/ui";
+import { VerticalPipe } from "../../../../shared/ui";
 
 interface IRepliedMessageItemProps {
     prevMessageFrom: string;

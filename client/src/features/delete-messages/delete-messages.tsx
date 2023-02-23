@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { deselectAllSelectedMessages, IMessage } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
-import { Close, Delete, NavbarButton } from "../../shared/ui";
+import { Delete, NavbarButton } from "../../shared/ui";
 
 import { DeleteMessagesPopupContent } from "./delete-messages-popup-content";
 
@@ -24,10 +24,6 @@ export const DeleteMessages = memo<IDeleteMessagesProps>(({ selectedMessages }) 
         setIsModalOpen(true);
     }, []);
 
-    const handleCancel = useCallback(() => {
-        dispatch(deselectAllSelectedMessages(selectedMessages));
-    }, [dispatch, selectedMessages]);
-
     const handleModalCancel = useCallback(() => {
         dispatch(deselectAllSelectedMessages(selectedMessages));
         setIsModalOpen(false);
@@ -37,12 +33,7 @@ export const DeleteMessages = memo<IDeleteMessagesProps>(({ selectedMessages }) 
         <>
             <StyledButtonContainer>
                 <NavbarButton type="primary" danger onClick={handleClick}>
-                    <Delete />
-                </NavbarButton>
-            </StyledButtonContainer>
-            <StyledButtonContainer>
-                <NavbarButton type="dashed" onClick={handleCancel}>
-                    <Close />
+                    <Delete /> Delete
                 </NavbarButton>
             </StyledButtonContainer>
             <Modal open={isModalOpen} onCancel={handleModalCancel} centered={true} footer={null}>

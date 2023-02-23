@@ -8,11 +8,10 @@ import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { setFriendIdActiveKey } from "../../../entities/friend";
 import { AddFriend } from "../../../features/add-friend";
 import { SearchFriend } from "../../../features/search-friend";
-import { DeleteMessages } from "../../../features/delete-messages";
-import { ForwardMessages } from "../../../features/forward-messages";
 import { deselectAllSelectedMessages } from "../../../entities/message";
-import { ReplyToMessage } from "../../../features/reply-to-message";
-import { CopyMessage } from "../../../features/copy-message";
+import { ForwardMessages } from "../../../features/forward-messages";
+import { DeleteMessages } from "../../../features/delete-messages";
+import { CancelButton } from "../../../shared/ui/Buttons/CancelButton";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
@@ -100,9 +99,8 @@ export const Navbar: FC = () => {
             </StyledLeftDiv>
             <StyledRightDiv>
                 {selectedMessages.length > 0 && <ForwardMessages selectedMessages={selectedMessages} />}
-                {selectedMessages.length === 1 && <ReplyToMessage selectedMessage={selectedMessages[0]} />}
-                {selectedMessages.length === 1 && <CopyMessage selectedMessage={selectedMessages[0]} />}
                 {selectedMessages.length > 0 && <DeleteMessages selectedMessages={selectedMessages} />}
+                {selectedMessages.length > 0 && <CancelButton selectedMessages={selectedMessages} />}
             </StyledRightDiv>
         </StyledHeader>
     );

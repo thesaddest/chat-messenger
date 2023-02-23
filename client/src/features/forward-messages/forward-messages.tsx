@@ -16,7 +16,7 @@ const StyledButtonContainer = styled.div`
     padding: 0.25rem;
 `;
 
-export const ForwardMessages = memo<IForwardMessages>(() => {
+export const ForwardMessages = memo<IForwardMessages>(({ selectedMessages }) => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [modalSearchInputValue, setModalSearchInputValue] = useState<string>("");
@@ -40,7 +40,7 @@ export const ForwardMessages = memo<IForwardMessages>(() => {
         friends && (
             <StyledButtonContainer>
                 <NavbarButton onClick={showModal} type="primary">
-                    <ForwardMessage />
+                    <ForwardMessage /> Forward
                 </NavbarButton>
                 <Modal title="Forward to..." open={isModalOpen} onCancel={handleCancel} centered={true} footer={null}>
                     <ForwardMessagesPopupContent

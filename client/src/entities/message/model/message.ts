@@ -179,7 +179,16 @@ export const messageModel = createSlice({
                 return;
             }
 
-            messageInState.isMessageSelected = action.payload.isMessageSelected;
+            const messageInSelectedMessages = state.selectedMessages.find(
+                (messageInSelectedMessagesState) =>
+                    messageInSelectedMessagesState.messageId === action.payload.messageId,
+            );
+
+            if (messageInSelectedMessages) {
+                return;
+            }
+
+            messageInState.isMessageSelected = true;
             state.selectedMessages.push(action.payload);
         },
         deselectMessage: (state, action: PayloadAction<IMessage>) => {

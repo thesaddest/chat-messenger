@@ -24,7 +24,7 @@ export const ReplyToMessage = memo<IReplyToMessageProps>(({ selectedMessage }) =
     return (
         <StyledButtonContainer>
             <NavbarButton onClick={onClick} type="primary">
-                <Reply />
+                <Reply /> Reply
             </NavbarButton>
         </StyledButtonContainer>
     );

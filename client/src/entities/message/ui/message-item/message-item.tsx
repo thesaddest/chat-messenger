@@ -1,12 +1,18 @@
-import { memo, useCallback } from "react";
+import React, { memo, MouseEventHandler, useCallback, useMemo } from "react";
 import styled from "styled-components";
+import { Dropdown, MenuProps } from "antd";
 
-import { useAppDispatch } from "../../../../shared/lib/hooks";
-import { selectMessage, deselectMessage, createMessage, IMessage } from "../../model";
+import { deselectMessage, IMessage, selectMessage } from "../../model";
 import { MessageReadCheck } from "../../../../shared/ui";
 import { IFriend } from "../../../friend";
 
-import { RepliedMessageItem } from "./replied-message-item";
+import { RepliedMessageItem } from "../replied-message-item";
+import { ForwardMessages } from "../../../../features/forward-messages";
+import { ReplyToMessage } from "../../../../features/reply-to-message";
+import { CopyMessage } from "../../../../features/copy-message";
+import { DeleteMessages } from "../../../../features/delete-messages";
+import { SelectMessage } from "../../../../features/select-message";
+import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 
 interface MessageItemProps {
     friend: IFriend;
@@ -48,79 +54,64 @@ const StyledForwarded = styled.p<ForwardedProps>`
 `;
 
 export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
-    const {
-        to,
-        from,
-        content,
-        messageId,
-        isMessageRead,
-        isMessageForwarded,
-        isMessageSelected,
-        prevMessageContent,
-        prevMessageFrom,
-    } = message;
+    const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
+    const { isMessageForwarded, isMessageSelected } = message;
     const dispatch = useAppDispatch();
-    const handleClick = useCallback(() => {
-        if (!isMessageSelected) {
-            dispatch(
-                selectMessage(
-                    createMessage({
-                        to: to,
-                        from: from,
-                        content: content,
-                        messageId: messageId,
-                        isMessageSelected: true,
-                        isMessageRead: isMessageRead,
-                        isMessageForwarded: isMessageForwarded,
-                        prevMessageContent: prevMessageContent,
-                        prevMessageFrom: prevMessageFrom,
-                    }),
-                ),
-            );
-        } else {
-            dispatch(
-                deselectMessage(
-                    createMessage({
-                        to: to,
-                        from: from,
-                        content: content,
-                        messageId: messageId,
-                        isMessageSelected: false,
-                        isMessageRead: isMessageRead,
-                        isMessageForwarded: isMessageForwarded,
-                        prevMessageContent: prevMessageContent,
-                        prevMessageFrom: prevMessageFrom,
-                    }),
-                ),
-            );
+
+    const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
+        if (selectedMessages.length > 0 && isMessageSelected) {
+            dispatch(deselectMessage(message));
         }
-    }, [
-        content,
-        dispatch,
-        from,
-        isMessageForwarded,
-        isMessageRead,
-        isMessageSelected,
-        messageId,
-        to,
-        prevMessageContent,
-        prevMessageFrom,
-    ]);
+        if (selectedMessages.length > 0 && !isMessageSelected) {
+            dispatch(selectMessage(message));
+        }
+    }, [dispatch, isMessageSelected, message, selectedMessages.length]);
+
+    const items: MenuProps["items"] | undefined = useMemo(
+        () => [
+            {
+                label: <ForwardMessages selectedMessages={[message]} />,
+                key: 1,
+            },
+            {
+                label: <ReplyToMessage selectedMessage={message} />,
+                key: 2,
+            },
+            {
+                label: <CopyMessage selectedMessage={message} />,
+                key: 3,
+            },
+            {
+                label: <SelectMessage selectedMessage={message} />,
+                key: 4,
+            },
+            {
+                label: <DeleteMessages selectedMessages={[message]} />,
+                key: 5,
+            },
+        ],
+        [message],
+    );
 
     return (
-        <StyledContainer friend={friend} message={message} onClick={handleClick}>
-            {isMessageForwarded && (
-                <StyledForwarded to={message.to} from={message.from}>
-                    Forwarded from {message.forwardedFrom}
-                </StyledForwarded>
-            )}
-            {message.prevMessageContent && message.prevMessageFrom && (
-                <RepliedMessageItem prevMessageFrom={message.prevMessageFrom} content={message.prevMessageContent} />
-            )}
-            <StyledMessageContentHolder>
-                <p>{message.content}</p>
-            </StyledMessageContentHolder>
-            <MessageReadCheck isMessageRead={message.isMessageRead} />
-        </StyledContainer>
+        <Dropdown menu={{ items }} trigger={["click"]} disabled={selectedMessages.length > 0}>
+            <StyledContainer friend={friend} message={message} onClick={handleClick}>
+                {isMessageForwarded && (
+                    <StyledForwarded to={message.to} from={message.from}>
+                        Forwarded from {message.forwardedFrom}
+                    </StyledForwarded>
+                )}
+                {message.prevMessageContent && message.prevMessageFrom && (
+                    <RepliedMessageItem
+                        prevMessageFrom={message.prevMessageFrom}
+                        content={message.prevMessageContent}
+                    />
+                )}
+                <StyledMessageContentHolder>
+                    <p>{message.content}</p>
+                </StyledMessageContentHolder>
+                <MessageReadCheck isMessageRead={message.isMessageRead} />
+            </StyledContainer>
+        </Dropdown>
     );
 });
