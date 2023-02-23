@@ -164,7 +164,6 @@ class MessageService {
             isMessageRead: newMessage.isMessageRead,
             isMessageForwarded: newMessage.isMessageForwarded,
             forwardedFrom: newMessage.forwardedFrom,
-            isPrevMessageReplied: true,
             prevMessageContent: repliedMessage.content,
             prevMessageFrom: await userService.getUsernameByUserId(repliedMessage.from),
         };

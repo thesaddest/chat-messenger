@@ -28,6 +28,16 @@ const StyledUsernameMessageContainer = styled.div`
         font-weight: 600;
         color: whitesmoke;
     }
+
+    span {
+        display: flex;
+        align-items: start;
+        width: 20vw;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
 `;
 
 export const RepliedMessageItem = memo<IRepliedMessageItemProps>(({ prevMessageFrom, content }) => {
