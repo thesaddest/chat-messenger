@@ -1,7 +1,6 @@
-import { Button } from "antd";
 import { FC, useCallback } from "react";
-
 import styled from "styled-components";
+import { Button } from "antd";
 
 import {
     deleteMessages,
@@ -29,6 +28,10 @@ const StyledButtonsContainer = styled.div`
     width: 70%;
     justify-content: space-evenly;
     align-items: center;
+
+    @media only screen and (max-width: 425px) {
+        width: 100%;
+    }
 `;
 
 export const DeleteMessagesPopupContent: FC<IDeleteMessagesPopupContentProps> = ({ selectedMessages }) => {
@@ -49,10 +52,11 @@ export const DeleteMessagesPopupContent: FC<IDeleteMessagesPopupContentProps> = 
         <StyledContainer>
             <MemoTitle title="Are you sure?" />
             <StyledButtonsContainer>
-                <Button type="primary" danger onClick={handleDelete}>
-                    Delete {selectedMessages.length} Messages <Delete />
+                <Button type="dashed" danger onClick={handleDelete}>
+                    <Delete />
+                    {selectedMessages.length} items
                 </Button>
-                <Button type="primary" onClick={handleCancel}>
+                <Button type="dashed" onClick={handleCancel}>
                     Cancel
                 </Button>
             </StyledButtonsContainer>

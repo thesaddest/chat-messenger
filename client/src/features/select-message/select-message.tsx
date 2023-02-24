@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { createMessage, deselectMessage, IMessage, selectMessage } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
-import { NavbarButton, Select } from "../../shared/ui";
+import { MenuButton, Select } from "../../shared/ui";
 
 interface ISelectMessageProps {
     selectedMessage: IMessage;
@@ -64,9 +64,9 @@ export const SelectMessage = memo<ISelectMessageProps>(({ selectedMessage }) => 
     ]);
     return (
         <StyledButtonContainer>
-            <NavbarButton onClick={handleClick} type={"dashed"}>
+            <MenuButton onClick={handleClick} type={"dashed"}>
                 <Select /> Select
-            </NavbarButton>
+            </MenuButton>
         </StyledButtonContainer>
     );
 });

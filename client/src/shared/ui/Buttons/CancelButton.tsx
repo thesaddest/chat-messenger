@@ -6,7 +6,7 @@ import { Close } from "../Icons";
 import { deselectAllSelectedMessages, IMessage } from "../../../entities/message";
 import { useAppDispatch } from "../../lib/hooks";
 
-import { NavbarButton } from "./NavbarButton";
+import { MenuButton } from "./MenuButton";
 
 interface ICancelButtonProps {
     selectedMessages: IMessage[];
@@ -25,9 +25,9 @@ export const CancelButton = memo<ICancelButtonProps>(({ selectedMessages }) => {
 
     return (
         <StyledButtonContainer>
-            <NavbarButton type="dashed" onClick={handleCancel}>
+            <MenuButton type="dashed" onClick={handleCancel}>
                 <Close />
-            </NavbarButton>
+            </MenuButton>
         </StyledButtonContainer>
     );
 });

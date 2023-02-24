@@ -1,5 +1,5 @@
 export { ErrorAlert } from "./Alert";
-export { ZeroPaddingButton, SendMessageButton, NavbarButton, CancelButton } from "./Buttons";
+export { ZeroPaddingButton, SendMessageButton, MenuButton, CancelButton, BackButton } from "./Buttons";
 export { Loader } from "./Loader";
 export { SharedAvatar } from "./Avatar";
 export { UsernameConnected } from "./UsernameConnected";

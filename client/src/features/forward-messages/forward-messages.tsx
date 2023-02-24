@@ -3,7 +3,7 @@ import { Form, Modal } from "antd";
 import styled from "styled-components";
 
 import { IMessage } from "../../entities/message";
-import { ForwardMessage, NavbarButton } from "../../shared/ui";
+import { ForwardMessage, MenuButton } from "../../shared/ui";
 import { useAppSelector } from "../../shared/lib/hooks";
 
 import { ForwardMessagesPopupContent } from "./forward-messages-popup-content";
@@ -39,9 +39,9 @@ export const ForwardMessages = memo<IForwardMessages>(({ selectedMessages }) => 
     return (
         friends && (
             <StyledButtonContainer>
-                <NavbarButton onClick={showModal} type="dashed">
+                <MenuButton onClick={showModal} type="dashed">
                     <ForwardMessage /> Forward {selectedMessages.length > 1 && selectedMessages.length}
-                </NavbarButton>
+                </MenuButton>
                 <Modal title="Forward to..." open={isModalOpen} onCancel={handleCancel} centered={true} footer={null}>
                     <ForwardMessagesPopupContent
                         modalSearchInputValue={modalSearchInputValue}

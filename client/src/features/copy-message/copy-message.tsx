@@ -2,7 +2,7 @@ import { memo, useCallback } from "react";
 import styled from "styled-components";
 import { notification } from "antd";
 
-import { Copy, NavbarButton } from "../../shared/ui";
+import { Copy, MenuButton } from "../../shared/ui";
 import { IMessage } from "../../entities/message";
 
 interface ICopyMessageProps {
@@ -36,9 +36,9 @@ export const CopyMessage = memo<ICopyMessageProps>(({ selectedMessage }) => {
     return (
         <StyledButtonContainer>
             {contextHolder}
-            <NavbarButton onClick={handleCopy} type="dashed">
+            <MenuButton onClick={handleCopy} type="dashed">
                 <Copy /> Copy
-            </NavbarButton>
+            </MenuButton>
         </StyledButtonContainer>
     );
 });

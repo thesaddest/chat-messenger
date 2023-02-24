@@ -1,7 +1,7 @@
 import { memo, useCallback } from "react";
 import styled from "styled-components";
 
-import { NavbarButton, Reply } from "../../shared/ui";
+import { MenuButton, Reply } from "../../shared/ui";
 import { deselectMessage, IMessage, selectMessageToReply } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
 
@@ -23,9 +23,9 @@ export const ReplyToMessage = memo<IReplyToMessageProps>(({ selectedMessage }) =
 
     return (
         <StyledButtonContainer>
-            <NavbarButton onClick={onClick} type="dashed">
+            <MenuButton onClick={onClick} type="dashed">
                 <Reply /> Reply
-            </NavbarButton>
+            </MenuButton>
         </StyledButtonContainer>
     );
 });

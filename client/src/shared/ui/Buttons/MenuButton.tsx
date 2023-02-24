@@ -3,7 +3,7 @@ import { memo, MouseEventHandler, ReactNode } from "react";
 import { ButtonType } from "antd/es/button";
 import styled from "styled-components";
 
-interface INavbarButtonProps {
+interface IMenuButtonProps {
     onClick: MouseEventHandler<HTMLElement>;
     type: ButtonType;
     children: ReactNode;
@@ -17,7 +17,7 @@ const StyledButton = styled(Button)`
     width: 100%;
 `;
 
-export const NavbarButton = memo<INavbarButtonProps>(({ onClick, type, children, danger }) => {
+export const MenuButton = memo<IMenuButtonProps>(({ onClick, type, children, danger }) => {
     return (
         <StyledButton onClick={onClick} type={type} danger={danger}>
             {children}

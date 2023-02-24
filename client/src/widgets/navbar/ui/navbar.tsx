@@ -2,29 +2,29 @@ import { FC, useCallback } from "react";
 import styled from "styled-components";
 
 import { useWindowSize } from "../../../shared/lib/hooks";
-import { MemoTitle, ZeroPaddingButton, ArrowLeft } from "../../../shared/ui";
+import { MemoTitle, CancelButton, BackButton } from "../../../shared/ui";
 import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { setFriendIdActiveKey } from "../../../entities/friend";
 import { AddFriend } from "../../../features/add-friend";
 import { SearchFriend } from "../../../features/search-friend";
-import { deselectAllSelectedMessages } from "../../../entities/message";
+import { deselectAllSelectedMessages, IMessage } from "../../../entities/message";
 import { ForwardMessages } from "../../../features/forward-messages";
 import { DeleteMessages } from "../../../features/delete-messages";
-import { CancelButton } from "../../../shared/ui/Buttons/CancelButton";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
+    selectedMessages: IMessage[];
 }
 
 const StyledRightDiv = styled.div`
     display: flex;
     flex: 2;
-    justify-content: end;
-    padding-right: 1rem;
+    justify-content: space-between;
+    padding: 0 1rem 0 1rem;
 
     @media only screen and (max-width: 425px) {
-        padding-right: 0.25rem;
+        width: 100%;
         flex: 0;
     }
 `;
@@ -36,8 +36,9 @@ const StyledLeftDiv = styled.div<IStyledLeftDivProps>`
     flex: 1;
 
     @media only screen and (max-width: 425px) {
-        display: flex;
-        justify-content: ${(props) => (props.friendIdActiveKey === DEFAULT_ACTIVE_KEY ? "space-evenly" : "start")};
+        display: ${({ selectedMessages }) => (selectedMessages.length > 0 ? "none" : "flex")};
+        justify-content: ${({ friendIdActiveKey }) =>
+            friendIdActiveKey === DEFAULT_ACTIVE_KEY ? "space-evenly" : "start"};
         flex: 3;
 
         .ant-btn > .anticon + span {
@@ -51,6 +52,7 @@ const StyledHeader = styled.header`
     justify-content: center;
     align-items: center;
     height: 5vh;
+    width: 100%;
 
     h4 {
         margin: 0;
@@ -69,6 +71,20 @@ const StyledModalButtonsContainer = styled.div`
     gap: 0.5rem;
 `;
 
+const StyledForwardDeleteContainer = styled.div`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: start;
+`;
+
+const StyledCancelContainer = styled.div`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: end;
+`;
+
 export const Navbar: FC = () => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
@@ -82,7 +98,7 @@ export const Navbar: FC = () => {
 
     return (
         <StyledHeader>
-            <StyledLeftDiv friendIdActiveKey={friendIdActiveKey}>
+            <StyledLeftDiv friendIdActiveKey={friendIdActiveKey} selectedMessages={selectedMessages}>
                 {width >= 426 || friendIdActiveKey === DEFAULT_ACTIVE_KEY ? (
                     <>
                         <MemoTitle title="Chat" />
@@ -92,15 +108,17 @@ export const Navbar: FC = () => {
                         </StyledModalButtonsContainer>
                     </>
                 ) : (
-                    <ZeroPaddingButton type="link" onClick={onClick}>
-                        <ArrowLeft /> Back
-                    </ZeroPaddingButton>
+                    selectedMessages.length === 0 && <BackButton onClick={onClick} />
                 )}
             </StyledLeftDiv>
             <StyledRightDiv>
-                {selectedMessages.length > 0 && <ForwardMessages selectedMessages={selectedMessages} />}
-                {selectedMessages.length > 0 && <DeleteMessages selectedMessages={selectedMessages} />}
-                {selectedMessages.length > 0 && <CancelButton selectedMessages={selectedMessages} />}
+                <StyledForwardDeleteContainer>
+                    {selectedMessages.length > 0 && <ForwardMessages selectedMessages={selectedMessages} />}
+                    {selectedMessages.length > 0 && <DeleteMessages selectedMessages={selectedMessages} />}
+                </StyledForwardDeleteContainer>
+                <StyledCancelContainer>
+                    {selectedMessages.length > 0 && <CancelButton selectedMessages={selectedMessages} />}
+                </StyledCancelContainer>
             </StyledRightDiv>
         </StyledHeader>
     );
