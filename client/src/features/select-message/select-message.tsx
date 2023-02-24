@@ -64,7 +64,7 @@ export const SelectMessage = memo<ISelectMessageProps>(({ selectedMessage }) => 
     ]);
     return (
         <StyledButtonContainer>
-            <NavbarButton onClick={handleClick} type={"primary"}>
+            <NavbarButton onClick={handleClick} type={"dashed"}>
                 <Select /> Select
             </NavbarButton>
         </StyledButtonContainer>

@@ -1,4 +1,4 @@
-import React, { memo, MouseEventHandler, useCallback, useMemo } from "react";
+import { memo, MouseEventHandler, useCallback, useMemo } from "react";
 import styled from "styled-components";
 import { Dropdown, MenuProps } from "antd";
 
@@ -94,7 +94,7 @@ export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
     );
 
     return (
-        <Dropdown menu={{ items }} trigger={["click"]} disabled={selectedMessages.length > 0}>
+        <Dropdown menu={{ items }} trigger={["click"]} disabled={selectedMessages.length > 0} arrow>
             <StyledContainer friend={friend} message={message} onClick={handleClick}>
                 {isMessageForwarded && (
                     <StyledForwarded to={message.to} from={message.from}>

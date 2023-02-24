@@ -1,18 +1,26 @@
 import { Button } from "antd";
 import { memo, MouseEventHandler, ReactNode } from "react";
 import { ButtonType } from "antd/es/button";
+import styled from "styled-components";
 
-interface INavbarProps {
+interface INavbarButtonProps {
     onClick: MouseEventHandler<HTMLElement>;
     type: ButtonType;
     children: ReactNode;
     danger?: boolean;
 }
 
-export const NavbarButton = memo<INavbarProps>(({ onClick, type, children, danger }) => {
+const StyledButton = styled(Button)`
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    width: 100%;
+`;
+
+export const NavbarButton = memo<INavbarButtonProps>(({ onClick, type, children, danger }) => {
     return (
-        <Button onClick={onClick} type={type} danger={danger}>
+        <StyledButton onClick={onClick} type={type} danger={danger}>
             {children}
-        </Button>
+        </StyledButton>
     );
 });

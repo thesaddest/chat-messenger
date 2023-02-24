@@ -32,8 +32,8 @@ export const DeleteMessages = memo<IDeleteMessagesProps>(({ selectedMessages }) 
     return (
         <>
             <StyledButtonContainer>
-                <NavbarButton type="primary" danger onClick={handleClick}>
-                    <Delete /> Delete
+                <NavbarButton type="dashed" danger onClick={handleClick}>
+                    <Delete /> Delete {selectedMessages.length > 1 && selectedMessages.length}
                 </NavbarButton>
             </StyledButtonContainer>
             <Modal open={isModalOpen} onCancel={handleModalCancel} centered={true} footer={null}>

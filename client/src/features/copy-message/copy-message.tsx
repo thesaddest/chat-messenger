@@ -36,7 +36,7 @@ export const CopyMessage = memo<ICopyMessageProps>(({ selectedMessage }) => {
     return (
         <StyledButtonContainer>
             {contextHolder}
-            <NavbarButton onClick={handleCopy} type="primary">
+            <NavbarButton onClick={handleCopy} type="dashed">
                 <Copy /> Copy
             </NavbarButton>
         </StyledButtonContainer>

@@ -39,8 +39,8 @@ export const ForwardMessages = memo<IForwardMessages>(({ selectedMessages }) => 
     return (
         friends && (
             <StyledButtonContainer>
-                <NavbarButton onClick={showModal} type="primary">
-                    <ForwardMessage /> Forward
+                <NavbarButton onClick={showModal} type="dashed">
+                    <ForwardMessage /> Forward {selectedMessages.length > 1 && selectedMessages.length}
                 </NavbarButton>
                 <Modal title="Forward to..." open={isModalOpen} onCancel={handleCancel} centered={true} footer={null}>
                     <ForwardMessagesPopupContent
