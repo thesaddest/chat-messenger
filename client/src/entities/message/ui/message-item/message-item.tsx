@@ -70,13 +70,14 @@ export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
     const items: MenuProps["items"] | undefined = useMemo(
         () => [
             {
-                label: <ForwardMessages selectedMessages={[message]} />,
+                label: <ReplyToMessage selectedMessage={message} />,
                 key: 1,
             },
             {
-                label: <ReplyToMessage selectedMessage={message} />,
+                label: <ForwardMessages selectedMessages={[message]} />,
                 key: 2,
             },
+
             {
                 label: <CopyMessage selectedMessage={message} />,
                 key: 3,
