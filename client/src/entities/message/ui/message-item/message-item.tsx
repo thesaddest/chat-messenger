@@ -94,7 +94,7 @@ export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
     );
 
     return (
-        <Dropdown menu={{ items }} trigger={["click"]} disabled={selectedMessages.length > 0} arrow>
+        <Dropdown menu={{ items }} trigger={["click"]} disabled={selectedMessages.length > 0}>
             <StyledContainer friend={friend} message={message} onClick={handleClick}>
                 {isMessageForwarded && (
                     <StyledForwarded to={message.to} from={message.from}>

@@ -8,13 +8,13 @@ export const router = Router();
 router.post("/auth/register", userController.register);
 router.post("/auth/login", userController.login);
 
-router.get("/friend/getFriends", friendController.getFriends);
-router.post("/friend/addFriend", friendController.addFriend);
-router.get("/friend/getFriendsBySearchQuery", friendController.getFriendsBySearchQuery);
+router.get("/friend/friends", friendController.getFriends);
+router.post("/friend/friend", friendController.addFriend);
+router.get("/friend/search", friendController.getFriendsBySearchQuery);
 
-router.get("/message/getMessages", messageController.getMessages);
-router.post("/message/sendMessage", messageController.sendMessage);
-router.post("/message/deleteMessages", messageController.deleteMessages);
-router.post("/message/readMessages", messageController.readMessages);
-router.post("/message/forwardMessages", messageController.forwardMessages);
-router.post("/message/replyToMessage", messageController.replyToMessage);
+router.get("/message/messages", messageController.getMessages);
+router.post("/message/message", messageController.sendMessage);
+router.post("/message/delete", messageController.deleteMessages);
+router.post("/message/read", messageController.readMessages);
+router.post("/message/forward", messageController.forwardMessages);
+router.post("/message/reply", messageController.replyToMessage);

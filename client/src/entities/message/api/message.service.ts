@@ -5,26 +5,26 @@ import { IForwardMessagesPayload, IMessage, IReplyToMessagePayload } from "../mo
 
 export default class MessageService {
     static async getMessages(): Promise<AxiosResponse<IMessage[]>> {
-        return api.get<IMessage[]>("/message/getMessages");
+        return api.get<IMessage[]>("/message/messages");
     }
 
     static async sendMessage(messageData: IMessage): Promise<AxiosResponse<IMessage>> {
-        return api.post<IMessage>("/message/sendMessage", messageData);
+        return api.post<IMessage>("/message/message", messageData);
     }
 
     static async deleteMessages(messageIds: IMessage[]): Promise<AxiosResponse<IMessage[]>> {
-        return api.post<IMessage[]>("/message/deleteMessages", messageIds);
+        return api.post<IMessage[]>("/message/delete", messageIds);
     }
 
     static async readMessages(messages: IMessage[]): Promise<AxiosResponse<IMessage[]>> {
-        return api.post<IMessage[]>("/message/readMessages", messages);
+        return api.post<IMessage[]>("/message/read", messages);
     }
 
     static async forwardMessages(forwardMessagesPayload: IForwardMessagesPayload): Promise<AxiosResponse<IMessage[]>> {
-        return api.post<IMessage[]>("/message/forwardMessages", forwardMessagesPayload);
+        return api.post<IMessage[]>("/message/forward", forwardMessagesPayload);
     }
 
     static async replyToMessage(replyToMessagePayload: IReplyToMessagePayload): Promise<AxiosResponse<IMessage>> {
-        return api.post<IMessage>("/message/replyToMessage", replyToMessagePayload);
+        return api.post<IMessage>("/message/reply", replyToMessagePayload);
     }
 }
