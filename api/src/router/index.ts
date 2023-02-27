@@ -2,6 +2,8 @@ import { Router } from "express";
 import { userController } from "../user/user.controller.js";
 import { friendController } from "../friend/friend.controller.js";
 import { messageController } from "../message/message.controller.js";
+import { fileController } from "../file/file.controller.js";
+import { multerUpload } from "../libs/multer.js";
 
 export const router = Router();
 
@@ -18,3 +20,5 @@ router.post("/message/delete", messageController.deleteMessages);
 router.post("/message/read", messageController.readMessages);
 router.post("/message/forward", messageController.forwardMessages);
 router.post("/message/reply", messageController.replyToMessage);
+
+router.post("/file/upload-file", multerUpload.array("files"), fileController.uploadFile);

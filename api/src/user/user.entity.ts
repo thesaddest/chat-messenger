@@ -1,6 +1,7 @@
 import { Entity, Column, OneToMany, Relation } from "typeorm";
 import { BaseEntity } from "../common/entities/base.entity.js";
 import { Friend } from "../friend/friend.entity.js";
+import { File } from "../file/file.entity.js";
 
 @Entity()
 export class User extends BaseEntity {
@@ -24,4 +25,7 @@ export class User extends BaseEntity {
 
     @OneToMany(() => Friend, (friend) => friend.user, { eager: true })
     friends: Relation<Friend[]>;
+
+    @OneToMany(() => File, (file) => file.user, { eager: true })
+    files: Relation<File[]>;
 }
