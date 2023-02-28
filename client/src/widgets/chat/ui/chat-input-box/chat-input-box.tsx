@@ -7,6 +7,8 @@ import { sendMessage } from "../../../../entities/message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 import { SendMessageButton } from "../../../../shared/ui";
 
+import { FileUpload } from "../../../../features/file-upload";
+
 import { ChatInput } from "./chat-input";
 
 interface ChatInputBoxProps {
@@ -59,6 +61,7 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
             <StyledForm form={form} name="message-form" onFinish={(values) => onFinish(values as IMessageValues)}>
                 <ChatInput form={form} />
                 <SendMessageButton />
+                <FileUpload />
             </StyledForm>
         </StyledWrapper>
     );

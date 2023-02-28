@@ -3,7 +3,7 @@ import { userController } from "../user/user.controller.js";
 import { friendController } from "../friend/friend.controller.js";
 import { messageController } from "../message/message.controller.js";
 import { fileController } from "../file/file.controller.js";
-import { multerUpload } from "../libs/multer.js";
+import { multerUploadMiddleware } from "../libs/multer.js";
 
 export const router = Router();
 
@@ -21,4 +21,4 @@ router.post("/message/read", messageController.readMessages);
 router.post("/message/forward", messageController.forwardMessages);
 router.post("/message/reply", messageController.replyToMessage);
 
-router.post("/file/upload-file", multerUpload.array("files"), fileController.uploadFile);
+router.post("/file/upload-file", multerUploadMiddleware.array("files"), fileController.uploadFile);

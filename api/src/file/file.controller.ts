@@ -12,11 +12,10 @@ class FileController {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            const files = req.files as Express.Multer.File[];
-
+            const files = req.files as Express.MulterS3.File[];
             const uploadedFiles = await fileService.uploadFiles(files, user);
 
-            console.log(uploadedFiles);
+            res.json(uploadedFiles);
         } catch (e) {
             next(e);
         }

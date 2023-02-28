@@ -18,6 +18,12 @@ export class File extends BaseEntity {
     @Column({ nullable: false })
     fileId: string;
 
+    @Column({ nullable: true })
+    location: string;
+
+    @Column({ nullable: true })
+    attachedBy: string;
+
     @ManyToOne(() => User, (user) => user.files, { nullable: true })
     user: Relation<User>;
 }

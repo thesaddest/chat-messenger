@@ -3,6 +3,4 @@
 
 # dotenv environment variable files
 .env
-
-# uploads
-src/uploads
+!/uploads/
