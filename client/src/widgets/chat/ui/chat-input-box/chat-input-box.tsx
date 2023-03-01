@@ -2,12 +2,21 @@ import { FC } from "react";
 import { Form } from "antd";
 import styled from "styled-components";
 
-import { createMessage, deselectMessageToReply, IMessageValues, replyToMessage } from "../../../../entities/message";
+import {
+    createMessage,
+    deselectMessageToReply,
+    IMessage,
+    IMessageValues,
+    replyToMessage,
+    uploadFileMessage,
+} from "../../../../entities/message";
 import { sendMessage } from "../../../../entities/message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 import { SendMessageButton } from "../../../../shared/ui";
 
 import { FileUpload } from "../../../../features/file-upload";
+
+import api from "../../../../shared/api/axios-instance";
 
 import { ChatInput } from "./chat-input";
 
@@ -39,13 +48,23 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     const userId = useAppSelector((state) => state.auth.user?.userId);
     const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
 
-    const onFinish = (values: IMessageValues) => {
+    const onFinish = async (values: IMessageValues) => {
         if (userId) {
             const message = createMessage({
                 to: friendId,
                 from: userId,
                 content: values.message,
             });
+            if (values.uploadedFiles) {
+                const formData = new FormData();
+                for (const uploadFile of values.uploadedFiles) {
+                    if (uploadFile.originFileObj) {
+                        formData.append("file", uploadFile.originFileObj);
+                    }
+                }
+                //TODO: SEPARATE FILE UPLOAD AND SEND MESSAGE LOGIC
+                dispatch(uploadFileMessage({ newMessage: message, attachedFiles: formData }));
+            }
             if (selectedMessageToReply) {
                 dispatch(replyToMessage({ newMessage: message, repliedMessage: selectedMessageToReply }));
                 dispatch(deselectMessageToReply());

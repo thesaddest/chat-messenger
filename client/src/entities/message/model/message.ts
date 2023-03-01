@@ -5,7 +5,15 @@ import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
 import { IUser } from "../../user";
 
-import { IForwardMessagesPayload, IMessage, IReplyToMessagePayload } from "./interfaces";
+import api from "../../../shared/api/axios-instance";
+
+import {
+    IFile,
+    IForwardMessagesPayload,
+    IMessage,
+    IReplyToMessagePayload,
+    ISendMessageWithFilesPayload,
+} from "./interfaces";
 import {
     setMessagesStateAfterReadStatusUpdate,
     setMessageStateAfterDeleteMessages,
@@ -52,6 +60,7 @@ export const createMessage = (message: IMessage): IMessage => {
         isMessageForwarded: message.isMessageForwarded !== undefined ? message.isMessageForwarded : false,
         prevMessageContent: message.prevMessageContent !== undefined ? message.prevMessageContent : undefined,
         prevMessageFrom: message.prevMessageFrom !== undefined ? message.prevMessageFrom : undefined,
+        attachedFilesToUpload: message.attachedFilesToUpload !== undefined ? message.attachedFilesToUpload : undefined,
     };
 };
 
@@ -60,7 +69,9 @@ export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: s
     async function (messageData, { rejectWithValue }) {
         try {
             const { data } = await MessageService.sendMessage(messageData);
+
             socket.emit(SOCKET_EVENTS.SEND_MESSAGE, data);
+
             return data;
         } catch (e) {
             return rejectWithValue("Error while sending message");
@@ -143,6 +154,20 @@ export const replyToMessage = createAsyncThunk<IMessage, IReplyToMessagePayload,
         }
 
         socket.emit(SOCKET_EVENTS.REPLY_TO_MESSAGE, data);
+        return data;
+    },
+);
+
+export const uploadFileMessage = createAsyncThunk<IMessage, ISendMessageWithFilesPayload, { rejectValue: string }>(
+    "message/file/uploadFile",
+    async function (uploadFileData, { rejectWithValue }) {
+        const { data } = await MessageService.uploadFileMessage(uploadFileData);
+
+        if (!data) {
+            return rejectWithValue("Error while replying to message");
+        }
+        console.log("DATA IN UPLOAD FILE MESSAGE: ", data);
+        // socket.emit(SOCKET_EVENTS.REPLY_TO_MESSAGE, data);
         return data;
     },
 );

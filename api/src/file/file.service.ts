@@ -3,20 +3,11 @@ import { User } from "../user/user.entity.js";
 import { BaseFile } from "./interfaces.js";
 import { AppDataSource } from "../db/database.js";
 import { v4 as uuidv4 } from "uuid";
-import { FileDto } from "./file.dto.js";
 
 class FileService {
-    async uploadFiles(files: Express.MulterS3.File[], user: User): Promise<FileDto[]> {
+    async uploadFiles(files: Express.MulterS3.File[], user: User): Promise<File[]> {
         const convertedFiles = await Promise.all(files.map((file) => this.convertMulterFilesIntoBaseFile(file, user)));
-        const savedFiles = await Promise.all(convertedFiles.map((file) => this.createFileInDb(file)));
-
-        return savedFiles.map((file) => ({
-            fileId: file.fileId,
-            name: file.name,
-            mimetype: file.mimetype,
-            location: file.location,
-            attachedBy: file.attachedBy,
-        }));
+        return await Promise.all(convertedFiles.map((file) => this.createFileInDb(file)));
     }
 
     async convertMulterFilesIntoBaseFile(file: Express.MulterS3.File, user: User): Promise<BaseFile> {
@@ -35,7 +26,7 @@ class FileService {
             mimetype: file.mimetype,
             fileId: uuidv4(),
             location: file.location,
-            attachedBy: file.attachedBy.userId,
+            attachedBy: file.attachedBy.username,
             user: file.attachedBy,
         };
         return await fileRepository.save(fileToSave);

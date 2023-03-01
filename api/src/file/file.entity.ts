@@ -1,6 +1,7 @@
 import { Entity, Column, ManyToOne, Relation } from "typeorm";
 import { BaseEntity } from "../common/entities/base.entity.js";
 import { User } from "../user/user.entity.js";
+import { Message } from "../message/message.entity.js";
 
 @Entity()
 export class File extends BaseEntity {
@@ -23,6 +24,9 @@ export class File extends BaseEntity {
 
     @Column({ nullable: true })
     attachedBy: string;
+
+    @ManyToOne(() => Message, (message) => message.files, { nullable: true })
+    message: Relation<Message>;
 
     @ManyToOne(() => User, (user) => user.files, { nullable: true })
     user: Relation<User>;

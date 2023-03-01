@@ -21,4 +21,4 @@ router.post("/message/read", messageController.readMessages);
 router.post("/message/forward", messageController.forwardMessages);
 router.post("/message/reply", messageController.replyToMessage);
 
-router.post("/file/upload-file", multerUploadMiddleware.array("files"), fileController.uploadFile);
+router.post("/file/upload-file", multerUploadMiddleware.array("file"), fileController.uploadFile);

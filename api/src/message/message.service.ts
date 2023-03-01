@@ -4,6 +4,7 @@ import { AppDataSource } from "../db/database.js";
 import { MessageDto } from "./message.dto.js";
 import { User } from "../user/user.entity.js";
 import { userService } from "../user/user.service.js";
+import { File } from "../file/file.entity.js";
 
 class MessageService {
     async createMessage(messageDto: MessageDto, user: User): Promise<MessageDto> {
@@ -18,6 +19,7 @@ class MessageService {
             isMessageForwarded: messageDto.isMessageForwarded,
             prevMessageContent: messageDto.prevMessageContent,
             prevMessageFrom: messageDto.prevMessageFrom,
+            files: messageDto.attachedFilesAfterUpload,
         };
         const message = messageRepository.create(newMessage);
         await messageRepository.save(message);
@@ -32,6 +34,7 @@ class MessageService {
             isMessageForwarded: message.isMessageForwarded,
             prevMessageContent: message.prevMessageContent,
             prevMessageFrom: message.prevMessageFrom,
+            attachedFilesAfterUpload: message.files,
         };
     }
 
@@ -180,6 +183,36 @@ class MessageService {
             forwardedFrom: messageInDb.forwardedFrom,
             prevMessageContent: messageInDb.prevMessageContent,
             prevMessageFrom: messageInDb.prevMessageFrom,
+        };
+    }
+
+    async sendMessageWithFile(newMessage: MessageDto, uploadedFiles: File[], user: User): Promise<MessageDto> {
+        const messageWithFileToSaveInDb: MessageDto = {
+            messageId: newMessage.messageId,
+            to: newMessage.to,
+            from: newMessage.from,
+            content: newMessage.content,
+            isMessageRead: newMessage.isMessageRead,
+            isMessageForwarded: newMessage.isMessageForwarded,
+            prevMessageContent: newMessage.content,
+            prevMessageFrom: await userService.getUsernameByUserId(newMessage.from),
+            attachedFilesAfterUpload: uploadedFiles,
+        };
+
+        const messageInDb = await this.createMessage(messageWithFileToSaveInDb, user);
+
+        return {
+            messageId: messageInDb.messageId,
+            to: messageInDb.to,
+            from: messageInDb.from,
+            content: messageInDb.content,
+            isMessageSelected: false,
+            isMessageRead: messageInDb.isMessageRead,
+            isMessageForwarded: messageInDb.isMessageForwarded,
+            forwardedFrom: messageInDb.forwardedFrom,
+            prevMessageContent: messageInDb.prevMessageContent,
+            prevMessageFrom: messageInDb.prevMessageFrom,
+            attachedFilesAfterUpload: messageInDb.attachedFilesAfterUpload,
         };
     }
 }
