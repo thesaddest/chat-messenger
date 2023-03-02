@@ -1,15 +1,36 @@
-import { Button, Form, Upload } from "antd";
+import { Form, Upload } from "antd";
+import styled from "styled-components";
+import { memo } from "react";
 
-import { FolderAdd } from "../../shared/ui";
+import { FileAdd, InputButton } from "../../shared/ui";
 
-export const FileUpload = () => {
+const StyledFormItemButtonContainer = styled(Form.Item)`
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 15%;
+    height: 100%;
+    margin: 0;
+    padding-right: 0.15rem;
+
+    @media only screen and (min-width: 1080px) {
+        width: 10%;
+        .ant-form-item-row {
+            width: 40px;
+        }
+    }
+`;
+
+export const FileUpload = memo(() => {
     return (
-        <Form.Item name="uploadedFiles" valuePropName="fileList" getValueFromEvent={({ fileList }) => fileList}>
+        <StyledFormItemButtonContainer
+            name="uploadedFiles"
+            valuePropName="fileList"
+            getValueFromEvent={({ fileList }) => fileList}
+        >
             <Upload multiple customRequest={() => {}} showUploadList={false}>
-                <Button>
-                    <FolderAdd />
-                </Button>
+                <InputButton icon={<FileAdd />} type={"default"} />
             </Upload>
-        </Form.Item>
+        </StyledFormItemButtonContainer>
     );
-};
+});

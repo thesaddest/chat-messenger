@@ -13,6 +13,7 @@ import { CopyMessage } from "../../../../features/copy-message";
 import { DeleteMessages } from "../../../../features/delete-messages";
 import { SelectMessage } from "../../../../features/select-message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
+import { AttachedFileList } from "../../../file";
 
 interface MessageItemProps {
     friend: IFriend;
@@ -102,15 +103,21 @@ export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
                         Forwarded from {message.forwardedFrom}
                     </StyledForwarded>
                 )}
+
                 {message.prevMessageContent && message.prevMessageFrom && (
                     <RepliedMessageItem
                         prevMessageFrom={message.prevMessageFrom}
                         content={message.prevMessageContent}
                     />
                 )}
+
                 <StyledMessageContentHolder>
                     <p>{message.content}</p>
                 </StyledMessageContentHolder>
+
+                {message.attachedFilesAfterUpload && (
+                    <AttachedFileList attachedFilesAfterUpload={message.attachedFilesAfterUpload} />
+                )}
                 <MessageReadCheck isMessageRead={message.isMessageRead} />
             </StyledContainer>
         </Dropdown>

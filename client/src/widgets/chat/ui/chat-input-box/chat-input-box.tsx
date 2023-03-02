@@ -5,18 +5,14 @@ import styled from "styled-components";
 import {
     createMessage,
     deselectMessageToReply,
-    IMessage,
-    IMessageValues,
+    IMessageInChatValues,
     replyToMessage,
-    uploadFileMessage,
+    sendMessageWithAttachedFiles,
 } from "../../../../entities/message";
 import { sendMessage } from "../../../../entities/message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
-import { SendMessageButton } from "../../../../shared/ui";
-
 import { FileUpload } from "../../../../features/file-upload";
-
-import api from "../../../../shared/api/axios-instance";
+import { SendMessage } from "../../../../features/send-message";
 
 import { ChatInput } from "./chat-input";
 
@@ -48,7 +44,7 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     const userId = useAppSelector((state) => state.auth.user?.userId);
     const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
 
-    const onFinish = async (values: IMessageValues) => {
+    const onFinish = async (values: IMessageInChatValues) => {
         if (userId) {
             const message = createMessage({
                 to: friendId,
@@ -56,19 +52,13 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
                 content: values.message,
             });
             if (values.uploadedFiles) {
-                const formData = new FormData();
-                for (const uploadFile of values.uploadedFiles) {
-                    if (uploadFile.originFileObj) {
-                        formData.append("file", uploadFile.originFileObj);
-                    }
-                }
-                //TODO: SEPARATE FILE UPLOAD AND SEND MESSAGE LOGIC
-                dispatch(uploadFileMessage({ newMessage: message, attachedFiles: formData }));
+                dispatch(sendMessageWithAttachedFiles({ newMessage: message, uploadedFiles: values.uploadedFiles }));
             }
             if (selectedMessageToReply) {
                 dispatch(replyToMessage({ newMessage: message, repliedMessage: selectedMessageToReply }));
                 dispatch(deselectMessageToReply());
-            } else {
+            }
+            if (!selectedMessageToReply && !values.uploadedFiles) {
                 dispatch(sendMessage(message));
             }
             form.resetFields();
@@ -77,10 +67,10 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
 
     return (
         <StyledWrapper>
-            <StyledForm form={form} name="message-form" onFinish={(values) => onFinish(values as IMessageValues)}>
+            <StyledForm form={form} name="message-form" onFinish={(values) => onFinish(values as IMessageInChatValues)}>
                 <ChatInput form={form} />
-                <SendMessageButton />
                 <FileUpload />
+                <SendMessage />
             </StyledForm>
         </StyledWrapper>
     );

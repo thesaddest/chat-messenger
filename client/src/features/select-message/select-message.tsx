@@ -30,6 +30,7 @@ export const SelectMessage = memo<ISelectMessageProps>(({ selectedMessage }) => 
                         isMessageForwarded: selectedMessage.isMessageForwarded,
                         prevMessageContent: selectedMessage.prevMessageContent,
                         prevMessageFrom: selectedMessage.prevMessageFrom,
+                        attachedFilesAfterUpload: selectedMessage.attachedFilesAfterUpload,
                     }),
                 ),
             );
@@ -46,12 +47,14 @@ export const SelectMessage = memo<ISelectMessageProps>(({ selectedMessage }) => 
                         isMessageForwarded: selectedMessage.isMessageForwarded,
                         prevMessageContent: selectedMessage.prevMessageContent,
                         prevMessageFrom: selectedMessage.prevMessageFrom,
+                        attachedFilesAfterUpload: selectedMessage.attachedFilesAfterUpload,
                     }),
                 ),
             );
         }
     }, [
         dispatch,
+        selectedMessage.attachedFilesAfterUpload,
         selectedMessage.content,
         selectedMessage.from,
         selectedMessage.isMessageForwarded,

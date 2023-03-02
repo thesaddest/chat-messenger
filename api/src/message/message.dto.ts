@@ -1,5 +1,6 @@
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { FileDto } from "../file/file.dto.js";
+import { File } from "../file/file.entity.js";
 
 export class MessageDto {
     @IsString()
@@ -42,5 +43,6 @@ export class MessageDto {
     @IsNotEmpty()
     prevMessageFrom?: string;
 
-    attachedFilesAfterUpload?: FileDto[];
+    attachedFilesAfterUpload?: File[];
+    // attachedFilesAfterUpload?: FileDto[];
 }

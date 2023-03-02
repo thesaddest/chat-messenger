@@ -11,4 +11,5 @@ export * from "./Close";
 export * from "./Down";
 export * from "./Copy";
 export * from "./Select";
-export * from "./FolderAdd";
+export * from "./FileAdd";
+export * from "./SendMessageIcon";

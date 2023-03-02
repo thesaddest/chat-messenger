@@ -1,5 +1,5 @@
 export { ErrorAlert } from "./Alert";
-export { ZeroPaddingButton, SendMessageButton, MenuButton, CancelButton, BackButton } from "./Buttons";
+export { ZeroPaddingButton, InputButton, MenuButton, CancelButton, BackButton } from "./Buttons";
 export { Loader } from "./Loader";
 export { SharedAvatar } from "./Avatar";
 export { UsernameConnected } from "./UsernameConnected";
@@ -18,7 +18,8 @@ export {
     Down,
     Copy,
     Select,
-    FolderAdd,
+    FileAdd,
+    SendMessageIcon,
 } from "./Icons";
 export { MemoTitle } from "./Title";
 export { ScrollToSeeMore } from "./ScrollToSeeMore";

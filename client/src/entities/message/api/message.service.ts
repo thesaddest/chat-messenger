@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 
 import api from "../../../shared/api/axios-instance";
-import { IForwardMessagesPayload, IMessage, IReplyToMessagePayload, ISendMessageWithFilesPayload } from "../model";
+import { IForwardMessagesPayload, IMessage, IReplyToMessagePayload } from "../model";
 
 export default class MessageService {
     static async getMessages(): Promise<AxiosResponse<IMessage[]>> {
@@ -26,9 +26,5 @@ export default class MessageService {
 
     static async replyToMessage(replyToMessagePayload: IReplyToMessagePayload): Promise<AxiosResponse<IMessage>> {
         return api.post<IMessage>("/message/reply", replyToMessagePayload);
-    }
-
-    static async uploadFileMessage(formData: ISendMessageWithFilesPayload): Promise<AxiosResponse<IMessage>> {
-        return await api.post<IMessage>("/file/upload-file", formData);
     }
 }

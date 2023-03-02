@@ -1,19 +1,15 @@
 import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 
+import { UploadFile } from "antd/es/upload/interface";
+
 import MessageService from "../api/message.service";
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
 import { IUser } from "../../user";
 
-import api from "../../../shared/api/axios-instance";
+import FileService from "../../file/api/file.service";
 
-import {
-    IFile,
-    IForwardMessagesPayload,
-    IMessage,
-    IReplyToMessagePayload,
-    ISendMessageWithFilesPayload,
-} from "./interfaces";
+import { IForwardMessagesPayload, IMessage, IReplyToMessagePayload } from "./interfaces";
 import {
     setMessagesStateAfterReadStatusUpdate,
     setMessageStateAfterDeleteMessages,
@@ -25,6 +21,11 @@ import {
 interface IReadMessagePayload {
     messages: IMessage[];
     user: IUser;
+}
+
+interface ISendMessageWithAttachedFilesPayload {
+    newMessage: IMessage;
+    uploadedFiles: UploadFile[];
 }
 
 interface MessageState {
@@ -61,6 +62,8 @@ export const createMessage = (message: IMessage): IMessage => {
         prevMessageContent: message.prevMessageContent !== undefined ? message.prevMessageContent : undefined,
         prevMessageFrom: message.prevMessageFrom !== undefined ? message.prevMessageFrom : undefined,
         attachedFilesToUpload: message.attachedFilesToUpload !== undefined ? message.attachedFilesToUpload : undefined,
+        attachedFilesAfterUpload:
+            message.attachedFilesAfterUpload !== undefined ? message.attachedFilesAfterUpload : undefined,
     };
 };
 
@@ -158,19 +161,38 @@ export const replyToMessage = createAsyncThunk<IMessage, IReplyToMessagePayload,
     },
 );
 
-export const uploadFileMessage = createAsyncThunk<IMessage, ISendMessageWithFilesPayload, { rejectValue: string }>(
-    "message/file/uploadFile",
-    async function (uploadFileData, { rejectWithValue }) {
-        const { data } = await MessageService.uploadFileMessage(uploadFileData);
-
-        if (!data) {
-            return rejectWithValue("Error while replying to message");
+export const sendMessageWithAttachedFiles = createAsyncThunk<
+    IMessage,
+    ISendMessageWithAttachedFilesPayload,
+    { rejectValue: string }
+>("messages/sendMessageWithAttachedFiles", async function (messageWithAttachedFilesPayload, { rejectWithValue }) {
+    const formData = new FormData();
+    for (const uploadFile of messageWithAttachedFilesPayload.uploadedFiles) {
+        if (uploadFile.originFileObj) {
+            formData.append("file", uploadFile.originFileObj);
         }
-        console.log("DATA IN UPLOAD FILE MESSAGE: ", data);
-        // socket.emit(SOCKET_EVENTS.REPLY_TO_MESSAGE, data);
-        return data;
-    },
-);
+    }
+    const filesData = await FileService.uploadFile(formData);
+
+    if (!filesData.data) {
+        return rejectWithValue("Error while uploading file");
+    }
+
+    const messageToSend = createMessage({
+        to: messageWithAttachedFilesPayload.newMessage.to,
+        from: messageWithAttachedFilesPayload.newMessage.from,
+        content: messageWithAttachedFilesPayload.newMessage.content,
+        attachedFilesAfterUpload: filesData.data,
+    });
+    const messageData = await MessageService.sendMessage(messageToSend);
+
+    if (!messageData.data) {
+        return rejectWithValue("Error while sending message with attached files");
+    }
+
+    socket.emit(SOCKET_EVENTS.SEND_MESSAGE, messageData.data);
+    return messageData.data;
+});
 
 export const messageModel = createSlice({
     name: "messages",
@@ -212,6 +234,8 @@ export const messageModel = createSlice({
             if (messageInSelectedMessages) {
                 return;
             }
+
+            console.log("action: ", action.payload);
 
             messageInState.isMessageSelected = true;
             state.selectedMessages.push(action.payload);
@@ -384,6 +408,21 @@ export const messageModel = createSlice({
                 state.error = null;
             })
             .addCase(replyToMessage.rejected, (state, action) => {
+                if (!action.payload) {
+                    return;
+                }
+                state.error = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(sendMessageWithAttachedFiles.fulfilled, (state, action) => {
+                if (!state.messages) {
+                    return;
+                }
+                state.messages.push(action.payload);
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(sendMessageWithAttachedFiles.rejected, (state, action) => {
                 if (!action.payload) {
                     return;
                 }

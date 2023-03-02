@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne, Relation } from "typeorm";
 import { BaseEntity } from "../common/entities/base.entity.js";
 import { User } from "../user/user.entity.js";
 import { Message } from "../message/message.entity.js";
+import { FileType } from "../common/enums/file-type.enum.js";
 
 @Entity()
 export class File extends BaseEntity {
@@ -14,7 +15,7 @@ export class File extends BaseEntity {
     name: string;
 
     @Column({ nullable: false })
-    mimetype: string;
+    mimetype: FileType;
 
     @Column({ nullable: false })
     fileId: string;

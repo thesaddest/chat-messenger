@@ -1,5 +1,7 @@
 import { UploadFile } from "antd/es/upload/interface";
 
+import { IFile } from "../../file";
+
 export interface IMessage {
     to: string;
     from: string;
@@ -15,7 +17,7 @@ export interface IMessage {
     attachedFilesAfterUpload?: IFile[];
 }
 
-export interface IMessageValues {
+export interface IMessageInChatValues {
     message: string;
     uploadedFiles: UploadFile[];
 }
@@ -29,17 +31,4 @@ export interface IForwardMessagesPayload {
 export interface IReplyToMessagePayload {
     newMessage: IMessage;
     repliedMessage: IMessage;
-}
-
-export interface IFile {
-    fileId: string;
-    name: string;
-    mimetype: string;
-    location: string;
-    attachedBy: string;
-}
-
-export interface ISendMessageWithFilesPayload {
-    newMessage: IMessage;
-    attachedFiles: FormData;
 }

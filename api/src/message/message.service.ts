@@ -5,6 +5,7 @@ import { MessageDto } from "./message.dto.js";
 import { User } from "../user/user.entity.js";
 import { userService } from "../user/user.service.js";
 import { File } from "../file/file.entity.js";
+import { fileService } from "../file/file.service.js";
 
 class MessageService {
     async createMessage(messageDto: MessageDto, user: User): Promise<MessageDto> {
@@ -23,6 +24,15 @@ class MessageService {
         };
         const message = messageRepository.create(newMessage);
         await messageRepository.save(message);
+
+        const fileRepository = AppDataSource.getRepository(File);
+
+        //File to message assigment
+        if (messageDto.attachedFilesAfterUpload) {
+            for (const attachedFile of messageDto.attachedFilesAfterUpload) {
+                await fileRepository.update({ fileId: attachedFile.fileId }, { message: message });
+            }
+        }
 
         return {
             messageId: message.messageId,
@@ -58,6 +68,7 @@ class MessageService {
                 isMessageForwarded: message.isMessageForwarded,
                 prevMessageContent: message.prevMessageContent,
                 prevMessageFrom: message.prevMessageFrom,
+                attachedFilesAfterUpload: message.files,
             });
         }
 
@@ -69,6 +80,12 @@ class MessageService {
         const messagesToDelete = await Promise.all(
             messages.map(({ messageId }) => messageRepository.findOneBy({ messageId: messageId })),
         );
+
+        for (const message of messagesToDelete) {
+            if (message.files) {
+                await fileService.deleteFiles(message.files);
+            }
+        }
 
         const deletedMessages = await messageRepository.remove(messagesToDelete);
 
@@ -82,6 +99,7 @@ class MessageService {
             isMessageForwarded: message.isMessageForwarded,
             prevMessageContent: message.prevMessageContent,
             prevMessageFrom: message.prevMessageFrom,
+            attachedFilesAfterUpload: message.files,
         }));
     }
 
@@ -103,6 +121,7 @@ class MessageService {
                     forwardedFrom: await userService.getUsernameByUserId(savedReadMessage.from),
                     prevMessageContent: savedReadMessage.prevMessageContent,
                     prevMessageFrom: savedReadMessage.prevMessageFrom,
+                    attachedFilesAfterUpload: savedReadMessage.files,
                 };
             }),
         );
@@ -120,6 +139,7 @@ class MessageService {
             isMessageForwarded: true,
             prevMessageContent: messageDto.prevMessageContent,
             prevMessageFrom: messageDto.prevMessageFrom,
+            files: messageDto.attachedFilesAfterUpload,
         };
         const forwardedMessage = messageRepository.create(newMessage);
         await messageRepository.save(forwardedMessage);
@@ -134,6 +154,7 @@ class MessageService {
             isMessageForwarded: forwardedMessage.isMessageForwarded,
             prevMessageContent: forwardedMessage.prevMessageContent,
             prevMessageFrom: forwardedMessage.prevMessageFrom,
+            attachedFilesAfterUpload: messageDto.attachedFilesAfterUpload,
         };
     }
 
@@ -152,6 +173,7 @@ class MessageService {
                     forwardedFrom: await userService.getUsernameByUserId(message.from),
                     prevMessageContent: createdForwardedMessage.prevMessageContent,
                     prevMessageFrom: createdForwardedMessage.prevMessageFrom,
+                    attachedFilesAfterUpload: createdForwardedMessage.attachedFilesAfterUpload,
                 };
             }),
         );
@@ -169,38 +191,10 @@ class MessageService {
             forwardedFrom: newMessage.forwardedFrom,
             prevMessageContent: repliedMessage.content,
             prevMessageFrom: await userService.getUsernameByUserId(repliedMessage.from),
+            files: repliedMessage.attachedFilesAfterUpload,
         };
 
         const messageInDb = await this.createMessage(repliedMessageToSaveInDb, user);
-        return {
-            messageId: messageInDb.messageId,
-            to: messageInDb.to,
-            from: messageInDb.from,
-            content: messageInDb.content,
-            isMessageSelected: false,
-            isMessageRead: messageInDb.isMessageRead,
-            isMessageForwarded: messageInDb.isMessageForwarded,
-            forwardedFrom: messageInDb.forwardedFrom,
-            prevMessageContent: messageInDb.prevMessageContent,
-            prevMessageFrom: messageInDb.prevMessageFrom,
-        };
-    }
-
-    async sendMessageWithFile(newMessage: MessageDto, uploadedFiles: File[], user: User): Promise<MessageDto> {
-        const messageWithFileToSaveInDb: MessageDto = {
-            messageId: newMessage.messageId,
-            to: newMessage.to,
-            from: newMessage.from,
-            content: newMessage.content,
-            isMessageRead: newMessage.isMessageRead,
-            isMessageForwarded: newMessage.isMessageForwarded,
-            prevMessageContent: newMessage.content,
-            prevMessageFrom: await userService.getUsernameByUserId(newMessage.from),
-            attachedFilesAfterUpload: uploadedFiles,
-        };
-
-        const messageInDb = await this.createMessage(messageWithFileToSaveInDb, user);
-
         return {
             messageId: messageInDb.messageId,
             to: messageInDb.to,

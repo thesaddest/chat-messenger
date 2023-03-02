@@ -35,7 +35,7 @@ export class Message extends BaseEntity {
     @Column({ nullable: true })
     prevMessageFrom: string;
 
-    @OneToMany(() => File, (file) => file.message)
+    @OneToMany(() => File, (file) => file.message, { eager: true })
     files: Relation<File[]>;
 
     @ManyToOne(() => Friend, (friend) => friend.messages)

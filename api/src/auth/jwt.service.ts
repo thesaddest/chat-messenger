@@ -1,12 +1,16 @@
-import { User } from "../user/user.entity.js";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
+interface JWTPayload {
+    email: string;
+    password: string;
+}
+
 interface JWTUserPayload extends JwtPayload {
-    payload: User;
+    payload: JWTPayload;
 }
 
 class JWTService {
-    async generateTokens(payload: User): Promise<string> {
+    async generateTokens(payload: JWTPayload): Promise<string> {
         return jwt.sign({ payload }, process.env.JWT_SECRET, { expiresIn: "30m" });
     }
 

@@ -45,7 +45,7 @@ class AuthService {
             throw ErrorException.BadRequest(`Incorrect password`);
         }
 
-        const token = await jwtService.generateTokens(user);
+        const token = await jwtService.generateTokens({ email: user.email, password: user.password });
 
         return {
             userId: user.userId,
