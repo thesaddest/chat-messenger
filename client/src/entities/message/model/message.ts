@@ -26,6 +26,7 @@ interface IReadMessagePayload {
 interface ISendMessageWithAttachedFilesPayload {
     newMessage: IMessage;
     uploadedFiles: UploadFile[];
+    username: string;
 }
 
 interface MessageState {
@@ -172,7 +173,7 @@ export const sendMessageWithAttachedFiles = createAsyncThunk<
             formData.append("file", uploadFile.originFileObj);
         }
     }
-    const filesData = await FileService.uploadFile(formData);
+    const filesData = await FileService.uploadFile(formData, messageWithAttachedFilesPayload.username);
 
     if (!filesData.data) {
         return rejectWithValue("Error while uploading file");
@@ -234,8 +235,6 @@ export const messageModel = createSlice({
             if (messageInSelectedMessages) {
                 return;
             }
-
-            console.log("action: ", action.payload);
 
             messageInState.isMessageSelected = true;
             state.selectedMessages.push(action.payload);

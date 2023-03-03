@@ -41,18 +41,24 @@ const StyledForm = styled(Form)`
 export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
-    const userId = useAppSelector((state) => state.auth.user?.userId);
+    const user = useAppSelector((state) => state.auth.user);
     const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
 
     const onFinish = async (values: IMessageInChatValues) => {
-        if (userId) {
+        if (user) {
             const message = createMessage({
                 to: friendId,
-                from: userId,
+                from: user.userId,
                 content: values.message,
             });
             if (values.uploadedFiles) {
-                dispatch(sendMessageWithAttachedFiles({ newMessage: message, uploadedFiles: values.uploadedFiles }));
+                dispatch(
+                    sendMessageWithAttachedFiles({
+                        newMessage: message,
+                        uploadedFiles: values.uploadedFiles,
+                        username: user.username,
+                    }),
+                );
             }
             if (selectedMessageToReply) {
                 dispatch(replyToMessage({ newMessage: message, repliedMessage: selectedMessageToReply }));
@@ -68,8 +74,8 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     return (
         <StyledWrapper>
             <StyledForm form={form} name="message-form" onFinish={(values) => onFinish(values as IMessageInChatValues)}>
-                <ChatInput form={form} />
                 <FileUpload />
+                <ChatInput form={form} />
                 <SendMessage />
             </StyledForm>
         </StyledWrapper>

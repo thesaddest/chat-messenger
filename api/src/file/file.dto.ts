@@ -9,6 +9,9 @@ export class FileDto {
     name: string;
 
     @IsString()
+    s3Key: string;
+
+    @IsString()
     mimetype: FileType;
 
     @IsString()
@@ -16,4 +19,7 @@ export class FileDto {
 
     @IsString()
     attachedBy: string;
+
+    @IsString()
+    streamUrl?: string;
 }

@@ -14,11 +14,14 @@ const s3 = new S3Client({
 const s3storage = multerS3({
     s3: s3,
     bucket: process.env.AWS_BUCKET_NAME,
+    contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata: (req, file, cb) => {
         cb(null, { fieldName: file.fieldname });
     },
     key: (req, file, cb) => {
-        cb(null, v4() + file.originalname);
+        //get username from headers to pass it as a folder in S3 bucket
+        // @ts-ignore
+        cb(null, `${req.get("username")}/` + v4() + file.originalname);
     },
 });
 

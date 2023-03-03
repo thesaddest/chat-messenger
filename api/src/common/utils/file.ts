@@ -18,3 +18,7 @@ export const getFileTypeEnum = (fileName: string) => {
         }
     }
 };
+
+export const getFileNameAfterMulterMiddleware = (key: string): string => {
+    return key.split("/")[1];
+};

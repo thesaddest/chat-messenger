@@ -13,3 +13,4 @@ export * from "./Copy";
 export * from "./Select";
 export * from "./FileAdd";
 export * from "./SendMessageIcon";
+export * from "./Folder";

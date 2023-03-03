@@ -14,6 +14,9 @@ export class File extends BaseEntity {
     @Column({ nullable: false })
     name: string;
 
+    @Column({ nullable: true })
+    s3Key: string;
+
     @Column({ nullable: false })
     mimetype: FileType;
 
@@ -25,6 +28,9 @@ export class File extends BaseEntity {
 
     @Column({ nullable: true })
     attachedBy: string;
+
+    @Column({ nullable: true })
+    streamUrl: string;
 
     @ManyToOne(() => Message, (message) => message.files, { nullable: true })
     message: Relation<Message>;

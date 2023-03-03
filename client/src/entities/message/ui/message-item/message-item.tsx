@@ -96,7 +96,7 @@ export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
     );
 
     return (
-        <Dropdown menu={{ items }} trigger={["click"]} disabled={selectedMessages.length > 0}>
+        <Dropdown menu={{ items }} trigger={["contextMenu"]} disabled={selectedMessages.length > 0}>
             <StyledContainer friend={friend} message={message} onClick={handleClick}>
                 {isMessageForwarded && (
                     <StyledForwarded to={message.to} from={message.from}>
@@ -111,13 +111,14 @@ export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
                     />
                 )}
 
+                {message.attachedFilesAfterUpload && (
+                    <AttachedFileList attachedFilesAfterUpload={message.attachedFilesAfterUpload} />
+                )}
+
                 <StyledMessageContentHolder>
                     <p>{message.content}</p>
                 </StyledMessageContentHolder>
 
-                {message.attachedFilesAfterUpload && (
-                    <AttachedFileList attachedFilesAfterUpload={message.attachedFilesAfterUpload} />
-                )}
                 <MessageReadCheck isMessageRead={message.isMessageRead} />
             </StyledContainer>
         </Dropdown>

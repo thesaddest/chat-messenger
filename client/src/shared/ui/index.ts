@@ -20,6 +20,7 @@ export {
     Select,
     FileAdd,
     SendMessageIcon,
+    Folder,
 } from "./Icons";
 export { MemoTitle } from "./Title";
 export { ScrollToSeeMore } from "./ScrollToSeeMore";
