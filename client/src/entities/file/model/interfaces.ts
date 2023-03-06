@@ -1,3 +1,5 @@
+import { RcFile } from "antd/lib/upload";
+
 export interface IFile {
     fileId: string;
     name: string;
@@ -17,4 +19,9 @@ export enum FileType {
 
 export interface IAttachedFileProps {
     attachedFile: IFile;
+}
+
+export interface IUploadFilePayload {
+    file: string | Blob | RcFile;
+    username: string;
 }

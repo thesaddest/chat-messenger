@@ -24,6 +24,21 @@ class FileService {
         }));
     }
 
+    async uploadSingleFile(file: Express.MulterS3.File, user: User): Promise<FileDto> {
+        const convertedFile = await this.convertMulterFilesIntoBaseFile(file, user);
+        const uploadedFile = await this.createFileInDb(convertedFile);
+
+        return {
+            fileId: uploadedFile.fileId,
+            name: uploadedFile.name,
+            s3Key: uploadedFile.s3Key,
+            mimetype: uploadedFile.mimetype,
+            location: uploadedFile.location,
+            attachedBy: uploadedFile.attachedBy,
+            streamUrl: uploadedFile.streamUrl,
+        };
+    }
+
     async convertMulterFilesIntoBaseFile(file: Express.MulterS3.File, user: User): Promise<BaseFile> {
         return {
             name: getFileNameAfterMulterMiddleware(file.key),

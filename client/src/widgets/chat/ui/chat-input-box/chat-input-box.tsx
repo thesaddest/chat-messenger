@@ -8,8 +8,9 @@ import {
     IMessageInChatValues,
     replyToMessage,
     sendMessageWithAttachedFiles,
+    sendMessage,
 } from "../../../../entities/message";
-import { sendMessage } from "../../../../entities/message";
+import { clearFileStateAfterUpload } from "../../../../entities/file";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 import { FileUpload } from "../../../../features/file-upload";
 import { SendMessage } from "../../../../features/send-message";
@@ -43,6 +44,7 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
     const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
+    const files = useAppSelector((state) => state.file.files);
 
     const onFinish = async (values: IMessageInChatValues) => {
         if (user) {
@@ -55,10 +57,10 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
                 dispatch(
                     sendMessageWithAttachedFiles({
                         newMessage: message,
-                        uploadedFiles: values.uploadedFiles,
-                        username: user.username,
+                        uploadedFiles: files,
                     }),
                 );
+                dispatch(clearFileStateAfterUpload(files));
             }
             if (selectedMessageToReply) {
                 dispatch(replyToMessage({ newMessage: message, repliedMessage: selectedMessageToReply }));
@@ -74,7 +76,7 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     return (
         <StyledWrapper>
             <StyledForm form={form} name="message-form" onFinish={(values) => onFinish(values as IMessageInChatValues)}>
-                <FileUpload />
+                {user && <FileUpload username={user.username} />}
                 <ChatInput form={form} />
                 <SendMessage />
             </StyledForm>

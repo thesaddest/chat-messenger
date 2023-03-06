@@ -4,15 +4,15 @@ import { ErrorException } from "../error-handler/error-exception.js";
 import { fileService } from "./file.service.js";
 
 class FileController {
-    async uploadFile(req: Request, res: Response, next: NextFunction) {
+    async uploadSingleFile(req: Request, res: Response, next: NextFunction) {
         try {
             const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
             if (!user) {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            const files = req.files as Express.MulterS3.File[];
-            const uploadedFiles = await fileService.uploadFiles(files, user);
+            const file = req.file as Express.MulterS3.File;
+            const uploadedFiles = await fileService.uploadSingleFile(file, user);
 
             res.json(uploadedFiles);
         } catch (e) {

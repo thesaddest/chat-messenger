@@ -3,12 +3,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import { userModel } from "../../entities/user";
 import { friendModel } from "../../entities/friend";
 import { messageModel } from "../../entities/message";
+import { fileModel } from "../../entities/file";
 
 export const store = configureStore({
     reducer: {
         auth: userModel.reducer,
         friend: friendModel.reducer,
         message: messageModel.reducer,
+        file: fileModel.reducer,
     },
 });
 

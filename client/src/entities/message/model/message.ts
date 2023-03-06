@@ -1,13 +1,10 @@
 import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 
-import { UploadFile } from "antd/es/upload/interface";
-
 import MessageService from "../api/message.service";
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
 import { IUser } from "../../user";
-
-import FileService from "../../file/api/file.service";
+import { IFile } from "../../file";
 
 import { IForwardMessagesPayload, IMessage, IReplyToMessagePayload } from "./interfaces";
 import {
@@ -25,8 +22,7 @@ interface IReadMessagePayload {
 
 interface ISendMessageWithAttachedFilesPayload {
     newMessage: IMessage;
-    uploadedFiles: UploadFile[];
-    username: string;
+    uploadedFiles: IFile[];
 }
 
 interface MessageState {
@@ -167,32 +163,20 @@ export const sendMessageWithAttachedFiles = createAsyncThunk<
     ISendMessageWithAttachedFilesPayload,
     { rejectValue: string }
 >("messages/sendMessageWithAttachedFiles", async function (messageWithAttachedFilesPayload, { rejectWithValue }) {
-    const formData = new FormData();
-    for (const uploadFile of messageWithAttachedFilesPayload.uploadedFiles) {
-        if (uploadFile.originFileObj) {
-            formData.append("file", uploadFile.originFileObj);
-        }
-    }
-    const filesData = await FileService.uploadFile(formData, messageWithAttachedFilesPayload.username);
-
-    if (!filesData.data) {
-        return rejectWithValue("Error while uploading file");
-    }
-
     const messageToSend = createMessage({
         to: messageWithAttachedFilesPayload.newMessage.to,
         from: messageWithAttachedFilesPayload.newMessage.from,
         content: messageWithAttachedFilesPayload.newMessage.content,
-        attachedFilesAfterUpload: filesData.data,
+        attachedFilesAfterUpload: messageWithAttachedFilesPayload.uploadedFiles,
     });
-    const messageData = await MessageService.sendMessage(messageToSend);
+    const { data } = await MessageService.sendMessage(messageToSend);
 
-    if (!messageData.data) {
+    if (!data) {
         return rejectWithValue("Error while sending message with attached files");
     }
 
-    socket.emit(SOCKET_EVENTS.SEND_MESSAGE, messageData.data);
-    return messageData.data;
+    socket.emit(SOCKET_EVENTS.SEND_MESSAGE, data);
+    return data;
 });
 
 export const messageModel = createSlice({
