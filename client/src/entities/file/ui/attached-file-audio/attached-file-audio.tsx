@@ -34,7 +34,7 @@ export const AttachedFileAudio = memo<IAttachedFileProps>(({ attachedFile }) => 
                 <source src={attachedFile.location} />
             </StyledAudio>
             <StyledFileNameContainer>
-                <p>{attachedFile.name}</p>
+                <p>{attachedFile.originalName}</p>
             </StyledFileNameContainer>
         </StyledContainer>
     );

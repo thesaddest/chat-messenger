@@ -4,9 +4,11 @@ import { memo, useCallback } from "react";
 import { UploadRequestOption } from "rc-upload/lib/interface";
 import { UploadChangeParam } from "antd/es/upload";
 
+import { UploadFile } from "antd/es/upload/interface";
+
 import { FileAdd, InputButton } from "../../shared/ui";
-import { useAppDispatch } from "../../shared/lib/hooks";
-import { uploadSingleFile } from "../../entities/file";
+import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks";
+import { deleteSingleFile, IFile, removeFileFromState, uploadSingleFile } from "../../entities/file";
 
 interface IFileUploadProps {
     username: string;
@@ -29,6 +31,7 @@ const StyledFormItemButtonContainer = styled(Form.Item)`
 
 export const FileUpload = memo<IFileUploadProps>(({ username }) => {
     const dispatch = useAppDispatch();
+
     const customRequest = useCallback(
         async (options: UploadRequestOption) => {
             try {
@@ -51,13 +54,24 @@ export const FileUpload = memo<IFileUploadProps>(({ username }) => {
         }
     }, []);
 
+    const handleRemove = (file: UploadFile) => {
+        dispatch(deleteSingleFile(file));
+        dispatch(removeFileFromState(file.name));
+    };
+
     return (
         <StyledFormItemButtonContainer
             name="uploadedFiles"
             valuePropName="fileList"
             getValueFromEvent={({ fileList }) => fileList}
         >
-            <Upload customRequest={customRequest} onChange={handleChange} multiple>
+            <Upload
+                customRequest={customRequest}
+                onChange={handleChange}
+                multiple
+                maxCount={10}
+                onRemove={handleRemove}
+            >
                 <InputButton icon={<FileAdd />} type={"default"} />
             </Upload>
         </StyledFormItemButtonContainer>

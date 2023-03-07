@@ -56,7 +56,7 @@ export const AttachedFileDocument = memo<IAttachedFileProps>(({ attachedFile }) 
             </StyledButtonContainer>
 
             <StyledFileNameContainer>
-                <p>{attachedFile.name}</p>
+                <p>{attachedFile.originalName}</p>
             </StyledFileNameContainer>
         </StyledContainer>
     );

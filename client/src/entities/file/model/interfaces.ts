@@ -3,6 +3,7 @@ import { RcFile } from "antd/lib/upload";
 export interface IFile {
     fileId: string;
     name: string;
+    originalName: string;
     s3Key?: string;
     mimetype: FileType;
     location: string;

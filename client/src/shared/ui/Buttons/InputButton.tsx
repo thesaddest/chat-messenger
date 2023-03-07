@@ -8,6 +8,7 @@ interface IInputButtonProps {
     block?: boolean;
     type: ButtonType;
     htmlType?: any;
+    disabled?: boolean;
 }
 
 const StyledButton = styled(Button)`
@@ -24,8 +25,8 @@ const StyledButton = styled(Button)`
     }
 `;
 
-export const InputButton = memo<IInputButtonProps>(({ block, icon, type, htmlType }) => (
-    <StyledButton block={block} type={type} htmlType={htmlType}>
+export const InputButton = memo<IInputButtonProps>(({ block, icon, type, htmlType, disabled }) => (
+    <StyledButton block={block} type={type} htmlType={htmlType} disabled={disabled}>
         {icon}
     </StyledButton>
 ));

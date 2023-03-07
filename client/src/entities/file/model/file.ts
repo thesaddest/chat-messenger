@@ -1,17 +1,19 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import { UploadFile } from "antd/es/upload/interface";
+
 import FileService from "../api/file.service";
 
 import { IFile, IUploadFilePayload } from "./interfaces";
 
 interface FileState {
     files: IFile[];
-    status: "pending" | "succeeded" | "failed";
+    status: "start" | "pending" | "succeeded" | "failed";
 }
 
 const initialState: FileState = {
     files: [],
-    status: "pending",
+    status: "start",
 };
 
 export const uploadSingleFile = createAsyncThunk<IFile, IUploadFilePayload, { rejectValue: string }>(
@@ -20,6 +22,19 @@ export const uploadSingleFile = createAsyncThunk<IFile, IUploadFilePayload, { re
         const formData = new FormData();
         formData.append("file", file);
         const { data } = await FileService.uploadFile(formData, username);
+
+        if (!data) {
+            return rejectWithValue("Error while sending message with attached files");
+        }
+
+        return data;
+    },
+);
+
+export const deleteSingleFile = createAsyncThunk<IFile, UploadFile, { rejectValue: string }>(
+    "files/deleteSingleFile",
+    async function (payloadFile, { rejectWithValue }) {
+        const { data } = await FileService.deleteSingleFile(payloadFile);
 
         if (!data) {
             return rejectWithValue("Error while sending message with attached files");
@@ -38,6 +53,9 @@ export const fileModel = createSlice({
                 (fileInState) => !action.payload.some((fileInPayload) => fileInPayload.fileId === fileInState.fileId),
             );
         },
+        removeFileFromState: (state, action: PayloadAction<string>) => {
+            state.files = state.files.filter((fileInState) => fileInState.originalName !== action.payload);
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -54,6 +72,6 @@ export const fileModel = createSlice({
     },
 });
 
-export const { clearFileStateAfterUpload } = fileModel.actions;
+export const { clearFileStateAfterUpload, removeFileFromState } = fileModel.actions;
 
 export const reducer = fileModel.reducer;

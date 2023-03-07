@@ -6,6 +6,9 @@ export class FileDto {
     fileId: string;
 
     @IsString()
+    originalName: string;
+
+    @IsString()
     name: string;
 
     @IsString()

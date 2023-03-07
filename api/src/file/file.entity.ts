@@ -14,6 +14,9 @@ export class File extends BaseEntity {
     @Column({ nullable: false })
     name: string;
 
+    @Column({ nullable: false })
+    originalName: string;
+
     @Column({ nullable: true })
     s3Key: string;
 
