@@ -23,6 +23,14 @@ export interface IAttachedFileProps {
 }
 
 export interface IUploadFilePayload {
-    file: string | Blob | RcFile;
+    file: PendingFile;
     username: string;
 }
+
+export interface IPendingAttachedFile {
+    uid: string;
+    name: string;
+}
+
+export type IAttachedFileStatus = "start" | "pending" | "succeeded" | "failed";
+export type PendingFile = string | Blob | RcFile;

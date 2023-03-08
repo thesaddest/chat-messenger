@@ -4,6 +4,7 @@ import { Form } from "antd";
 
 import { InputButton } from "../../shared/ui";
 import { SendMessageIcon } from "../../shared/ui";
+import { useAppSelector } from "../../shared/lib/hooks";
 
 const StyledFormItemButtonContainer = styled(Form.Item)`
     display: flex;
@@ -21,9 +22,16 @@ const StyledFormItemButtonContainer = styled(Form.Item)`
 `;
 
 export const SendMessage = memo(() => {
+    const pendingFiles = useAppSelector((state) => state.file.pendingFiles);
     return (
         <StyledFormItemButtonContainer>
-            <InputButton type={"primary"} icon={<SendMessageIcon />} htmlType={"submit"} block={true} />
+            <InputButton
+                type={"primary"}
+                icon={<SendMessageIcon />}
+                htmlType={"submit"}
+                block={true}
+                disabled={pendingFiles.length > 0 && true}
+            />
         </StyledFormItemButtonContainer>
     );
 });

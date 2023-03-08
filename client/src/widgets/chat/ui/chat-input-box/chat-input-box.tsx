@@ -44,7 +44,7 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
     const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
-    const files = useAppSelector((state) => state.file.files);
+    const files = useAppSelector((state) => state.file.uploadedFiles);
 
     const onFinish = async (values: IMessageInChatValues) => {
         if (user) {

@@ -1,12 +1,4 @@
-import {
-    DeleteObjectCommand,
-    DeleteObjectCommandOutput,
-    S3Client,
-    CreateMultipartUploadCommand,
-    UploadPartCommand,
-    CompleteMultipartUploadCommand,
-    UploadPartCommandOutput,
-} from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, DeleteObjectCommandOutput, S3Client } from "@aws-sdk/client-s3";
 
 class S3Service {
     private readonly s3: S3Client;
@@ -30,49 +22,6 @@ class S3Service {
         });
 
         return await this.s3.send(deleteCommand);
-    }
-
-    async getMultipartUploadId(fileKey: string): Promise<string> {
-        const multipartUploadCommand = await this.s3.send(
-            new CreateMultipartUploadCommand({
-                Bucket: this.bucketName,
-                Key: fileKey,
-            }),
-        );
-
-        return multipartUploadCommand.UploadId;
-    }
-
-    async uploadPartData(data: Buffer, fileKey: string, uploadId: string, i: number): Promise<UploadPartCommandOutput> {
-        return await this.s3
-            .send(
-                new UploadPartCommand({
-                    Bucket: this.bucketName,
-                    Key: fileKey,
-                    UploadId: uploadId,
-                    Body: data,
-                    PartNumber: i + 1,
-                }),
-            )
-            .then((d) => {
-                return d;
-            });
-    }
-
-    async completeMultipartUpload(uploadResults: UploadPartCommandOutput[], fileKey: string, uploadId: string) {
-        return await this.s3.send(
-            new CompleteMultipartUploadCommand({
-                Bucket: this.bucketName,
-                Key: fileKey,
-                UploadId: uploadId,
-                MultipartUpload: {
-                    Parts: uploadResults.map(({ ETag }, i) => ({
-                        ETag,
-                        PartNumber: i + 1,
-                    })),
-                },
-            }),
-        );
     }
 }
 

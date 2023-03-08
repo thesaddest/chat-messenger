@@ -22,5 +22,3 @@ router.post("/message/forward", messageController.forwardMessages);
 router.post("/message/reply", messageController.replyToMessage);
 
 router.post("/file/upload-single-file", multerUploadMiddleware.single("file"), fileController.uploadSingleFile);
-router.post("/file/delete-single-file", fileController.deleteSingleFile);
-router.post("/file/test-upload", fileController.testUpload);

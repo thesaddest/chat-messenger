@@ -1,14 +1,12 @@
+import { memo, useCallback } from "react";
 import { Form, message, Upload } from "antd";
 import styled from "styled-components";
-import { memo, useCallback } from "react";
 import { UploadRequestOption } from "rc-upload/lib/interface";
-import { UploadChangeParam } from "antd/es/upload";
-
-import { UploadFile } from "antd/es/upload/interface";
+import { UploadChangeParam, RcFile } from "antd/es/upload";
 
 import { FileAdd, InputButton } from "../../shared/ui";
-import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks";
-import { deleteSingleFile, IFile, removeFileFromState, uploadSingleFile } from "../../entities/file";
+import { useAppDispatch } from "../../shared/lib/hooks";
+import { addPendingFile, uploadSingleFile } from "../../entities/file";
 
 interface IFileUploadProps {
     username: string;
@@ -36,7 +34,9 @@ export const FileUpload = memo<IFileUploadProps>(({ username }) => {
         async (options: UploadRequestOption) => {
             try {
                 if (options.onSuccess && options.file) {
-                    const data = await dispatch(uploadSingleFile({ file: options.file, username: username }));
+                    const file = options.file as RcFile;
+                    dispatch(addPendingFile({ uid: file.uid, name: file.name }));
+                    const data = await dispatch(uploadSingleFile({ file: file, username: username }));
                     options.onSuccess(data);
                 }
             } catch (error) {
@@ -54,24 +54,13 @@ export const FileUpload = memo<IFileUploadProps>(({ username }) => {
         }
     }, []);
 
-    const handleRemove = (file: UploadFile) => {
-        dispatch(deleteSingleFile(file));
-        dispatch(removeFileFromState(file.name));
-    };
-
     return (
         <StyledFormItemButtonContainer
             name="uploadedFiles"
             valuePropName="fileList"
             getValueFromEvent={({ fileList }) => fileList}
         >
-            <Upload
-                customRequest={customRequest}
-                onChange={handleChange}
-                multiple
-                maxCount={10}
-                onRemove={handleRemove}
-            >
+            <Upload customRequest={customRequest} onChange={handleChange} multiple maxCount={10} showUploadList={false}>
                 <InputButton icon={<FileAdd />} type={"default"} />
             </Upload>
         </StyledFormItemButtonContainer>

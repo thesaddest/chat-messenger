@@ -1,18 +1,18 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { UploadFile } from "antd/es/upload/interface";
-
 import FileService from "../api/file.service";
 
-import { IFile, IUploadFilePayload } from "./interfaces";
+import { IAttachedFileStatus, IFile, IPendingAttachedFile, IUploadFilePayload } from "./interfaces";
 
 interface FileState {
-    files: IFile[];
-    status: "start" | "pending" | "succeeded" | "failed";
+    pendingFiles: IPendingAttachedFile[];
+    uploadedFiles: IFile[];
+    status: IAttachedFileStatus;
 }
 
 const initialState: FileState = {
-    files: [],
+    pendingFiles: [],
+    uploadedFiles: [],
     status: "start",
 };
 
@@ -24,20 +24,7 @@ export const uploadSingleFile = createAsyncThunk<IFile, IUploadFilePayload, { re
         const { data } = await FileService.uploadFile(formData, username);
 
         if (!data) {
-            return rejectWithValue("Error while sending message with attached files");
-        }
-
-        return data;
-    },
-);
-
-export const deleteSingleFile = createAsyncThunk<IFile, UploadFile, { rejectValue: string }>(
-    "files/deleteSingleFile",
-    async function (payloadFile, { rejectWithValue }) {
-        const { data } = await FileService.deleteSingleFile(payloadFile);
-
-        if (!data) {
-            return rejectWithValue("Error while sending message with attached files");
+            return rejectWithValue("Error while uploading single file");
         }
 
         return data;
@@ -49,18 +36,27 @@ export const fileModel = createSlice({
     initialState,
     reducers: {
         clearFileStateAfterUpload: (state, action: PayloadAction<IFile[]>) => {
-            state.files = state.files.filter(
+            state.uploadedFiles = state.uploadedFiles.filter(
                 (fileInState) => !action.payload.some((fileInPayload) => fileInPayload.fileId === fileInState.fileId),
             );
         },
         removeFileFromState: (state, action: PayloadAction<string>) => {
-            state.files = state.files.filter((fileInState) => fileInState.originalName !== action.payload);
+            state.uploadedFiles = state.uploadedFiles.filter(
+                (fileInState) => fileInState.originalName !== action.payload,
+            );
+        },
+        addPendingFile: (state, action: PayloadAction<IPendingAttachedFile>) => {
+            state.pendingFiles.push(action.payload);
+            state.status = "pending";
         },
     },
     extraReducers: (builder) => {
         builder
             .addCase(uploadSingleFile.fulfilled, (state, action) => {
-                state.files.push(action.payload);
+                state.uploadedFiles.push(action.payload);
+                state.pendingFiles = state.pendingFiles.filter(
+                    (pendingFile) => pendingFile.name !== action.payload.originalName,
+                );
                 state.status = "succeeded";
             })
             .addCase(uploadSingleFile.pending, (state) => {
@@ -72,6 +68,6 @@ export const fileModel = createSlice({
     },
 });
 
-export const { clearFileStateAfterUpload, removeFileFromState } = fileModel.actions;
+export const { clearFileStateAfterUpload, removeFileFromState, addPendingFile } = fileModel.actions;
 
 export const reducer = fileModel.reducer;

@@ -12,6 +12,7 @@ class FileService {
     async uploadSingleFile(file: Express.MulterS3.File, user: User): Promise<FileDto> {
         const convertedFile = await this.convertMulterFilesIntoBaseFile(file, user);
         const uploadedFile = await this.createFileInDb(convertedFile);
+
         return {
             fileId: uploadedFile.fileId,
             name: uploadedFile.name,
@@ -62,11 +63,6 @@ class FileService {
         }
 
         return await fileRepository.remove(files);
-    }
-
-    async deleteSingleFile(file: Express.MulterS3.File, user: User) {
-        const fileRepository = AppDataSource.getRepository(File);
-        // await s3Service.deleteObject(file.s3Key);
     }
 }
 
