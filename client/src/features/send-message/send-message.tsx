@@ -4,7 +4,12 @@ import { Form } from "antd";
 
 import { InputButton } from "../../shared/ui";
 import { SendMessageIcon } from "../../shared/ui";
-import { useAppSelector } from "../../shared/lib/hooks";
+import { IPendingAttachedFile, isSendMessageNeedDisable } from "../../entities/file";
+
+interface ISendMessageProps {
+    pendingFiles: IPendingAttachedFile[];
+    friendIdActiveKey: string;
+}
 
 const StyledFormItemButtonContainer = styled(Form.Item)`
     display: flex;
@@ -21,8 +26,7 @@ const StyledFormItemButtonContainer = styled(Form.Item)`
     }
 `;
 
-export const SendMessage = memo(() => {
-    const pendingFiles = useAppSelector((state) => state.file.pendingFiles);
+export const SendMessage = memo<ISendMessageProps>(({ pendingFiles, friendIdActiveKey }) => {
     return (
         <StyledFormItemButtonContainer>
             <InputButton
@@ -30,7 +34,7 @@ export const SendMessage = memo(() => {
                 icon={<SendMessageIcon />}
                 htmlType={"submit"}
                 block={true}
-                disabled={pendingFiles.length > 0 && true}
+                disabled={isSendMessageNeedDisable(friendIdActiveKey, pendingFiles)}
             />
         </StyledFormItemButtonContainer>
     );

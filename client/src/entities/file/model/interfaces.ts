@@ -30,6 +30,7 @@ export interface IUploadFilePayload {
 export interface IPendingAttachedFile {
     uid: string;
     name: string;
+    friendIdActiveKey: string;
 }
 
 export type IAttachedFileStatus = "start" | "pending" | "succeeded" | "failed";

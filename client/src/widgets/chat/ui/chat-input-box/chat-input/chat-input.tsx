@@ -3,9 +3,14 @@ import { Form, FormInstance, Input, InputRef } from "antd";
 import styled from "styled-components";
 
 import { MESSAGE_RULES } from "../../../../../shared/const";
+import { IFile, IPendingAttachedFile, isSendMessageNeedDisable } from "../../../../../entities/file";
+import { InputFilesList } from "../../../../../entities/file/ui/input-files-list";
 
 interface IChatInputProps {
     form: FormInstance;
+    uploadedFiles: IFile[];
+    pendingFiles: IPendingAttachedFile[];
+    friendIdActiveKey: string;
 }
 
 const StyledInputContainer = styled(Form.Item)`
@@ -75,15 +80,17 @@ const StyledInputContainer = styled(Form.Item)`
     }
 `;
 
-export const ChatInput: FC<IChatInputProps> = ({ form }) => {
+export const ChatInput: FC<IChatInputProps> = ({ form, friendIdActiveKey, pendingFiles, uploadedFiles }) => {
     const inputRef = useRef<InputRef>(null);
 
     const onEnterPress = useCallback(
         (e: KeyboardEvent) => {
             e.preventDefault();
-            form.submit();
+            if (!isSendMessageNeedDisable(friendIdActiveKey, pendingFiles)) {
+                form.submit();
+            }
         },
-        [form],
+        [form, friendIdActiveKey, pendingFiles],
     );
 
     useEffect(() => {
@@ -91,8 +98,11 @@ export const ChatInput: FC<IChatInputProps> = ({ form }) => {
     });
 
     return (
-        <StyledInputContainer name="message" rules={MESSAGE_RULES.MESSAGE}>
-            <Input ref={inputRef} placeholder="Write a message..." onPressEnter={onEnterPress} autoComplete="off" />
-        </StyledInputContainer>
+        <>
+            <StyledInputContainer name="message" rules={MESSAGE_RULES.MESSAGE}>
+                <Input ref={inputRef} placeholder="Write a message..." onPressEnter={onEnterPress} autoComplete="off" />
+            </StyledInputContainer>
+            <InputFilesList uploadedFiles={uploadedFiles} />
+        </>
     );
 };

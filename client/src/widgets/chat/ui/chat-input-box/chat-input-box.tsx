@@ -44,7 +44,9 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
     const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
-    const files = useAppSelector((state) => state.file.uploadedFiles);
+    const uploadedFiles = useAppSelector((state) => state.file.uploadedFiles);
+    const pendingFiles = useAppSelector((state) => state.file.pendingFiles);
+    const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
 
     const onFinish = async (values: IMessageInChatValues) => {
         if (user) {
@@ -57,10 +59,10 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
                 dispatch(
                     sendMessageWithAttachedFiles({
                         newMessage: message,
-                        uploadedFiles: files,
+                        uploadedFiles: uploadedFiles,
                     }),
                 );
-                dispatch(clearFileStateAfterUpload(files));
+                dispatch(clearFileStateAfterUpload(uploadedFiles));
             }
             if (selectedMessageToReply) {
                 dispatch(replyToMessage({ newMessage: message, repliedMessage: selectedMessageToReply }));
@@ -76,9 +78,16 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
     return (
         <StyledWrapper>
             <StyledForm form={form} name="message-form" onFinish={(values) => onFinish(values as IMessageInChatValues)}>
-                {user && <FileUpload username={user.username} />}
-                <ChatInput form={form} />
-                <SendMessage />
+                {user && <FileUpload username={user.username} friendIdActiveKey={friendIdActiveKey} />}
+
+                <ChatInput
+                    pendingFiles={pendingFiles}
+                    friendIdActiveKey={friendIdActiveKey}
+                    form={form}
+                    uploadedFiles={uploadedFiles}
+                />
+
+                <SendMessage pendingFiles={pendingFiles} friendIdActiveKey={friendIdActiveKey} />
             </StyledForm>
         </StyledWrapper>
     );

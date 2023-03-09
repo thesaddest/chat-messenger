@@ -8,12 +8,23 @@ interface FileState {
     pendingFiles: IPendingAttachedFile[];
     uploadedFiles: IFile[];
     status: IAttachedFileStatus;
+    progress: number | null;
 }
 
 const initialState: FileState = {
     pendingFiles: [],
     uploadedFiles: [],
     status: "start",
+    progress: null,
+};
+
+export const isSendMessageNeedDisable = (
+    friendIdActiveKey: string,
+    pendingAttachedFiles: IPendingAttachedFile[],
+): boolean => {
+    return pendingAttachedFiles.some(
+        (pendingAttachedFile) => pendingAttachedFile.friendIdActiveKey === friendIdActiveKey,
+    );
 };
 
 export const uploadSingleFile = createAsyncThunk<IFile, IUploadFilePayload, { rejectValue: string }>(
@@ -40,11 +51,6 @@ export const fileModel = createSlice({
                 (fileInState) => !action.payload.some((fileInPayload) => fileInPayload.fileId === fileInState.fileId),
             );
         },
-        removeFileFromState: (state, action: PayloadAction<string>) => {
-            state.uploadedFiles = state.uploadedFiles.filter(
-                (fileInState) => fileInState.originalName !== action.payload,
-            );
-        },
         addPendingFile: (state, action: PayloadAction<IPendingAttachedFile>) => {
             state.pendingFiles.push(action.payload);
             state.status = "pending";
@@ -68,6 +74,6 @@ export const fileModel = createSlice({
     },
 });
 
-export const { clearFileStateAfterUpload, removeFileFromState, addPendingFile } = fileModel.actions;
+export const { clearFileStateAfterUpload, addPendingFile } = fileModel.actions;
 
 export const reducer = fileModel.reducer;
