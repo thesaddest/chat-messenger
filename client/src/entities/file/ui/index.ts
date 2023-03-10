@@ -1,4 +1,4 @@
-export * from "./attached-files-list";
+export * from "./attached-file-list";
 export * from "./attached-file-audio";
 export * from "./attached-file-video";
 export * from "./attached-file-document";

@@ -1,12 +1,14 @@
 import { memo } from "react";
-
 import styled from "styled-components";
+import { CustomerServiceOutlined } from "@ant-design/icons";
 
 import { IAttachedFileProps } from "../../model";
 
 const StyledAudio = styled.audio`
     max-height: 100%;
-    max-width: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: start;
 `;
 
 const StyledFileNameContainer = styled.div`
@@ -22,20 +24,40 @@ const StyledFileNameContainer = styled.div`
 `;
 
 const StyledContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+`;
+
+const StyledIconContainer = styled.div`
     display: flex;
     justify-content: center;
+    align-items: center;
+`;
+
+const StyledFileNameAndIconContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: start;
     align-items: center;
 `;
 
 export const AttachedFileAudio = memo<IAttachedFileProps>(({ attachedFile }) => {
     return (
         <StyledContainer>
+            <StyledFileNameAndIconContainer>
+                <StyledIconContainer>
+                    <CustomerServiceOutlined style={{ fontSize: "24px", color: "whitesmoke" }} />
+                </StyledIconContainer>
+                <StyledFileNameContainer>
+                    <p>{attachedFile.originalName}</p>
+                </StyledFileNameContainer>
+            </StyledFileNameAndIconContainer>
             <StyledAudio controls>
                 <source src={attachedFile.location} />
             </StyledAudio>
-            <StyledFileNameContainer>
-                <p>{attachedFile.originalName}</p>
-            </StyledFileNameContainer>
         </StyledContainer>
     );
 });

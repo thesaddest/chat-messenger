@@ -53,7 +53,7 @@ export const UploadedFilesList = memo<IInputFilesListProps>(({ uploadedFiles }) 
     return (
         <StyledContainer>
             {uploadedFiles.length > 0 && (
-                <Dropdown trigger={["hover", "click"]} menu={{ items }}>
+                <Dropdown trigger={["click", "hover"]} menu={{ items }}>
                     <Button
                         type={"ghost"}
                         icon={<PaperClipOutlined style={{ color: "gray" }} />}

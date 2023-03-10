@@ -22,6 +22,7 @@ const StyledContainer = styled.div`
 const StyledItemContainer = styled.div`
     width: 100%;
     height: 100%;
+    padding: 0.5rem 0 0.5rem 0;
 `;
 
 const switchRenderedCard = (attachedFile: IFile): JSX.Element => {

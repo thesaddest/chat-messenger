@@ -7,7 +7,7 @@ import { Folder } from "../../../../shared/ui";
 
 const StyledContainer = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     width: 100%;
 `;

@@ -36,7 +36,6 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages, select
     const bottomDiv = useRef<HTMLDivElement>(null);
     const memoizedFilteredMessages = useMemo(() => getFilteredMessageBySender(messages, friend), [messages, friend]);
     const isInViewport = useIsInViewport(bottomDiv);
-
     const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
 
     useEffect(() => {
