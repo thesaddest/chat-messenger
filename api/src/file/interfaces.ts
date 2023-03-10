@@ -7,4 +7,5 @@ export interface BaseFile {
     mimetype: string;
     location: string;
     attachedBy?: User;
+    sentTo: string;
 }

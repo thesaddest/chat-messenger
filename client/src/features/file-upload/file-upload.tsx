@@ -37,7 +37,13 @@ export const FileUpload = memo<IFileUploadProps>(({ username, friendIdActiveKey 
                 if (options.onSuccess && options.file) {
                     const file = options.file as RcFile;
                     dispatch(addPendingFile({ uid: file.uid, name: file.name, friendIdActiveKey: friendIdActiveKey }));
-                    const data = await dispatch(uploadSingleFile({ file: file, username: username }));
+                    const data = await dispatch(
+                        uploadSingleFile({
+                            file: file,
+                            username: username,
+                            friendIdActiveKey: friendIdActiveKey,
+                        }),
+                    );
                     options.onSuccess(data);
                 }
             } catch (error) {

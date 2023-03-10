@@ -24,5 +24,8 @@ export class FileDto {
     attachedBy: string;
 
     @IsString()
+    sentTo: string;
+
+    @IsString()
     streamUrl?: string;
 }

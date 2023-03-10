@@ -9,8 +9,8 @@ import { s3Service } from "../s3/s3.service.js";
 import { FileType } from "../common/enums/file-type.enum.js";
 
 class FileService {
-    async uploadSingleFile(file: Express.MulterS3.File, user: User): Promise<FileDto> {
-        const convertedFile = await this.convertMulterFilesIntoBaseFile(file, user);
+    async uploadSingleFile(file: Express.MulterS3.File, user: User, sentTo: string): Promise<FileDto> {
+        const convertedFile = await this.convertMulterFilesIntoBaseFile(file, user, sentTo);
         const uploadedFile = await this.createFileInDb(convertedFile);
 
         return {
@@ -21,11 +21,12 @@ class FileService {
             mimetype: uploadedFile.mimetype,
             location: uploadedFile.location,
             attachedBy: uploadedFile.attachedBy,
+            sentTo: sentTo,
             streamUrl: uploadedFile.streamUrl,
         };
     }
 
-    async convertMulterFilesIntoBaseFile(file: Express.MulterS3.File, user: User): Promise<BaseFile> {
+    async convertMulterFilesIntoBaseFile(file: Express.MulterS3.File, user: User, sentTo: string): Promise<BaseFile> {
         return {
             name: getFileNameAfterMulterMiddleware(file.key),
             originalName: file.originalname,
@@ -33,6 +34,7 @@ class FileService {
             mimetype: file.mimetype,
             location: file.location,
             attachedBy: user,
+            sentTo: sentTo,
         };
     }
 
@@ -48,6 +50,7 @@ class FileService {
             fileId: uuidv4(),
             location: file.location,
             attachedBy: file.attachedBy.username,
+            sentTo: file.sentTo,
             user: file.attachedBy,
             streamUrl:
                 mimetype === FileType.VIDEO ? `${process.env.AWS_CLOUDFRONT_DISTRIBUTION_DOMAIN}/${file.s3key}` : null,

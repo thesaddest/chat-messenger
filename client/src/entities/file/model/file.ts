@@ -27,12 +27,16 @@ export const isSendMessageNeedDisable = (
     );
 };
 
+export const isUploadedFilesBelongToFriend = (friendIdActiveKey: string, uploadedFiles: IFile[]) => {
+    return uploadedFiles.every((uploadedFile) => uploadedFile.sentTo === friendIdActiveKey);
+};
+
 export const uploadSingleFile = createAsyncThunk<IFile, IUploadFilePayload, { rejectValue: string }>(
     "files/uploadSingleFile",
-    async function ({ file, username }, { rejectWithValue }) {
+    async function ({ file, username, friendIdActiveKey }, { rejectWithValue }) {
         const formData = new FormData();
         formData.append("file", file);
-        const { data } = await FileService.uploadFile(formData, username);
+        const { data } = await FileService.uploadFile(formData, username, friendIdActiveKey);
 
         if (!data) {
             return rejectWithValue("Error while uploading single file");

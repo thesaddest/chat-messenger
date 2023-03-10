@@ -11,8 +11,10 @@ class FileController {
                 return next(ErrorException.UnauthorizedError());
             }
 
+            const sentTo = req.headers.sentto as string;
             const file = req.file as Express.MulterS3.File;
-            const uploadedFiles = await fileService.uploadSingleFile(file, user);
+
+            const uploadedFiles = await fileService.uploadSingleFile(file, user, sentTo);
 
             res.json(uploadedFiles);
         } catch (e) {

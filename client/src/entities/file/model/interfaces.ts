@@ -8,6 +8,7 @@ export interface IFile {
     mimetype: FileType;
     location: string;
     attachedBy: string;
+    sentTo: string;
     streamUrl?: string;
 }
 
@@ -25,6 +26,7 @@ export interface IAttachedFileProps {
 export interface IUploadFilePayload {
     file: PendingFile;
     username: string;
+    friendIdActiveKey: string;
 }
 
 export interface IPendingAttachedFile {

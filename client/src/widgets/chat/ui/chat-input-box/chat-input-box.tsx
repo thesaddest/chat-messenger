@@ -10,7 +10,7 @@ import {
     sendMessageWithAttachedFiles,
     sendMessage,
 } from "../../../../entities/message";
-import { clearFileStateAfterUpload } from "../../../../entities/file";
+import { clearFileStateAfterUpload, isUploadedFilesBelongToFriend, UploadedFilesList } from "../../../../entities/file";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 import { FileUpload } from "../../../../features/file-upload";
 import { SendMessage } from "../../../../features/send-message";
@@ -79,6 +79,10 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ friendId }) => {
         <StyledWrapper>
             <StyledForm form={form} name="message-form" onFinish={(values) => onFinish(values as IMessageInChatValues)}>
                 {user && <FileUpload username={user.username} friendIdActiveKey={friendIdActiveKey} />}
+
+                {isUploadedFilesBelongToFriend(friendIdActiveKey, uploadedFiles) && (
+                    <UploadedFilesList uploadedFiles={uploadedFiles} />
+                )}
 
                 <ChatInput
                     pendingFiles={pendingFiles}

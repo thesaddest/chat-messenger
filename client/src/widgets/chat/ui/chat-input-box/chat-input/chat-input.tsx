@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 import { MESSAGE_RULES } from "../../../../../shared/const";
 import { IFile, IPendingAttachedFile, isSendMessageNeedDisable } from "../../../../../entities/file";
-import { InputFilesList } from "../../../../../entities/file/ui/input-files-list";
 
 interface IChatInputProps {
     form: FormInstance;
@@ -102,7 +101,6 @@ export const ChatInput: FC<IChatInputProps> = ({ form, friendIdActiveKey, pendin
             <StyledInputContainer name="message" rules={MESSAGE_RULES.MESSAGE}>
                 <Input ref={inputRef} placeholder="Write a message..." onPressEnter={onEnterPress} autoComplete="off" />
             </StyledInputContainer>
-            <InputFilesList uploadedFiles={uploadedFiles} />
         </>
     );
 };

@@ -5,10 +5,10 @@ import {
     VideoCameraOutlined,
     PlayCircleOutlined,
     FileOutlined,
-    FileDoneOutlined,
+    PaperClipOutlined,
 } from "@ant-design/icons";
 
-import { Dropdown, MenuProps } from "antd";
+import { Button, Dropdown, MenuProps } from "antd";
 
 import { FileType, IFile } from "../../model";
 
@@ -36,7 +36,7 @@ const switchRenderedCard = (attachedFile: IFile): JSX.Element => {
     }
 };
 
-export const InputFilesList = memo<IInputFilesListProps>(({ uploadedFiles }) => {
+export const UploadedFilesList = memo<IInputFilesListProps>(({ uploadedFiles }) => {
     const items: MenuProps["items"] = useMemo(
         () =>
             uploadedFiles.map((uploadedFile) => ({
@@ -54,7 +54,12 @@ export const InputFilesList = memo<IInputFilesListProps>(({ uploadedFiles }) => 
         <StyledContainer>
             {uploadedFiles.length > 0 && (
                 <Dropdown trigger={["hover", "click"]} menu={{ items }}>
-                    <FileDoneOutlined />
+                    <Button
+                        type={"ghost"}
+                        icon={<PaperClipOutlined style={{ color: "gray" }} />}
+                        shape={"circle"}
+                        size={"large"}
+                    />
                 </Dropdown>
             )}
         </StyledContainer>

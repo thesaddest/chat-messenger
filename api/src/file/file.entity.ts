@@ -32,6 +32,9 @@ export class File extends BaseEntity {
     @Column({ nullable: true })
     attachedBy: string;
 
+    @Column({ nullable: false })
+    sentTo: string;
+
     @Column({ nullable: true })
     streamUrl: string;
 
