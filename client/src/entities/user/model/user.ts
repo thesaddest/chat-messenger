@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
-import UserService from "../api/user.service.";
+import UserService from "../api/user.service";
 import { ILoginValues } from "../../../pages/login/interfaces";
 import { IRegisterValues } from "../../../pages/register/interfaces";
 

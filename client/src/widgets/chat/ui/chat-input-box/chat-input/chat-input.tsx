@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, KeyboardEvent, useCallback } from "react";
 import { Form, FormInstance, Input, InputRef } from "antd";
 import styled from "styled-components";
 
-import { MESSAGE_RULES } from "../../../../../shared/const";
+import { CHAT_RULES } from "../../../../../shared/const";
 import { IFile, IPendingAttachedFile, isSendMessageNeedDisable } from "../../../../../entities/file";
 
 interface IChatInputProps {
@@ -97,7 +97,7 @@ export const ChatInput: FC<IChatInputProps> = ({ form, friendIdActiveKey, pendin
     });
 
     return (
-        <StyledInputContainer name="message" rules={uploadedFiles.length === 0 ? MESSAGE_RULES.MESSAGE : undefined}>
+        <StyledInputContainer name="message" rules={uploadedFiles.length === 0 ? CHAT_RULES.MESSAGE : undefined}>
             <Input ref={inputRef} placeholder="Write a message..." onPressEnter={onEnterPress} autoComplete="off" />
         </StyledInputContainer>
     );

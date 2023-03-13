@@ -44,5 +44,4 @@ export class MessageDto {
     prevMessageFrom?: string;
 
     attachedFilesAfterUpload?: File[];
-    // attachedFilesAfterUpload?: FileDto[];
 }

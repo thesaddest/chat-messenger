@@ -1,6 +1,6 @@
 import {
     getFriends,
-    onDeinitUser,
+    onDeInitUser,
     sendMessage,
     getMessages,
     onInitUser,
@@ -8,6 +8,7 @@ import {
     readMessages,
     forwardMessages,
     replyToMessage,
+    createRoom,
 } from "./socket/socket.controller.js";
 import express from "express";
 import helmet from "helmet";
@@ -21,6 +22,7 @@ import { errorMiddleware } from "./error-handler/error.middleware.js";
 import { SOCKET_EVENTS } from "./socket/socket.constants.js";
 import { socketAuthMiddleware } from "./socket/socket.middleware.js";
 import { MessageDto } from "./message/message.dto.js";
+import { RoomDto } from "./room/room.dto.js";
 
 dotenv.config();
 
@@ -66,8 +68,12 @@ io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
         replyToMessage(socket, messageDto);
     });
 
+    socket.on(SOCKET_EVENTS.CREATE_ROOM, (roomDto: RoomDto) => {
+        createRoom(socket, roomDto);
+    });
+
     socket.on(SOCKET_EVENTS.ON_DISCONNECT, () => {
-        onDeinitUser(socket);
+        onDeInitUser(socket);
     });
 });
 

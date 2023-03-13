@@ -2,6 +2,7 @@ import { Entity, Column, Relation, ManyToOne, OneToMany } from "typeorm";
 import { BaseEntity } from "../common/entities/base.entity.js";
 import { Friend } from "../friend/friend.entity.js";
 import { File } from "../file/file.entity.js";
+import { Room } from "../room/room.entity.js";
 
 @Entity()
 export class Message extends BaseEntity {

@@ -8,6 +8,8 @@ export const SOCKET_EVENTS = {
     READ_MESSAGES: "read_messages",
     FORWARD_MESSAGES: "forward_messages",
     REPLY_TO_MESSAGE: "reply_to_message",
+    CREATE_ROOM: "create_room",
+    CONNECT_TO_ROOM: "connect_to_room",
     ON_INIT_USER: "on_connect",
     ON_DEINIT_USER: "on_disconnect",
     ON_DISCONNECT: "disconnecting",

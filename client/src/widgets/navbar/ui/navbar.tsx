@@ -11,6 +11,7 @@ import { SearchFriend } from "../../../features/search-friend";
 import { deselectAllSelectedMessages, IMessage } from "../../../entities/message";
 import { ForwardMessages } from "../../../features/forward-messages";
 import { DeleteMessages } from "../../../features/delete-messages";
+import { CreateRoom } from "../../../features/create-room/create-room";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
@@ -104,6 +105,7 @@ export const Navbar: FC = () => {
                         <MemoTitle title="Chat" />
                         <StyledModalButtonsContainer>
                             <AddFriend />
+                            <CreateRoom />
                             <SearchFriend />
                         </StyledModalButtonsContainer>
                     </>

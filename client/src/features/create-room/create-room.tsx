@@ -1,11 +1,10 @@
 import { Button, ButtonProps, Form, Modal } from "antd";
-import { memo, SyntheticEvent, useCallback, useMemo, useState } from "react";
+import { WechatOutlined } from "@ant-design/icons";
+import { SyntheticEvent, useCallback, useMemo, useState } from "react";
 
-import { AddFriendIcon } from "../../shared/ui";
+import { CreateRoomPopupContent } from "./create-room-popup-content";
 
-import { AddFriendPopupContent } from "./add-friend-popup-content";
-
-export const AddFriend = memo(() => {
+export const CreateRoom = () => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [modalError, setModalError] = useState<string>("");
@@ -18,33 +17,32 @@ export const AddFriend = memo(() => {
         (e: SyntheticEvent) => {
             e.stopPropagation();
             setIsModalOpen(false);
-            setModalError("");
             form.resetFields();
         },
         [form],
     );
 
-    const OK_BUTTON_PROPS: ButtonProps = useMemo(() => ({ htmlType: "submit", form: "add-friend-form" }), []);
+    const OK_BUTTON_PROPS: ButtonProps = useMemo(() => ({ htmlType: "submit", form: "create-room-form" }), []);
 
     return (
         <>
-            <Button onClick={showModal} type="primary">
-                <AddFriendIcon />
+            <Button type={"primary"} onClick={showModal}>
+                <WechatOutlined />
             </Button>
             <Modal
-                title="Add a friend!"
+                title="Create a room!"
                 open={isModalOpen}
                 onCancel={handleCancel}
                 okButtonProps={OK_BUTTON_PROPS}
                 centered={true}
             >
-                <AddFriendPopupContent
-                    form={form}
-                    modalError={modalError}
+                <CreateRoomPopupContent
                     setModalError={setModalError}
                     setIsModalOpen={setIsModalOpen}
+                    modalError={modalError}
+                    form={form}
                 />
             </Modal>
         </>
     );
-});
+};

@@ -7,7 +7,7 @@ export { SkeletonNavbar, SkeletonFriendSidebarCard } from "./Skeleton";
 export {
     Search,
     AddFriendGroup,
-    AddFriend,
+    AddFriendIcon,
     ArrowLeft,
     Delete,
     MessageReadCheck,
