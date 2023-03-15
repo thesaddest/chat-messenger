@@ -30,6 +30,6 @@ export class User extends BaseEntity {
     @OneToMany(() => File, (file) => file.user, { eager: true })
     files: Relation<File[]>;
 
-    @OneToMany(() => Room, (room) => room.owner, { eager: true })
+    @OneToMany(() => Room, (room) => room.owner)
     rooms: Relation<Room[]>;
 }

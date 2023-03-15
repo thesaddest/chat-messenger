@@ -53,9 +53,12 @@ export const replyToMessage = async (socket: Socket, messageDto: MessageDto): Pr
 
 export const createRoom = async (socket: Socket, roomDto: RoomDto): Promise<void> => {
     socket.join(roomDto.roomId);
-    console.log(`${socket.handshake.auth.username} joined room: ${roomDto.roomName} with id: ${roomDto.roomId}`);
 };
 
 export const getMessages = async (socket: Socket): Promise<void> => {
     socket.emit(SOCKET_EVENTS.GET_ALL_MESSAGES);
+};
+
+export const getRooms = async (socket: Socket): Promise<void> => {
+    socket.emit(SOCKET_EVENTS.GET_ALL_ROOMS);
 };

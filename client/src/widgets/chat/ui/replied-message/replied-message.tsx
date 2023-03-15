@@ -3,13 +3,11 @@ import styled from "styled-components";
 import { Button } from "antd";
 
 import { deselectMessageToReply, IMessage } from "../../../../entities/message";
-import { IFriend } from "../../../../entities/friend";
 import { Close, Reply } from "../../../../shared/ui";
 import { useAppDispatch } from "../../../../shared/lib/hooks";
 
 interface IRepliedMessageProps {
     selectedMessageToReply: IMessage | null;
-    friend: IFriend;
 }
 
 const StyledWrapper = styled.div<IRepliedMessageProps>`
@@ -60,7 +58,7 @@ const StyledReplyContainer = styled.div`
     padding-left: 0.25rem;
 `;
 
-export const RepliedMessage = memo<IRepliedMessageProps>(({ selectedMessageToReply, friend }) => {
+export const RepliedMessage = memo<IRepliedMessageProps>(({ selectedMessageToReply }) => {
     const dispatch = useAppDispatch();
 
     const onClick = useCallback(() => {
@@ -68,13 +66,13 @@ export const RepliedMessage = memo<IRepliedMessageProps>(({ selectedMessageToRep
     }, [dispatch]);
 
     return (
-        <StyledWrapper selectedMessageToReply={selectedMessageToReply} friend={friend}>
+        <StyledWrapper selectedMessageToReply={selectedMessageToReply}>
             <StyledContainer>
                 <StyledReplyContainer>
                     <Reply color={"#1677ff"} fontSize={"20px"} />
                 </StyledReplyContainer>
                 <StyledUsernameMessageContainer>
-                    <p>{friend.username}</p>
+                    <p>{selectedMessageToReply?.fromUsername}</p>
                     <span>{selectedMessageToReply && selectedMessageToReply.content}</span>
                 </StyledUsernameMessageContainer>
                 <div>

@@ -15,6 +15,7 @@ import {
     readMessage,
 } from "../../../entities/message";
 import { socketError } from "../../../entities/user";
+import { getRooms } from "../../../entities/room";
 
 export const useSocket = () => {
     const dispatch = useAppDispatch();
@@ -39,6 +40,10 @@ export const useSocket = () => {
         socket.on(SOCKET_EVENTS.GET_ALL_MESSAGES, async () => {
             await dispatch(getMessages());
             await dispatch(getReadMessages());
+        });
+
+        socket.on(SOCKET_EVENTS.GET_ALL_ROOMS, () => {
+            dispatch(getRooms());
         });
 
         socket.on(SOCKET_EVENTS.SEND_MESSAGE, (message: IMessage) => {
@@ -78,6 +83,7 @@ export const useSocket = () => {
             socket.off(SOCKET_EVENTS.ON_CONNECT);
             socket.off(SOCKET_EVENTS.GET_ALL_MESSAGES);
             socket.off(SOCKET_EVENTS.GET_ALL_FRIENDS);
+            socket.off(SOCKET_EVENTS.GET_ALL_ROOMS);
             socket.off(SOCKET_EVENTS.SEND_MESSAGE);
             socket.off(SOCKET_EVENTS.ADD_FRIEND);
             socket.off(SOCKET_EVENTS.DELETE_MESSAGES);

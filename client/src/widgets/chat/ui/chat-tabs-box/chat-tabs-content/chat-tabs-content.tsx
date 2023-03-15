@@ -3,11 +3,11 @@ import styled from "styled-components";
 
 import { IFriend } from "../../../../../entities/friend";
 import { MessagesList } from "../../../../../entities/message/ui";
-import { ChatInputBox } from "../../chat-input-box";
 import { ChatInfo } from "../../chat-info";
 import { IMessage } from "../../../../../entities/message";
-import { RepliedMessage } from "../../replied-message";
 import { useAppSelector } from "../../../../../shared/lib/hooks";
+import { RepliedMessage } from "../../replied-message";
+import { ChatInputBox } from "../../chat-input-box";
 
 interface IChatTabsContentProps {
     friend: IFriend;
@@ -25,7 +25,7 @@ export const ChatTabsContent: FC<IChatTabsContentProps> = ({ friend, messages })
         <StyledChatTabsContent>
             <ChatInfo friend={friend} />
             <MessagesList friend={friend} messages={messages} selectedMessageToReply={selectedMessageToReply} />
-            <RepliedMessage selectedMessageToReply={selectedMessageToReply} friend={friend} />
+            <RepliedMessage selectedMessageToReply={selectedMessageToReply} />
             <ChatInputBox friendId={friend.userBehindFriend} />
         </StyledChatTabsContent>
     );

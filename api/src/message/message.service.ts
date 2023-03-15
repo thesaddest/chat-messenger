@@ -14,6 +14,7 @@ class MessageService {
             messageId: uuidv4(),
             to: messageDto.to,
             from: messageDto.from,
+            fromUsername: await userService.getUsernameByUserId(messageDto.from),
             content: messageDto.content,
             friend: user,
             isMessageRead: messageDto.isMessageRead,
@@ -38,6 +39,7 @@ class MessageService {
             messageId: message.messageId,
             to: message.to,
             from: message.from,
+            fromUsername: message.fromUsername,
             content: message.content,
             isMessageSelected: false,
             isMessageRead: message.isMessageRead,
@@ -62,6 +64,7 @@ class MessageService {
                 messageId: message.messageId,
                 to: message.to,
                 from: message.from,
+                fromUsername: message.fromUsername,
                 content: message.content,
                 isMessageSelected: false,
                 isMessageRead: message.isMessageRead,
@@ -93,6 +96,7 @@ class MessageService {
             messageId: message.messageId,
             to: message.to,
             from: message.from,
+            fromUsername: message.fromUsername,
             content: message.content,
             isMessageSelected: false,
             isMessageRead: message.isMessageRead,
@@ -114,6 +118,7 @@ class MessageService {
                     messageId: savedReadMessage.messageId,
                     to: savedReadMessage.to,
                     from: savedReadMessage.from,
+                    fromUsername: savedReadMessage.fromUsername,
                     content: savedReadMessage.content,
                     isMessageSelected: false,
                     isMessageRead: savedReadMessage.isMessageRead,
@@ -127,12 +132,13 @@ class MessageService {
         );
     }
 
-    async createForwardedMessage(messageDto: MessageDto, user: User, from: string, to: string) {
+    async createForwardedMessage(messageDto: MessageDto, user: User, from: string, to: string): Promise<MessageDto> {
         const messageRepository = AppDataSource.getRepository(Message);
         const newMessage = {
             messageId: uuidv4(),
             to: to,
             from: from,
+            fromUsername: await userService.getUsernameByUserId(from),
             content: messageDto.content,
             friend: user,
             isMessageRead: messageDto.isMessageRead,
@@ -148,6 +154,7 @@ class MessageService {
             messageId: forwardedMessage.messageId,
             to: forwardedMessage.to,
             from: forwardedMessage.from,
+            fromUsername: forwardedMessage.fromUsername,
             content: forwardedMessage.content,
             isMessageSelected: false,
             isMessageRead: forwardedMessage.isMessageRead,
@@ -166,6 +173,7 @@ class MessageService {
                     messageId: createdForwardedMessage.messageId,
                     to: createdForwardedMessage.to,
                     from: createdForwardedMessage.from,
+                    fromUsername: createdForwardedMessage.fromUsername,
                     content: createdForwardedMessage.content,
                     isMessageSelected: false,
                     isMessageRead: createdForwardedMessage.isMessageRead,
@@ -184,6 +192,7 @@ class MessageService {
             messageId: newMessage.messageId,
             to: newMessage.to,
             from: newMessage.from,
+            fromUsername: await userService.getUsernameByUserId(newMessage.from),
             content: newMessage.content,
             isMessageSelected: false,
             isMessageRead: newMessage.isMessageRead,
@@ -199,6 +208,7 @@ class MessageService {
             messageId: messageInDb.messageId,
             to: messageInDb.to,
             from: messageInDb.from,
+            fromUsername: messageInDb.fromUsername,
             content: messageInDb.content,
             isMessageSelected: false,
             isMessageRead: messageInDb.isMessageRead,

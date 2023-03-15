@@ -1,8 +1,8 @@
-import { FC, useCallback } from "react";
+import { Dispatch, FC, SetStateAction, useCallback } from "react";
 import styled from "styled-components";
 
 import { useWindowSize } from "../../../shared/lib/hooks";
-import { MemoTitle, CancelButton, BackButton } from "../../../shared/ui";
+import { CancelButton, BackButton, MemoTitle } from "../../../shared/ui";
 import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { setFriendIdActiveKey } from "../../../entities/friend";
@@ -11,11 +11,17 @@ import { SearchFriend } from "../../../features/search-friend";
 import { deselectAllSelectedMessages, IMessage } from "../../../entities/message";
 import { ForwardMessages } from "../../../features/forward-messages";
 import { DeleteMessages } from "../../../features/delete-messages";
-import { CreateRoom } from "../../../features/create-room/create-room";
+import { CreateRoom } from "../../../features/create-room";
+import { ChatSwitch } from "../../chat-switch";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
     selectedMessages: IMessage[];
+}
+
+interface INavbarProps {
+    isSwitched: boolean;
+    setIsSwitched: Dispatch<SetStateAction<boolean>>;
 }
 
 const StyledRightDiv = styled.div`
@@ -70,6 +76,10 @@ const StyledHeader = styled.header`
 const StyledModalButtonsContainer = styled.div`
     display: flex;
     gap: 0.5rem;
+
+    @media only screen and (max-width: 768px) {
+        padding-left: 0.5rem;
+    }
 `;
 
 const StyledForwardDeleteContainer = styled.div`
@@ -86,11 +96,12 @@ const StyledCancelContainer = styled.div`
     justify-content: end;
 `;
 
-export const Navbar: FC = () => {
+export const Navbar: FC<INavbarProps> = ({ isSwitched, setIsSwitched }) => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
+    const rooms = useAppSelector((state) => state.room.rooms);
 
     const onClick = useCallback(() => {
         dispatch(setFriendIdActiveKey(DEFAULT_ACTIVE_KEY));
@@ -102,8 +113,12 @@ export const Navbar: FC = () => {
             <StyledLeftDiv friendIdActiveKey={friendIdActiveKey} selectedMessages={selectedMessages}>
                 {width >= 426 || friendIdActiveKey === DEFAULT_ACTIVE_KEY ? (
                     <>
-                        <MemoTitle title="Chat" />
                         <StyledModalButtonsContainer>
+                            {rooms.length > 0 ? (
+                                <ChatSwitch isSwitched={isSwitched} setIsSwitched={setIsSwitched} />
+                            ) : (
+                                <MemoTitle title={"Chat"} />
+                            )}
                             <AddFriend />
                             <CreateRoom />
                             <SearchFriend />

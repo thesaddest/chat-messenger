@@ -51,6 +51,7 @@ export const createMessage = (message: IMessage): IMessage => {
     return {
         to: message.to,
         from: message.from,
+        fromUsername: message.fromUsername !== undefined ? message.fromUsername : "",
         content: message.content !== undefined ? message.content : "",
         messageId: message.messageId !== undefined ? message.messageId : undefined,
         isMessageSelected: message.isMessageSelected !== undefined ? message.isMessageSelected : false,

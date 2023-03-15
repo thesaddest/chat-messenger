@@ -1,10 +1,10 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import { Divider } from "antd";
 
 import { useAppSelector, useWindowSize } from "../../shared/lib/hooks";
 import { Navbar } from "../../widgets/navbar";
-import { ChatTabsBox } from "../../widgets/chat";
+import { ChatTabsBox, RoomTabsBox } from "../../widgets/chat";
 import { useSocket } from "../../app/lib/hooks";
 import { SkeletonChat } from "../../features/skeleton-chat";
 import { SelectChatToStartMessaging } from "../../shared/ui";
@@ -40,11 +40,14 @@ const StyledDivider = styled(Divider)`
 `;
 
 export const HomePage: FC = () => {
+    const [isSwitched, setIsSwitched] = useState<boolean>(false);
+
     useSocket();
     const { width } = useWindowSize();
 
     const isFriendsLoading = useAppSelector((state) => state.friend.isLoading);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
+    const rooms = useAppSelector((state) => state.room.rooms);
 
     return (
         <StyledHomeContainer>
@@ -53,10 +56,10 @@ export const HomePage: FC = () => {
                     <SkeletonChat />
                 ) : (
                     <>
-                        <Navbar />
+                        <Navbar isSwitched={isSwitched} setIsSwitched={setIsSwitched} />
                         <StyledDivider />
                         {width >= 426 && friendIdActiveKey === DEFAULT_ACTIVE_KEY && <SelectChatToStartMessaging />}
-                        <ChatTabsBox />
+                        {rooms.length > 0 && isSwitched ? <RoomTabsBox /> : <ChatTabsBox />}
                     </>
                 )}
             </StyledHome>

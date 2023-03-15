@@ -9,6 +9,7 @@ import {
     forwardMessages,
     replyToMessage,
     createRoom,
+    getRooms,
 } from "./socket/socket.controller.js";
 import express from "express";
 import helmet from "helmet";
@@ -47,6 +48,7 @@ io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
     onInitUser(socket);
     getFriends(socket);
     getMessages(socket);
+    getRooms(socket);
 
     socket.on(SOCKET_EVENTS.SEND_MESSAGE, (messageDto: MessageDto) => {
         sendMessage(socket, messageDto);

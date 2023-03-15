@@ -33,10 +33,6 @@ const StyledChatBoxTabs = styled(Tabs)`
             display: none;
         }
 
-        .ant-tabs-nav-wrap {
-            overflow-y: scroll;
-        }
-
         .ant-tabs-tab {
             padding: 0.5rem 0.75rem;
 

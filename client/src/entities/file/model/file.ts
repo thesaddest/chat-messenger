@@ -8,14 +8,12 @@ interface FileState {
     pendingFiles: IPendingAttachedFile[];
     uploadedFiles: IFile[];
     status: IAttachedFileStatus;
-    progress: number | null;
 }
 
 const initialState: FileState = {
     pendingFiles: [],
     uploadedFiles: [],
     status: "start",
-    progress: null,
 };
 
 export const isSendMessageNeedDisable = (

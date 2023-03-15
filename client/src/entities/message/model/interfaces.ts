@@ -5,6 +5,7 @@ import { IFile } from "../../file";
 export interface IMessage {
     to: string;
     from: string;
+    fromUsername?: string;
     content: string;
     messageId?: string;
     isMessageSelected?: boolean;

@@ -25,3 +25,4 @@ router.post("/message/reply", messageController.replyToMessage);
 router.post("/file/upload-single-file", multerUploadMiddleware.single("file"), fileController.uploadSingleFile);
 
 router.post("/room/create-room", roomController.createRoom);
+router.get("/room/rooms", roomController.getRooms);

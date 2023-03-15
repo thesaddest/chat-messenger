@@ -22,8 +22,23 @@ class RoomController {
             const { roomName } = req.body;
 
             const createdRoom = await roomService.createRoom(user, roomName);
-            console.log(createdRoom);
             res.json(createdRoom);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async getRooms(req: Request, res: Response, next: NextFunction) {
+        try {
+            const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
+
+            if (!user) {
+                return next(ErrorException.UnauthorizedError());
+            }
+
+            const rooms = await roomService.getUserRooms(user);
+
+            return res.json(rooms);
         } catch (e) {
             next(e);
         }

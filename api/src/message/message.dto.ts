@@ -17,6 +17,10 @@ export class MessageDto {
 
     @IsString()
     @IsNotEmpty()
+    fromUsername: string;
+
+    @IsString()
+    @IsNotEmpty()
     content: string;
 
     @IsBoolean()

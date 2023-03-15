@@ -21,6 +21,9 @@ export class Message extends BaseEntity {
     @Column({ nullable: true })
     from: string;
 
+    @Column({ nullable: true })
+    fromUsername: string;
+
     @Column({ nullable: false })
     content: string;
 

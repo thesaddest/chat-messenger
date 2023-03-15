@@ -1,4 +1,5 @@
 import { IFriend } from "../../friend";
+import { IRoom } from "../../room";
 
 import { IMessage } from "./interfaces";
 
@@ -6,6 +7,10 @@ export const getFilteredMessageBySender = (messages: IMessage[], friend: IFriend
     return messages.filter(
         (message) => message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
     );
+};
+
+export const getFilteredMessageByRoomSender = (messages: IMessage[], room: IRoom): IMessage[] => {
+    return messages.filter((message) => message.to === room.roomId || message.from === room.roomId);
 };
 
 export const getLastMessageBySender = (messages: IMessage[], friend: IFriend): IMessage => {
