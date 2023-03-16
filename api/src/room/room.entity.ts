@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, Relation } from "typeorm";
+import { Entity, Column, ManyToOne, Relation, OneToMany } from "typeorm";
 import { BaseEntity } from "../common/entities/base.entity.js";
 import { User } from "../user/user.entity.js";
 
@@ -19,6 +19,9 @@ export class Room extends BaseEntity {
     @Column({ nullable: false })
     createdBy: string;
 
-    @ManyToOne(() => User, (user) => user.rooms)
+    @ManyToOne(() => User, (user) => user.rooms, { nullable: false })
     owner: Relation<User>;
+
+    @OneToMany(() => User, (user) => user.roomsParticipant, { nullable: true })
+    participants: Relation<User[]>;
 }

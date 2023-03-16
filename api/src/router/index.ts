@@ -26,3 +26,4 @@ router.post("/file/upload-single-file", multerUploadMiddleware.single("file"), f
 
 router.post("/room/create-room", roomController.createRoom);
 router.get("/room/rooms", roomController.getRooms);
+router.post("/room/invite-friend-to-join-room", roomController.inviteFriendToJoinRoom);

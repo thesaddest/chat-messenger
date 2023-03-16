@@ -3,6 +3,7 @@ import { AppDataSource } from "../db/database.js";
 import { Room } from "./room.entity.js";
 import { v4 as uuidv4 } from "uuid";
 import { RoomDto } from "./room.dto.js";
+import { userService } from "../user/user.service.js";
 
 class RoomService {
     async createRoom(user: User, roomName: string): Promise<RoomDto> {
@@ -35,6 +36,23 @@ class RoomService {
             roomName: room.roomName,
             createdBy: room.createdBy,
         }));
+    }
+
+    async getRoomById(roomId: string): Promise<Room> {
+        const roomRepository = AppDataSource.getRepository(Room);
+
+        return roomRepository.findOne({ where: { roomId: roomId } });
+    }
+
+    async addFriendToRoom(username: string, roomId: string): Promise<Room> {
+        const roomRepository = AppDataSource.getRepository(Room);
+        const room = await this.getRoomById(roomId);
+        const userToAdd = await userService.getUserByUsername(username);
+
+        room.participants.push(userToAdd);
+        const results = await roomRepository.save(room);
+        console.log(results);
+        return results;
     }
 }
 

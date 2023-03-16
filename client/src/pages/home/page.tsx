@@ -48,6 +48,7 @@ export const HomePage: FC = () => {
     const isFriendsLoading = useAppSelector((state) => state.friend.isLoading);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const rooms = useAppSelector((state) => state.room.rooms);
+    const roomIdActiveKey = useAppSelector((state) => state.room.roomIdActiveKey);
 
     return (
         <StyledHomeContainer>
@@ -58,7 +59,10 @@ export const HomePage: FC = () => {
                     <>
                         <Navbar isSwitched={isSwitched} setIsSwitched={setIsSwitched} />
                         <StyledDivider />
-                        {width >= 426 && friendIdActiveKey === DEFAULT_ACTIVE_KEY && <SelectChatToStartMessaging />}
+                        {/*Check if IS NOT mobile and chat active keys ARE default = render SelectChatToStartMessaging */}
+                        {width >= 426 &&
+                            friendIdActiveKey === DEFAULT_ACTIVE_KEY &&
+                            roomIdActiveKey === DEFAULT_ACTIVE_KEY && <SelectChatToStartMessaging />}
                         {rooms.length > 0 && isSwitched ? <RoomTabsBox /> : <ChatTabsBox />}
                     </>
                 )}

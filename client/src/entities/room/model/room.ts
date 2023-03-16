@@ -1,20 +1,24 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import RoomService from "../api/room.service";
-
 import { socket } from "../../../shared/socket-io";
-import { SOCKET_EVENTS } from "../../../shared/const";
+import { DEFAULT_ACTIVE_KEY, SOCKET_EVENTS } from "../../../shared/const";
+import { IFriend } from "../../friend";
 
-import { ICreateRoomValues, IRoom } from "./interfaces";
+import { ICreateRoomValues, IInviteFriendToJoinRoomData, IInviteFriendToRoomOnFinishValues, IRoom } from "./interfaces";
 
 interface RoomState {
     rooms: IRoom[];
+    roomIdActiveKey: string;
     status: "start" | "pending" | "succeeded" | "failed";
+    invitedFriendsToRoom: IFriend[];
 }
 
 const initialState: RoomState = {
     rooms: [],
     status: "start",
+    roomIdActiveKey: DEFAULT_ACTIVE_KEY,
+    invitedFriendsToRoom: [],
 };
 
 export const getRooms = createAsyncThunk<IRoom[], undefined, { rejectValue: string }>(
@@ -38,6 +42,7 @@ export const createRoom = createAsyncThunk<IRoom, ICreateRoomValues, { rejectVal
         if (!data) {
             return rejectWithValue("Error while creating room");
         }
+
         socket.emit(SOCKET_EVENTS.CREATE_ROOM, data);
         return data;
     },
@@ -46,7 +51,11 @@ export const createRoom = createAsyncThunk<IRoom, ICreateRoomValues, { rejectVal
 export const roomModel = createSlice({
     name: "rooms",
     initialState,
-    reducers: {},
+    reducers: {
+        setRoomIdActiveKey(state, action: PayloadAction<string>) {
+            state.roomIdActiveKey = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getRooms.fulfilled, (state, action) => {
@@ -72,6 +81,6 @@ export const roomModel = createSlice({
     },
 });
 
-export const {} = roomModel.actions;
+export const { setRoomIdActiveKey } = roomModel.actions;
 
 export const reducer = roomModel.reducer;

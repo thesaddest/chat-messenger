@@ -1,10 +1,11 @@
 import { Tabs } from "antd";
 import styled from "styled-components";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 
 import { DEFAULT_ACTIVE_KEY } from "../../../../shared/const";
 import { RoomSidebarCard } from "../../../../features/room-sidebar-card";
-import { useAppSelector } from "../../../../shared/lib/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
+import { setRoomIdActiveKey } from "../../../../entities/room";
 
 import { RoomTabsContent } from "./room-tabs-content";
 
@@ -78,8 +79,17 @@ const StyledChatBoxTabs = styled(Tabs)`
 `;
 
 export const RoomTabsBox = memo(() => {
+    const dispatch = useAppDispatch();
     const rooms = useAppSelector((state) => state.room.rooms);
     const messages = useAppSelector((state) => state.message.messages);
+    const roomIdActiveKey = useAppSelector((state) => state.room.roomIdActiveKey);
+
+    const onTabChange = useCallback(
+        (activeKey: string) => {
+            dispatch(setRoomIdActiveKey(activeKey));
+        },
+        [dispatch],
+    );
 
     return (
         <StyledChatBoxTabs
@@ -91,6 +101,8 @@ export const RoomTabsBox = memo(() => {
                     children: messages && <RoomTabsContent room={room} messages={messages} />,
                 };
             })}
+            onChange={onTabChange}
+            activeKey={roomIdActiveKey}
         />
     );
 });

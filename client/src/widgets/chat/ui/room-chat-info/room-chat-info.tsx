@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { SharedAvatar } from "../../../../shared/ui";
 import { IRoom } from "../../../../entities/room";
+import { InviteFriendToRoom } from "../../../../features/invite-friend-to-room";
 
 interface IChatInfoProps {
     room: IRoom;
@@ -21,6 +22,8 @@ const ChatInfoWrapper = styled.div`
     display: flex;
     padding: 0 1rem;
     align-items: center;
+    width: 100%;
+    justify-content: space-between;
 `;
 
 const StyledRoomNameContainer = styled.div`
@@ -50,6 +53,7 @@ export const RoomChatInfo = memo<IChatInfoProps>(({ room }) => {
                 <StyledRoomNameContainer>
                     <p>{room.roomName}</p>
                 </StyledRoomNameContainer>
+                <InviteFriendToRoom />
             </ChatInfoWrapper>
         </ChatInfoContainer>
     );

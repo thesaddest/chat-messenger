@@ -10,6 +10,7 @@ import {
     replyToMessage,
     createRoom,
     getRooms,
+    inviteToRoom,
 } from "./socket/socket.controller.js";
 import express from "express";
 import helmet from "helmet";
@@ -24,6 +25,7 @@ import { SOCKET_EVENTS } from "./socket/socket.constants.js";
 import { socketAuthMiddleware } from "./socket/socket.middleware.js";
 import { MessageDto } from "./message/message.dto.js";
 import { RoomDto } from "./room/room.dto.js";
+import { InviteFriendToRoomValues } from "./socket/interfaces.js";
 
 dotenv.config();
 
@@ -72,6 +74,10 @@ io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
 
     socket.on(SOCKET_EVENTS.CREATE_ROOM, (roomDto: RoomDto) => {
         createRoom(socket, roomDto);
+    });
+
+    socket.on(SOCKET_EVENTS.INVITE_TO_ROOM, (inviteFriendToRoomValues: InviteFriendToRoomValues) => {
+        inviteToRoom(socket, inviteFriendToRoomValues);
     });
 
     socket.on(SOCKET_EVENTS.ON_DISCONNECT, () => {

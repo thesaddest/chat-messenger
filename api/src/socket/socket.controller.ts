@@ -3,6 +3,8 @@ import { Socket } from "socket.io";
 import { SOCKET_EVENTS } from "./socket.constants.js";
 import { MessageDto } from "../message/message.dto.js";
 import { RoomDto } from "../room/room.dto.js";
+import { InviteFriendToRoomValues } from "./interfaces.js";
+import { userService } from "../user/user.service.js";
 
 export const onInitUser = async (socket: Socket): Promise<void> => {
     const user = await socketService.initUser(socket);
@@ -53,6 +55,14 @@ export const replyToMessage = async (socket: Socket, messageDto: MessageDto): Pr
 
 export const createRoom = async (socket: Socket, roomDto: RoomDto): Promise<void> => {
     socket.join(roomDto.roomId);
+};
+
+export const inviteToRoom = async (
+    socket: Socket,
+    inviteFriendToRoomValues: InviteFriendToRoomValues,
+): Promise<void> => {
+    const userToSendInvite = await userService.getUserByUsername(inviteFriendToRoomValues.friendUsername);
+    socket.to(userToSendInvite.userId).emit(SOCKET_EVENTS.INVITE_TO_ROOM, inviteFriendToRoomValues);
 };
 
 export const getMessages = async (socket: Socket): Promise<void> => {

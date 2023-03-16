@@ -3,7 +3,6 @@ import { Socket } from "socket.io";
 import { userService } from "../user/user.service.js";
 import { friendService } from "../friend/friend.service.js";
 import { redisClient } from "../redis/index.js";
-import { Room } from "../room/room.entity.js";
 
 class SocketService {
     async getCurrentUser(socket: Socket): Promise<User> {

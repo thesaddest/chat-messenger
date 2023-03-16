@@ -13,9 +13,11 @@ import { ForwardMessages } from "../../../features/forward-messages";
 import { DeleteMessages } from "../../../features/delete-messages";
 import { CreateRoom } from "../../../features/create-room";
 import { ChatSwitch } from "../../chat-switch";
+import { setRoomIdActiveKey } from "../../../entities/room";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
+    roomIdActiveKey: string;
     selectedMessages: IMessage[];
 }
 
@@ -44,9 +46,12 @@ const StyledLeftDiv = styled.div<IStyledLeftDivProps>`
 
     @media only screen and (max-width: 425px) {
         display: ${({ selectedMessages }) => (selectedMessages.length > 0 ? "none" : "flex")};
-        justify-content: ${({ friendIdActiveKey }) =>
-            friendIdActiveKey === DEFAULT_ACTIVE_KEY ? "space-evenly" : "start"};
+        justify-content: ${({ friendIdActiveKey, roomIdActiveKey }) =>
+            friendIdActiveKey === DEFAULT_ACTIVE_KEY && roomIdActiveKey === DEFAULT_ACTIVE_KEY
+                ? "space-evenly"
+                : "start"};
         flex: 3;
+        padding-left: 0.5rem;
 
         .ant-btn > .anticon + span {
             margin-inline-start: 0;
@@ -100,18 +105,25 @@ export const Navbar: FC<INavbarProps> = ({ isSwitched, setIsSwitched }) => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
+    const roomIdActiveKey = useAppSelector((state) => state.room.roomIdActiveKey);
     const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
     const rooms = useAppSelector((state) => state.room.rooms);
 
     const onClick = useCallback(() => {
+        dispatch(setRoomIdActiveKey(DEFAULT_ACTIVE_KEY));
         dispatch(setFriendIdActiveKey(DEFAULT_ACTIVE_KEY));
         dispatch(deselectAllSelectedMessages(selectedMessages));
     }, [dispatch, selectedMessages]);
 
     return (
         <StyledHeader>
-            <StyledLeftDiv friendIdActiveKey={friendIdActiveKey} selectedMessages={selectedMessages}>
-                {width >= 426 || friendIdActiveKey === DEFAULT_ACTIVE_KEY ? (
+            <StyledLeftDiv
+                friendIdActiveKey={friendIdActiveKey}
+                roomIdActiveKey={roomIdActiveKey}
+                selectedMessages={selectedMessages}
+            >
+                {width >= 426 ||
+                (friendIdActiveKey === DEFAULT_ACTIVE_KEY && roomIdActiveKey === DEFAULT_ACTIVE_KEY) ? (
                     <>
                         <StyledModalButtonsContainer>
                             {rooms.length > 0 ? (
