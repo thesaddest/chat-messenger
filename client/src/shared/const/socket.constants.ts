@@ -3,6 +3,7 @@ export const SOCKET_EVENTS = {
     GET_ALL_FRIENDS: "get_all_friends",
     GET_ALL_MESSAGES: "get_all_messages",
     GET_ALL_ROOMS: "get_all_rooms",
+    GET_ALL_ROOM_NOTIFICATIONS: "get_all_notifications",
     ADD_FRIEND: "add_friend",
     SEND_MESSAGE: "send_message",
     DELETE_MESSAGES: "delete_messages",

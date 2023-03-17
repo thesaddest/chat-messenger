@@ -3,6 +3,7 @@ import { userService } from "../user/user.service.js";
 import { ErrorException } from "../error-handler/error-exception.js";
 import { roomService } from "./room.service.js";
 import { friendService } from "../friend/friend.service.js";
+import { notificationService } from "../notification/notification.service.js";
 
 interface ITypedRequest<T> extends Request {
     body: T;
@@ -14,6 +15,8 @@ interface ICreateRoomRequest {
 
 interface IInviteFriendToRoomRequest {
     friendUsername: string;
+    roomId: string;
+    roomName: string;
 }
 
 interface IAddFriendToRoomRequest {
@@ -41,7 +44,6 @@ class RoomController {
     async getRooms(req: Request, res: Response, next: NextFunction) {
         try {
             const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
-
             if (!user) {
                 return next(ErrorException.UnauthorizedError());
             }
@@ -56,15 +58,29 @@ class RoomController {
     async inviteFriendToJoinRoom(req: ITypedRequest<IInviteFriendToRoomRequest>, res: Response, next: NextFunction) {
         try {
             const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
-
             if (!user) {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            const { friendUsername } = req.body;
+            const { friendUsername, roomId, roomName } = req.body;
+            if (user.username === friendUsername) {
+                return next(ErrorException.BadRequest("You can not add your self"));
+            }
 
-            const friend = await friendService.getFriendByUsername(friendUsername);
-            return res.json(friend);
+            const friend = await friendService.hasFriend(user, friendUsername);
+            if (!friend) {
+                return next(ErrorException.BadRequest("Friend doesn't exist in your friends list"));
+            }
+
+            const isFriendAlreadyInvitedToRoom = await roomService.isFriendAlreadyInvitedToRoom(friend, roomId);
+            if (isFriendAlreadyInvitedToRoom) {
+                return next(ErrorException.BadRequest("Friend was already invited to this room"));
+            }
+
+            const roomWithInvitedFriend = await roomService.inviteFriendToRoom(friend, roomId);
+            await notificationService.createRoomNotification(friendUsername, roomId, roomName);
+
+            return res.json(roomWithInvitedFriend);
         } catch (e) {
             next(e);
         }

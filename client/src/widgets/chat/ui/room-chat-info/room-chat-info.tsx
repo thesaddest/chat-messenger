@@ -53,7 +53,7 @@ export const RoomChatInfo = memo<IChatInfoProps>(({ room }) => {
                 <StyledRoomNameContainer>
                     <p>{room.roomName}</p>
                 </StyledRoomNameContainer>
-                <InviteFriendToRoom />
+                <InviteFriendToRoom roomName={room.roomName} />
             </ChatInfoWrapper>
         </ChatInfoContainer>
     );

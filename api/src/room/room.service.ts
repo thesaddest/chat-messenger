@@ -2,11 +2,11 @@ import { User } from "../user/user.entity.js";
 import { AppDataSource } from "../db/database.js";
 import { Room } from "./room.entity.js";
 import { v4 as uuidv4 } from "uuid";
-import { RoomDto } from "./room.dto.js";
 import { userService } from "../user/user.service.js";
+import { Friend } from "../friend/friend.entity.js";
 
 class RoomService {
-    async createRoom(user: User, roomName: string): Promise<RoomDto> {
+    async createRoom(user: User, roomName: string): Promise<Room> {
         const roomRepository = AppDataSource.getRepository(Room);
 
         const newRoom = {
@@ -17,31 +17,33 @@ class RoomService {
         };
 
         const room = roomRepository.create(newRoom);
-        const savedRoom = await roomRepository.save(room);
-
-        return {
-            roomId: savedRoom.roomId,
-            roomName: savedRoom.roomName,
-            createdBy: savedRoom.createdBy,
-        };
+        return await roomRepository.save(room);
     }
 
-    async getUserRooms(user: User): Promise<RoomDto[]> {
+    async getUserRooms(user: User): Promise<Room[]> {
         const roomRepository = AppDataSource.getRepository(Room);
 
-        const rooms = await roomRepository.find({ where: { createdBy: user.username } });
-
-        return rooms.map((room) => ({
-            roomId: room.roomId,
-            roomName: room.roomName,
-            createdBy: room.createdBy,
-        }));
+        return await roomRepository.find({ where: { createdBy: user.username } });
     }
 
     async getRoomById(roomId: string): Promise<Room> {
         const roomRepository = AppDataSource.getRepository(Room);
 
         return roomRepository.findOne({ where: { roomId: roomId } });
+    }
+
+    async inviteFriendToRoom(friend: Friend, roomId: string): Promise<Room> {
+        const roomRepository = AppDataSource.getRepository(Room);
+        const room = await this.getRoomById(roomId);
+        room.invitedFriends.push(friend);
+
+        return await roomRepository.save(room);
+    }
+
+    async isFriendAlreadyInvitedToRoom(friend: Friend, roomId: string): Promise<boolean> {
+        const room = await this.getRoomById(roomId);
+
+        return room.invitedFriends.some((invitedFriend) => invitedFriend.username === friend.username);
     }
 
     async addFriendToRoom(username: string, roomId: string): Promise<Room> {

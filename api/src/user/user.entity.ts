@@ -3,6 +3,7 @@ import { BaseEntity } from "../common/entities/base.entity.js";
 import { Friend } from "../friend/friend.entity.js";
 import { File } from "../file/file.entity.js";
 import { Room } from "../room/room.entity.js";
+import { RoomNotification } from "../room/room-notification.entity.js";
 
 @Entity()
 export class User extends BaseEntity {
@@ -35,4 +36,7 @@ export class User extends BaseEntity {
 
     @ManyToOne(() => Room, (room) => room.participants)
     roomsParticipant: Relation<Room>;
+
+    @OneToMany(() => RoomNotification, (roomNotification) => roomNotification.sentTo, { nullable: true })
+    roomNotifications: Relation<RoomNotification[]>;
 }

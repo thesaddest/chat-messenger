@@ -6,7 +6,6 @@ import { FriendDto } from "./friend.dto.js";
 import { userService } from "../user/user.service.js";
 import { redisService } from "../redis/redis.service.js";
 import { DEFAULT_TAKE_AMOUNT } from "./friend.constants.js";
-import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
 
 class FriendService {
     async addFriend(friend: Friend, user: User): Promise<FriendDto> {
@@ -98,19 +97,6 @@ class FriendService {
                 connected: false,
             };
         });
-    }
-
-    async getFriendByUsername(username: string): Promise<FriendDto> {
-        const friendRepository = AppDataSource.getRepository(Friend);
-
-        const friend = await friendRepository.findOne({ where: { username: username } });
-
-        return {
-            userBehindFriend: friend.userBehindFriend,
-            username: friend.username,
-            addedBy: friend.addedBy,
-            connected: await redisService.getFriendConnectedStatusByUsername(friend.username),
-        };
     }
 }
 

@@ -5,6 +5,7 @@ import { messageController } from "../message/message.controller.js";
 import { fileController } from "../file/file.controller.js";
 import { multerUploadMiddleware } from "../libs/multer-s3.js";
 import { roomController } from "../room/room.controller.js";
+import { notificationController } from "../notification/notification.controller.js";
 
 export const router = Router();
 
@@ -27,3 +28,5 @@ router.post("/file/upload-single-file", multerUploadMiddleware.single("file"), f
 router.post("/room/create-room", roomController.createRoom);
 router.get("/room/rooms", roomController.getRooms);
 router.post("/room/invite-friend-to-join-room", roomController.inviteFriendToJoinRoom);
+
+router.get("/notification/room-notifications", notificationController.getAllRoomNotifications);

@@ -5,6 +5,7 @@ import { friendModel } from "../../entities/friend";
 import { messageModel } from "../../entities/message";
 import { fileModel } from "../../entities/file";
 import { roomModel } from "../../entities/room";
+import { notificationModel } from "../../entities/notification/model/notification";
 
 export const store = configureStore({
     reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
         message: messageModel.reducer,
         file: fileModel.reducer,
         room: roomModel.reducer,
+        notification: notificationModel.reducer,
     },
 });
 

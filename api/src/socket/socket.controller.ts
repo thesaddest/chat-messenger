@@ -72,3 +72,7 @@ export const getMessages = async (socket: Socket): Promise<void> => {
 export const getRooms = async (socket: Socket): Promise<void> => {
     socket.emit(SOCKET_EVENTS.GET_ALL_ROOMS);
 };
+
+export const getNotifications = async (socket: Socket): Promise<void> => {
+    socket.emit(SOCKET_EVENTS.GET_ALL_ROOM_NOTIFICATIONS);
+};

@@ -5,20 +5,18 @@ import { socket } from "../../../shared/socket-io";
 import { DEFAULT_ACTIVE_KEY, SOCKET_EVENTS } from "../../../shared/const";
 import { IFriend } from "../../friend";
 
-import { ICreateRoomValues, IInviteFriendToJoinRoomData, IInviteFriendToRoomOnFinishValues, IRoom } from "./interfaces";
+import { ICreateRoomValues, IInviteFriendToJoinRoomData, IRoom } from "./interfaces";
 
 interface RoomState {
     rooms: IRoom[];
     roomIdActiveKey: string;
     status: "start" | "pending" | "succeeded" | "failed";
-    invitedFriendsToRoom: IFriend[];
 }
 
 const initialState: RoomState = {
     rooms: [],
     status: "start",
     roomIdActiveKey: DEFAULT_ACTIVE_KEY,
-    invitedFriendsToRoom: [],
 };
 
 export const getRooms = createAsyncThunk<IRoom[], undefined, { rejectValue: string }>(
@@ -45,6 +43,29 @@ export const createRoom = createAsyncThunk<IRoom, ICreateRoomValues, { rejectVal
 
         socket.emit(SOCKET_EVENTS.CREATE_ROOM, data);
         return data;
+    },
+);
+
+export const inviteFriendToJoinRoom = createAsyncThunk<IFriend, IInviteFriendToJoinRoomData, { rejectValue: string }>(
+    "room/inviteFriendToJoinRoom",
+    async function ({ roomId, roomName, friendUsername }, { rejectWithValue }) {
+        try {
+            const { data } = await RoomService.inviteFriendToJoinRoom({
+                friendUsername: friendUsername,
+                roomId: roomId,
+                roomName: roomName,
+            });
+
+            socket.emit(SOCKET_EVENTS.INVITE_TO_ROOM, {
+                roomId: roomId,
+                roomName: roomName,
+                friendUsername: friendUsername,
+            });
+
+            return data;
+        } catch (e: any) {
+            return rejectWithValue(e.response.data.message);
+        }
     },
 );
 

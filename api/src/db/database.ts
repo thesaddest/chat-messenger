@@ -5,6 +5,7 @@ import { User } from "../user/user.entity.js";
 import { Message } from "../message/message.entity.js";
 import { File } from "../file/file.entity.js";
 import { Room } from "../room/room.entity.js";
+import { RoomNotification } from "../room/room-notification.entity.js";
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ export const AppDataSource = new DataSource({
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    entities: [User, Friend, Message, File, Room],
+    entities: [User, Friend, Message, File, Room, RoomNotification],
     synchronize: true,
     logging: false,
 });

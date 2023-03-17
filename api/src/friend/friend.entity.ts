@@ -2,6 +2,7 @@ import { User } from "./../user/user.entity.js";
 import { Entity, Column, ManyToOne, Relation, OneToMany } from "typeorm";
 import { BaseEntity } from "../common/entities/base.entity.js";
 import { Message } from "../message/message.entity.js";
+import { Room } from "../room/room.entity.js";
 
 @Entity()
 export class Friend extends BaseEntity {
@@ -22,6 +23,9 @@ export class Friend extends BaseEntity {
 
     @ManyToOne(() => User, (user) => user.friends, { nullable: true })
     user: Relation<User>;
+
+    @ManyToOne(() => Room, (room) => room.invitedFriends, { nullable: true })
+    roomInvites: Relation<Room>;
 
     @OneToMany(() => Message, (message) => message.friend)
     messages: Relation<Message[]>;

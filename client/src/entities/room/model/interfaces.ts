@@ -1,7 +1,10 @@
+import { IFriend } from "../../friend";
+
 export interface IRoom {
     roomId: string;
     roomName: string;
     createdBy: string;
+    invitedFriends: IFriend[];
 }
 
 export interface ICreateRoomValues {

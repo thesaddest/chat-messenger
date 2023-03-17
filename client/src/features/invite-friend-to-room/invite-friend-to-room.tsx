@@ -5,7 +5,11 @@ import { AddFriendIcon } from "../../shared/ui";
 
 import { InviteFriendToRoomPopupContent } from "./invite-friend-to-room-popup-content";
 
-export const InviteFriendToRoom = memo(() => {
+interface IInviteFriendToRoomProps {
+    roomName: string;
+}
+
+export const InviteFriendToRoom = memo<IInviteFriendToRoomProps>(({ roomName }) => {
     const [form] = Form.useForm();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [modalError, setModalError] = useState<string>("");
@@ -45,6 +49,7 @@ export const InviteFriendToRoom = memo(() => {
                 centered={true}
             >
                 <InviteFriendToRoomPopupContent
+                    roomName={roomName}
                     form={form}
                     modalError={modalError}
                     setModalError={setModalError}

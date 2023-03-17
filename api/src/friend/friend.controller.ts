@@ -33,14 +33,18 @@ class FriendController {
 
     async addFriend(req: IAddFriendRequest<IAddFriendValues>, res: Response, next: NextFunction) {
         try {
-            const { username } = req.body;
-            const existingUser = await userService.getUserByUsername(username);
+            const currentUser = await userService.getUserFromAuthHeaders(req.headers.authorization);
+            if (!currentUser) {
+                return next(ErrorException.UnauthorizedError());
+            }
 
-            if (!existingUser) {
+            const { username } = req.body;
+            const existingUserFromReq = await userService.getUserByUsername(username);
+
+            if (!existingUserFromReq) {
                 return next(ErrorException.BadRequest("User doesn't exists"));
             }
 
-            const currentUser = await userService.getUserFromAuthHeaders(req.headers.authorization);
             const existingFriend = await friendService.hasFriend(currentUser, username);
 
             if (existingFriend) {

@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction, useCallback } from "react";
 import styled from "styled-components";
 
 import { useWindowSize } from "../../../shared/lib/hooks";
-import { CancelButton, BackButton, MemoTitle } from "../../../shared/ui";
+import { CancelButton, BackButton } from "../../../shared/ui";
 import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { setFriendIdActiveKey } from "../../../entities/friend";
@@ -14,6 +14,7 @@ import { DeleteMessages } from "../../../features/delete-messages";
 import { CreateRoom } from "../../../features/create-room";
 import { ChatSwitch } from "../../chat-switch";
 import { setRoomIdActiveKey } from "../../../entities/room";
+import { Notification } from "../../../features/notification";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
@@ -126,14 +127,11 @@ export const Navbar: FC<INavbarProps> = ({ isSwitched, setIsSwitched }) => {
                 (friendIdActiveKey === DEFAULT_ACTIVE_KEY && roomIdActiveKey === DEFAULT_ACTIVE_KEY) ? (
                     <>
                         <StyledModalButtonsContainer>
-                            {rooms.length > 0 ? (
-                                <ChatSwitch isSwitched={isSwitched} setIsSwitched={setIsSwitched} />
-                            ) : (
-                                <MemoTitle title={"Chat"} />
-                            )}
+                            {rooms.length > 0 && <ChatSwitch isSwitched={isSwitched} setIsSwitched={setIsSwitched} />}
                             <AddFriend />
                             <CreateRoom />
                             <SearchFriend />
+                            <Notification />
                         </StyledModalButtonsContainer>
                     </>
                 ) : (

@@ -4,7 +4,7 @@ import { Form, FormInstance, Input } from "antd";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { AUTH_RULES } from "../../../shared/const";
 import { ErrorAlert, AddFriendIcon } from "../../../shared/ui";
-import { ICreateRoomValues, IInviteFriendToRoomOnFinishValues } from "../../../entities/room";
+import { IInviteFriendToRoomOnFinishValues, inviteFriendToJoinRoom } from "../../../entities/room";
 
 import type { InputRef } from "antd";
 
@@ -13,6 +13,7 @@ interface IInviteFriendToRoomPopupContentProps {
     setIsModalOpen: Dispatch<SetStateAction<boolean>>;
     setModalError: Dispatch<SetStateAction<string>>;
     modalError: string;
+    roomName: string;
 }
 
 export const InviteFriendToRoomPopupContent: FC<IInviteFriendToRoomPopupContentProps> = ({
@@ -20,17 +21,24 @@ export const InviteFriendToRoomPopupContent: FC<IInviteFriendToRoomPopupContentP
     setIsModalOpen,
     setModalError,
     modalError,
+    roomName,
 }) => {
     const inputRef = useRef<InputRef>(null);
     const dispatch = useAppDispatch();
     const roomIdActiveKey = useAppSelector((state) => state.room.roomIdActiveKey);
 
-    const onFinish = async (values: IInviteFriendToRoomOnFinishValues) => {
-        // inviteFriendToRoom({
-        //     friendUsername: values.friendUsername,
-        //     roomId: roomIdActiveKey,
-        //     roomName: string,
-        // });
+    const onFinish = async ({ friendUsername }: IInviteFriendToRoomOnFinishValues) => {
+        const { payload } = await dispatch(
+            inviteFriendToJoinRoom({
+                roomId: roomIdActiveKey,
+                roomName: roomName,
+                friendUsername: friendUsername,
+            }),
+        );
+
+        if (typeof payload === "string") {
+            return setModalError(payload);
+        }
 
         setIsModalOpen(false);
         form.resetFields();
@@ -44,7 +52,7 @@ export const InviteFriendToRoomPopupContent: FC<IInviteFriendToRoomPopupContentP
 
     return (
         <Form form={form} name="invite-friend-to-room-form" onFinish={onFinish}>
-            <Form.Item name="username" rules={AUTH_RULES.USERNAME}>
+            <Form.Item name="friendUsername" rules={AUTH_RULES.USERNAME}>
                 <Input ref={inputRef} prefix={<AddFriendIcon />} placeholder="Enter friend's username" />
             </Form.Item>
             {modalError && <ErrorAlert type="error" message={modalError} />}
