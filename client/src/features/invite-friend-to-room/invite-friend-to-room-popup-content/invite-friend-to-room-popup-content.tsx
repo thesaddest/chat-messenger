@@ -26,22 +26,27 @@ export const InviteFriendToRoomPopupContent: FC<IInviteFriendToRoomPopupContentP
     const inputRef = useRef<InputRef>(null);
     const dispatch = useAppDispatch();
     const roomIdActiveKey = useAppSelector((state) => state.room.roomIdActiveKey);
+    const username = useAppSelector((state) => state.auth.user?.username);
 
     const onFinish = async ({ friendUsername }: IInviteFriendToRoomOnFinishValues) => {
-        const { payload } = await dispatch(
-            inviteFriendToJoinRoom({
-                roomId: roomIdActiveKey,
-                roomName: roomName,
-                friendUsername: friendUsername,
-            }),
-        );
+        if (username) {
+            const { payload } = await dispatch(
+                inviteFriendToJoinRoom({
+                    notificationId: "",
+                    roomId: roomIdActiveKey,
+                    roomName: roomName,
+                    friendUsername: friendUsername,
+                    sentBy: username,
+                }),
+            );
 
-        if (typeof payload === "string") {
-            return setModalError(payload);
+            if (typeof payload === "string") {
+                return setModalError(payload);
+            }
+
+            setIsModalOpen(false);
+            form.resetFields();
         }
-
-        setIsModalOpen(false);
-        form.resetFields();
     };
 
     useEffect(() => {

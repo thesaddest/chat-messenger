@@ -1,6 +1,5 @@
-import { Entity, Column, ManyToOne, Relation } from "typeorm";
+import { Entity, Column } from "typeorm";
 import { BaseEntity } from "../common/entities/base.entity.js";
-import { User } from "../user/user.entity.js";
 
 @Entity()
 export class RoomNotification extends BaseEntity {
@@ -11,6 +10,9 @@ export class RoomNotification extends BaseEntity {
     }
 
     @Column({ nullable: false })
+    notificationId: string;
+
+    @Column({ nullable: false })
     friendUsername: string;
 
     @Column({ nullable: false })
@@ -19,6 +21,6 @@ export class RoomNotification extends BaseEntity {
     @Column({ nullable: false })
     roomId: string;
 
-    @ManyToOne(() => User, (user) => user.roomNotifications, { nullable: false })
-    sentTo: Relation<User>;
+    @Column({ nullable: false })
+    sentBy: string;
 }

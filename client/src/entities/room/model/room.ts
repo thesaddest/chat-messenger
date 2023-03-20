@@ -3,9 +3,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import RoomService from "../api/room.service";
 import { socket } from "../../../shared/socket-io";
 import { DEFAULT_ACTIVE_KEY, SOCKET_EVENTS } from "../../../shared/const";
-import { IFriend } from "../../friend";
 
-import { ICreateRoomValues, IInviteFriendToJoinRoomData, IRoom } from "./interfaces";
+import { IAcceptInviteToJoinRoom, ICreateRoomValues, IInviteFriendToJoinRoomData, IRoom } from "./interfaces";
 
 interface RoomState {
     rooms: IRoom[];
@@ -46,20 +45,43 @@ export const createRoom = createAsyncThunk<IRoom, ICreateRoomValues, { rejectVal
     },
 );
 
-export const inviteFriendToJoinRoom = createAsyncThunk<IFriend, IInviteFriendToJoinRoomData, { rejectValue: string }>(
+export const inviteFriendToJoinRoom = createAsyncThunk<IRoom, IInviteFriendToJoinRoomData, { rejectValue: string }>(
     "room/inviteFriendToJoinRoom",
-    async function ({ roomId, roomName, friendUsername }, { rejectWithValue }) {
+    async function ({ roomId, roomName, friendUsername, sentBy, notificationId }, { rejectWithValue }) {
         try {
             const { data } = await RoomService.inviteFriendToJoinRoom({
+                notificationId: notificationId,
                 friendUsername: friendUsername,
                 roomId: roomId,
                 roomName: roomName,
+                sentBy: sentBy,
             });
 
             socket.emit(SOCKET_EVENTS.INVITE_TO_ROOM, {
                 roomId: roomId,
                 roomName: roomName,
                 friendUsername: friendUsername,
+            });
+
+            return data;
+        } catch (e: any) {
+            return rejectWithValue(e.response.data.message);
+        }
+    },
+);
+
+export const acceptInviteToJoinRoom = createAsyncThunk<IRoom, IAcceptInviteToJoinRoom, { rejectValue: string }>(
+    "room/acceptInviteToJoinRoom",
+    async function ({ roomId, username }, { rejectWithValue }) {
+        try {
+            const { data } = await RoomService.acceptInviteToJoinRoom({
+                roomId: roomId,
+                username: username,
+            });
+
+            socket.emit(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, {
+                roomId: roomId,
+                username: username,
             });
 
             return data;
@@ -97,6 +119,27 @@ export const roomModel = createSlice({
                 state.status = "pending";
             })
             .addCase(createRoom.rejected, (state) => {
+                state.status = "failed";
+            })
+            .addCase(inviteFriendToJoinRoom.fulfilled, (state, action) => {
+                //Change to return only invited friend, not the whole room
+                state.rooms.map((room) => room.invitedFriends.concat(action.payload.invitedFriends));
+                state.status = "succeeded";
+            })
+            .addCase(inviteFriendToJoinRoom.pending, (state) => {
+                state.status = "pending";
+            })
+            .addCase(inviteFriendToJoinRoom.rejected, (state) => {
+                state.status = "failed";
+            })
+            .addCase(acceptInviteToJoinRoom.fulfilled, (state, action) => {
+                state.rooms.push(action.payload);
+                state.status = "succeeded";
+            })
+            .addCase(acceptInviteToJoinRoom.pending, (state) => {
+                state.status = "pending";
+            })
+            .addCase(acceptInviteToJoinRoom.rejected, (state) => {
                 state.status = "failed";
             });
     },

@@ -27,3 +27,4 @@ export { ScrollToSeeMore } from "./ScrollToSeeMore";
 export { SelectChatToStartMessaging } from "./SelectChatToStartMessaging";
 export { MessagesCountBadge } from "./MessagesCountBadge";
 export { SearchFriendInput } from "./SearchFriendInput";
+export { RoomNotificationItem } from "./RoomNotificationItem";

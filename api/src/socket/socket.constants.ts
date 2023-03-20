@@ -12,6 +12,7 @@ export const SOCKET_EVENTS = {
     CREATE_ROOM: "create_room",
     INVITE_TO_ROOM: "invite_to_room",
     CONNECT_TO_ROOM: "connect_to_room",
+    ACCEPT_INVITE_TO_JOIN_ROOM: "accept_invite_to_join_room",
     GET_ALL_ROOM_NOTIFICATIONS: "get_all_notifications",
     ON_INIT_USER: "on_connect",
     ON_DEINIT_USER: "on_disconnect",

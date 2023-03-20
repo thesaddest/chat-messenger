@@ -1,16 +1,22 @@
 import { RoomNotification } from "../room/room-notification.entity.js";
 import { AppDataSource } from "../db/database.js";
-import { userService } from "../user/user.service.js";
+import { v4 as uuidv4 } from "uuid";
 
 class NotificationService {
-    async createRoomNotification(friendUsername: string, roomId: string, roomName: string): Promise<RoomNotification> {
+    async createRoomNotification(
+        username: string,
+        friendUsername: string,
+        roomId: string,
+        roomName: string,
+    ): Promise<RoomNotification> {
         const roomNotificationRepository = AppDataSource.getRepository(RoomNotification);
 
         const roomNotification = {
+            notificationId: uuidv4(),
             friendUsername: friendUsername,
             roomId: roomId,
             roomName: roomName,
-            sentTo: await userService.getUserByUsername(friendUsername),
+            sentBy: username,
         };
 
         return await roomNotificationRepository.save(roomNotification);
@@ -20,6 +26,16 @@ class NotificationService {
         const roomNotificationRepository = AppDataSource.getRepository(RoomNotification);
 
         return await roomNotificationRepository.find({ where: { friendUsername: username } });
+    }
+
+    async deleteRoomNotification(notificationId: string): Promise<RoomNotification[]> {
+        const roomNotificationRepository = AppDataSource.getRepository(RoomNotification);
+
+        const notificationToDelete = await roomNotificationRepository.find({
+            where: { notificationId: notificationId },
+        });
+
+        return await roomNotificationRepository.remove(notificationToDelete);
     }
 }
 

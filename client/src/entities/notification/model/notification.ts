@@ -15,9 +15,11 @@ const initialState: RoomState = {
     notifications: {
         roomNotifications: [
             {
+                notificationId: "",
                 roomId: "",
                 friendUsername: "",
                 roomName: "",
+                sentBy: "",
             },
         ],
     },

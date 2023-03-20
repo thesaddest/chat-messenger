@@ -4,6 +4,7 @@ import { ErrorException } from "../error-handler/error-exception.js";
 import { roomService } from "./room.service.js";
 import { friendService } from "../friend/friend.service.js";
 import { notificationService } from "../notification/notification.service.js";
+import { IAcceptInviteToJoinRoom } from "./room.interfaces.js";
 
 interface ITypedRequest<T> extends Request {
     body: T;
@@ -17,11 +18,7 @@ interface IInviteFriendToRoomRequest {
     friendUsername: string;
     roomId: string;
     roomName: string;
-}
-
-interface IAddFriendToRoomRequest {
-    username: string;
-    roomId: string;
+    sentBy: string;
 }
 
 class RoomController {
@@ -62,8 +59,8 @@ class RoomController {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            const { friendUsername, roomId, roomName } = req.body;
-            if (user.username === friendUsername) {
+            const { friendUsername, roomId, roomName, sentBy } = req.body;
+            if (sentBy === friendUsername) {
                 return next(ErrorException.BadRequest("You can not add your self"));
             }
 
@@ -78,7 +75,8 @@ class RoomController {
             }
 
             const roomWithInvitedFriend = await roomService.inviteFriendToRoom(friend, roomId);
-            await notificationService.createRoomNotification(friendUsername, roomId, roomName);
+
+            await notificationService.createRoomNotification(sentBy, friendUsername, roomId, roomName);
 
             return res.json(roomWithInvitedFriend);
         } catch (e) {
@@ -86,7 +84,7 @@ class RoomController {
         }
     }
 
-    async acceptInviteToJoinRoom(req: ITypedRequest<IAddFriendToRoomRequest>, res: Response, next: NextFunction) {
+    async acceptInviteToJoinRoom(req: ITypedRequest<IAcceptInviteToJoinRoom>, res: Response, next: NextFunction) {
         try {
             const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
 
@@ -94,10 +92,10 @@ class RoomController {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            const { username, roomId } = req.body;
+            const { username, roomId, notificationId } = req.body;
 
-            const addedFriend = await roomService.addFriendToRoom(username, roomId);
-            return res.json(addedFriend);
+            const joinedRoom = await roomService.acceptInviteToJoinRoom(username, roomId, notificationId);
+            return res.json(joinedRoom);
         } catch (e) {
             next(e);
         }
