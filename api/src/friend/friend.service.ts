@@ -98,6 +98,11 @@ class FriendService {
             };
         });
     }
+
+    async getFriendByUsername(username: string, user: User): Promise<Friend> {
+        const friendRepository = AppDataSource.getRepository(Friend);
+        return await friendRepository.findOne({ where: { addedBy: user.username, username: username } });
+    }
 }
 
 export const friendService = new FriendService();

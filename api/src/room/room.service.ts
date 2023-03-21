@@ -2,9 +2,9 @@ import { User } from "../user/user.entity.js";
 import { AppDataSource } from "../db/database.js";
 import { Room } from "./room.entity.js";
 import { v4 as uuidv4 } from "uuid";
-import { userService } from "../user/user.service.js";
 import { Friend } from "../friend/friend.entity.js";
 import { notificationService } from "../notification/notification.service.js";
+import { userService } from "../user/user.service.js";
 
 class RoomService {
     async createRoom(user: User, roomName: string): Promise<Room> {
@@ -53,17 +53,10 @@ class RoomService {
         const userToAdd = await userService.getUserByUsername(username);
 
         room.participants.push(userToAdd);
-        await this.deleteFromInvitedFriends(username, roomId);
+        room.invitedFriends = room.invitedFriends.filter((invitedFriend) => invitedFriend.username !== username);
+
         await notificationService.deleteRoomNotification(notificationId);
 
-        return await roomRepository.save(room);
-    }
-
-    private async deleteFromInvitedFriends(username: string, roomId: string): Promise<Room> {
-        const roomRepository = AppDataSource.getRepository(Room);
-        const room = await this.getRoomById(roomId);
-
-        room.invitedFriends.filter((invitedFriend) => invitedFriend.username !== username);
         return await roomRepository.save(room);
     }
 }

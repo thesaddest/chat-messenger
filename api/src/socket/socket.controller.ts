@@ -5,7 +5,7 @@ import { MessageDto } from "../message/message.dto.js";
 import { RoomDto } from "../room/room.dto.js";
 import { InviteFriendToRoomValues } from "./interfaces.js";
 import { userService } from "../user/user.service.js";
-import { IAcceptInviteToJoinRoom } from "../room/room.interfaces.js";
+import { Room } from "../room/room.entity.js";
 
 export const onInitUser = async (socket: Socket): Promise<void> => {
     const user = await socketService.initUser(socket);
@@ -66,11 +66,11 @@ export const inviteToRoom = async (
     socket.to(userToSendInvite.userId).emit(SOCKET_EVENTS.INVITE_TO_ROOM, inviteFriendToRoomValues);
 };
 
-export const acceptInviteToRoom = async (
-    socket: Socket,
-    acceptInviteToJoinRoom: IAcceptInviteToJoinRoom,
-): Promise<void> => {
-    socket.join(acceptInviteToJoinRoom.roomId);
+export const acceptInviteToRoom = async (socket: Socket, joinedRoom: Room): Promise<void> => {
+    socket.join(joinedRoom.roomId);
+    for (const participant of joinedRoom.participants) {
+        socket.to(participant.userId).emit(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, joinedRoom);
+    }
 };
 
 export const getMessages = async (socket: Socket): Promise<void> => {

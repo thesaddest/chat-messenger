@@ -15,7 +15,13 @@ import {
     readMessage,
 } from "../../../entities/message";
 import { socketError } from "../../../entities/user";
-import { getRooms, IAcceptInviteToJoinRoom, IInviteFriendToJoinRoomData } from "../../../entities/room";
+import {
+    friendJoinedRoom,
+    getRooms,
+    IAcceptInviteToJoinRoom,
+    IInviteFriendToJoinRoomData,
+    IRoom,
+} from "../../../entities/room";
 import {
     getAllRoomNotifications,
     receiveNotificationInviteToJoinRoom,
@@ -78,8 +84,9 @@ export const useSocket = () => {
             dispatch(receiveNotificationInviteToJoinRoom(inviteFriendToJoinRoomData));
         });
 
-        socket.on(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, (acceptInviteToJoinRoom: IAcceptInviteToJoinRoom) => {
-            console.log(acceptInviteToJoinRoom);
+        socket.on(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, (joinedRoom: IRoom) => {
+            console.log("friend joined", joinedRoom);
+            dispatch(friendJoinedRoom(joinedRoom));
         });
 
         socket.on(SOCKET_EVENTS.ON_DISCONNECT, (friendStatus: IFriendStatus) => {

@@ -1,7 +1,7 @@
-import { Entity, Column, Relation, OneToMany } from "typeorm";
+import { Entity, Column, Relation, OneToMany, ManyToMany, JoinTable } from "typeorm";
 import { BaseEntity } from "../common/entities/base.entity.js";
-import { User } from "../user/user.entity.js";
 import { Friend } from "../friend/friend.entity.js";
+import { User } from "../user/user.entity.js";
 
 @Entity()
 export class Room extends BaseEntity {
@@ -23,7 +23,8 @@ export class Room extends BaseEntity {
     @Column({ nullable: false })
     ownerId: string;
 
-    @OneToMany(() => Friend, (friend) => friend.roomInvites, { nullable: true, eager: true })
+    @ManyToMany(() => Friend, (friend) => friend.roomInvites, { nullable: true, eager: true })
+    @JoinTable({ name: "room_invited_friends_id" })
     invitedFriends: Relation<Friend[]>;
 
     @OneToMany(() => User, (user) => user.roomsParticipant, { nullable: true, eager: true })

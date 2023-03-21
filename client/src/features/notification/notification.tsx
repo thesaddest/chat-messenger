@@ -10,7 +10,6 @@ export const Notification: FC = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const notification = useAppSelector((state) => state.notification.notifications);
     const notificationLength = useAppSelector((state) => state.notification.notificationLength);
-    console.log(notification, notificationLength);
 
     const showModal = useCallback(() => {
         setIsModalOpen(true);

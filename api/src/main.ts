@@ -29,6 +29,7 @@ import { MessageDto } from "./message/message.dto.js";
 import { RoomDto } from "./room/room.dto.js";
 import { InviteFriendToRoomValues } from "./socket/interfaces.js";
 import { IAcceptInviteToJoinRoom } from "./room/room.interfaces.js";
+import { Room } from "./room/room.entity.js";
 
 dotenv.config();
 
@@ -84,8 +85,8 @@ io.on(SOCKET_EVENTS.ON_CONNECT, (socket: Socket) => {
         inviteToRoom(socket, inviteFriendToRoomValues);
     });
 
-    socket.on(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, (acceptInviteToJoinRoom: IAcceptInviteToJoinRoom) => {
-        acceptInviteToRoom(socket, acceptInviteToJoinRoom);
+    socket.on(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, (joinedRoom: Room) => {
+        acceptInviteToRoom(socket, joinedRoom);
     });
 
     socket.on(SOCKET_EVENTS.ON_DISCONNECT, () => {

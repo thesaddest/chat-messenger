@@ -79,10 +79,7 @@ export const acceptInviteToJoinRoom = createAsyncThunk<IRoom, IAcceptInviteToJoi
                 username: username,
             });
 
-            socket.emit(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, {
-                roomId: roomId,
-                username: username,
-            });
+            socket.emit(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, data);
 
             return data;
         } catch (e: any) {
@@ -97,6 +94,16 @@ export const roomModel = createSlice({
     reducers: {
         setRoomIdActiveKey(state, action: PayloadAction<string>) {
             state.roomIdActiveKey = action.payload;
+        },
+        friendJoinedRoom(state, action: PayloadAction<IRoom>) {
+            console.log("friend joined", action.payload);
+            const joinedRoom = state.rooms.find((room) => room.roomId === action.payload.roomId);
+
+            if (!joinedRoom) {
+                return;
+            }
+
+            joinedRoom.participants = action.payload.participants;
         },
     },
     extraReducers: (builder) => {
@@ -122,8 +129,13 @@ export const roomModel = createSlice({
                 state.status = "failed";
             })
             .addCase(inviteFriendToJoinRoom.fulfilled, (state, action) => {
-                //Change to return only invited friend, not the whole room
-                state.rooms.map((room) => room.invitedFriends.concat(action.payload.invitedFriends));
+                const roomToInviteFriend = state.rooms.find((room) => room.roomId === action.payload.roomId);
+
+                if (!roomToInviteFriend) {
+                    return;
+                }
+
+                roomToInviteFriend.invitedFriends = action.payload.invitedFriends;
                 state.status = "succeeded";
             })
             .addCase(inviteFriendToJoinRoom.pending, (state) => {
@@ -145,6 +157,6 @@ export const roomModel = createSlice({
     },
 });
 
-export const { setRoomIdActiveKey } = roomModel.actions;
+export const { setRoomIdActiveKey, friendJoinedRoom } = roomModel.actions;
 
 export const reducer = roomModel.reducer;
