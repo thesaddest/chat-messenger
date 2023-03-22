@@ -31,3 +31,5 @@ router.post("/room/invite-friend-to-join-room", roomController.inviteFriendToJoi
 router.post("/room/accept-invite-to-join-room", roomController.acceptInviteToJoinRoom);
 
 router.get("/notification/room-notifications", notificationController.getAllRoomNotifications);
+router.post("/notification/create-room-notification", notificationController.createRoomNotification);
+router.delete("/notification/delete-room-notification", notificationController.deleteRoomNotification);

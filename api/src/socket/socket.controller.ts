@@ -71,6 +71,7 @@ export const acceptInviteToRoom = async (socket: Socket, joinedRoom: Room): Prom
     for (const participant of joinedRoom.participants) {
         socket.to(participant.userId).emit(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, joinedRoom);
     }
+    socket.to(joinedRoom.ownerId).emit(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, joinedRoom);
 };
 
 export const getMessages = async (socket: Socket): Promise<void> => {

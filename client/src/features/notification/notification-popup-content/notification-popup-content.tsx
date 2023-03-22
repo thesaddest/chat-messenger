@@ -5,11 +5,12 @@ import { INotification } from "../../../entities/notification/model/interfaces";
 import { RoomNotificationItem } from "../../../shared/ui";
 
 interface INotificationPopupContentProps {
-    notification: INotification;
+    notifications: INotification;
 }
 
-export const NotificationPopupContent: FC<INotificationPopupContentProps> = ({ notification }) => {
-    const data = notification.roomNotifications;
+export const NotificationPopupContent: FC<INotificationPopupContentProps> = ({ notifications }) => {
+    const data = notifications.roomNotifications;
+
     return (
         <List dataSource={data} itemLayout={"horizontal"} renderItem={(item) => <RoomNotificationItem item={item} />} />
     );

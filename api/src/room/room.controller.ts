@@ -3,8 +3,6 @@ import { userService } from "../user/user.service.js";
 import { ErrorException } from "../error-handler/error-exception.js";
 import { roomService } from "./room.service.js";
 import { friendService } from "../friend/friend.service.js";
-import { notificationService } from "../notification/notification.service.js";
-import { IAcceptInviteToJoinRoom } from "./room.interfaces.js";
 
 interface ITypedRequest<T> extends Request {
     body: T;
@@ -12,6 +10,11 @@ interface ITypedRequest<T> extends Request {
 
 interface ICreateRoomRequest {
     roomName: string;
+}
+
+interface IAcceptInviteToJoinRoom {
+    username: string;
+    roomId: string;
 }
 
 interface IInviteFriendToRoomRequest {
@@ -59,7 +62,7 @@ class RoomController {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            const { friendUsername, roomId, roomName, sentBy } = req.body;
+            const { friendUsername, roomId, sentBy } = req.body;
             if (sentBy === friendUsername) {
                 return next(ErrorException.BadRequest("You can not add your self"));
             }
@@ -76,8 +79,6 @@ class RoomController {
 
             const roomWithInvitedFriend = await roomService.inviteFriendToRoom(friend, roomId);
 
-            await notificationService.createRoomNotification(sentBy, friendUsername, roomId, roomName);
-
             return res.json(roomWithInvitedFriend);
         } catch (e) {
             next(e);
@@ -92,9 +93,9 @@ class RoomController {
                 return next(ErrorException.UnauthorizedError());
             }
 
-            const { username, roomId, notificationId } = req.body;
+            const { username, roomId } = req.body;
 
-            const joinedRoom = await roomService.acceptInviteToJoinRoom(username, roomId, notificationId);
+            const joinedRoom = await roomService.acceptInviteToJoinRoom(username, roomId);
             return res.json(joinedRoom);
         } catch (e) {
             next(e);

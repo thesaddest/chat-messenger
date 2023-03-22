@@ -7,6 +7,7 @@ import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import { IRoomNotification } from "../../../entities/notification/model/interfaces";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { acceptInviteToJoinRoom } from "../../../entities/room";
+import { deleteRoomNotification } from "../../../entities/notification/model/notification";
 
 interface IRoomNotificationItemProps {
     item: IRoomNotification;
@@ -43,8 +44,14 @@ export const RoomNotificationItem: FC<IRoomNotificationItemProps> = ({ item }) =
     const handleAccept = () => {
         if (username) {
             dispatch(acceptInviteToJoinRoom({ username: username, roomId: item.roomId }));
+            dispatch(deleteRoomNotification({ notificationId: item.notificationId }));
         }
     };
+
+    const handleDecline = () => {
+        dispatch(deleteRoomNotification({ notificationId: item.notificationId }));
+    };
+
     return (
         <StyledRoomNotificationListItem>
             <p>
@@ -58,7 +65,7 @@ export const RoomNotificationItem: FC<IRoomNotificationItemProps> = ({ item }) =
             <StyledDeclineButton
                 type={"primary"}
                 shape={"circle"}
-                icon={<CloseOutlined style={{ color: "whitesmoke" }} />}
+                icon={<CloseOutlined style={{ color: "whitesmoke" }} onClick={handleDecline} />}
             />
         </StyledRoomNotificationListItem>
     );

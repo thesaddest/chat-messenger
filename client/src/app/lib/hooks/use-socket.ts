@@ -15,17 +15,12 @@ import {
     readMessage,
 } from "../../../entities/message";
 import { socketError } from "../../../entities/user";
-import {
-    friendJoinedRoom,
-    getRooms,
-    IAcceptInviteToJoinRoom,
-    IInviteFriendToJoinRoomData,
-    IRoom,
-} from "../../../entities/room";
+import { friendJoinedRoom, getRooms, IRoom } from "../../../entities/room";
 import {
     getAllRoomNotifications,
     receiveNotificationInviteToJoinRoom,
 } from "../../../entities/notification/model/notification";
+import { IRoomNotification } from "../../../entities/notification/model/interfaces";
 
 export const useSocket = () => {
     const dispatch = useAppDispatch();
@@ -80,12 +75,11 @@ export const useSocket = () => {
             dispatch(addToRepliedMessages(message));
         });
 
-        socket.on(SOCKET_EVENTS.INVITE_TO_ROOM, (inviteFriendToJoinRoomData: IInviteFriendToJoinRoomData) => {
+        socket.on(SOCKET_EVENTS.INVITE_TO_ROOM, (inviteFriendToJoinRoomData: IRoomNotification) => {
             dispatch(receiveNotificationInviteToJoinRoom(inviteFriendToJoinRoomData));
         });
 
         socket.on(SOCKET_EVENTS.ACCEPT_INVITE_TO_JOIN_ROOM, (joinedRoom: IRoom) => {
-            console.log("friend joined", joinedRoom);
             dispatch(friendJoinedRoom(joinedRoom));
         });
 

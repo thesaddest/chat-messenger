@@ -9,3 +9,14 @@ export interface IRoomNotification {
     friendUsername: string;
     sentBy: string;
 }
+
+export interface ICreateRoomNotification {
+    friendUsername: string;
+    roomId: string;
+    sentBy: string;
+    roomName: string;
+}
+
+export interface IDeleteRoomNotification {
+    notificationId: string;
+}

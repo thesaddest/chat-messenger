@@ -1,7 +1,8 @@
 import { AxiosResponse } from "axios";
 
 import api from "../../../shared/api/axios-instance";
-import { IAcceptInviteToJoinRoom, ICreateRoomValues, IInviteFriendToJoinRoomData, IRoom } from "../model";
+import { IAcceptInviteToJoinRoom, ICreateRoomValues, IRoom } from "../model";
+import { IRoomNotification } from "../../notification/model/interfaces";
 
 export default class RoomService {
     static async createRoom(roomName: ICreateRoomValues): Promise<AxiosResponse<IRoom>> {
@@ -13,7 +14,7 @@ export default class RoomService {
     }
 
     static async inviteFriendToJoinRoom(
-        inviteFriendToRoomOnFinishValues: IInviteFriendToJoinRoomData,
+        inviteFriendToRoomOnFinishValues: IRoomNotification,
     ): Promise<AxiosResponse<IRoom>> {
         return api.post<IRoom>("/room/invite-friend-to-join-room", inviteFriendToRoomOnFinishValues);
     }

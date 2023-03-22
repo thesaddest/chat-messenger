@@ -6,6 +6,8 @@ import { AUTH_RULES } from "../../../shared/const";
 import { ErrorAlert, AddFriendIcon } from "../../../shared/ui";
 import { IInviteFriendToRoomOnFinishValues, inviteFriendToJoinRoom } from "../../../entities/room";
 
+import { createRoomNotification } from "../../../entities/notification/model/notification";
+
 import type { InputRef } from "antd";
 
 interface IInviteFriendToRoomPopupContentProps {
@@ -43,6 +45,15 @@ export const InviteFriendToRoomPopupContent: FC<IInviteFriendToRoomPopupContentP
             if (typeof payload === "string") {
                 return setModalError(payload);
             }
+
+            dispatch(
+                createRoomNotification({
+                    roomName: roomName,
+                    friendUsername: friendUsername,
+                    roomId: roomIdActiveKey,
+                    sentBy: username,
+                }),
+            );
 
             setIsModalOpen(false);
             form.resetFields();

@@ -24,7 +24,12 @@ class RoomService {
     async getUserRooms(user: User): Promise<Room[]> {
         const roomRepository = AppDataSource.getRepository(Room);
 
-        return await roomRepository.find({ where: { createdBy: user.username } });
+        const roomsCreatedByUser = await roomRepository.find({ where: { createdBy: user.username } });
+        const roomsUserParticipant = await roomRepository.find({ where: { participants: { userId: user.userId } } });
+
+        return roomsCreatedByUser
+            .concat(roomsUserParticipant)
+            .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
     }
 
     async getRoomById(roomId: string): Promise<Room> {
@@ -43,19 +48,20 @@ class RoomService {
 
     async isFriendAlreadyInvitedToRoom(friend: Friend, roomId: string): Promise<boolean> {
         const room = await this.getRoomById(roomId);
-
-        return room.invitedFriends.some((invitedFriend) => invitedFriend.username === friend.username);
+        const user = await userService.getUserByUsername(friend.username);
+        return (
+            room.invitedFriends.some((invitedFriend) => invitedFriend.username === friend.username) ||
+            room.participants.some((participant) => participant.username === user.username)
+        );
     }
 
-    async acceptInviteToJoinRoom(username: string, roomId: string, notificationId: string): Promise<Room> {
+    async acceptInviteToJoinRoom(username: string, roomId: string): Promise<Room> {
         const roomRepository = AppDataSource.getRepository(Room);
         const room = await this.getRoomById(roomId);
         const userToAdd = await userService.getUserByUsername(username);
 
         room.participants.push(userToAdd);
         room.invitedFriends = room.invitedFriends.filter((invitedFriend) => invitedFriend.username !== username);
-
-        await notificationService.deleteRoomNotification(notificationId);
 
         return await roomRepository.save(room);
     }

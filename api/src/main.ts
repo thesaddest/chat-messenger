@@ -28,7 +28,6 @@ import { socketAuthMiddleware } from "./socket/socket.middleware.js";
 import { MessageDto } from "./message/message.dto.js";
 import { RoomDto } from "./room/room.dto.js";
 import { InviteFriendToRoomValues } from "./socket/interfaces.js";
-import { IAcceptInviteToJoinRoom } from "./room/room.interfaces.js";
 import { Room } from "./room/room.entity.js";
 
 dotenv.config();

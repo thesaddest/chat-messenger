@@ -17,14 +17,6 @@ export interface IInviteFriendToRoomOnFinishValues {
     friendUsername: string;
 }
 
-export interface IInviteFriendToJoinRoomData {
-    notificationId: string;
-    friendUsername: string;
-    roomId: string;
-    roomName: string;
-    sentBy: string;
-}
-
 export interface IAcceptInviteToJoinRoom {
     username: string;
     roomId: string;

@@ -28,10 +28,10 @@ class NotificationService {
         return await roomNotificationRepository.find({ where: { friendUsername: username } });
     }
 
-    async deleteRoomNotification(notificationId: string): Promise<RoomNotification[]> {
+    async deleteRoomNotification(notificationId: string): Promise<RoomNotification> {
         const roomNotificationRepository = AppDataSource.getRepository(RoomNotification);
 
-        const notificationToDelete = await roomNotificationRepository.find({
+        const notificationToDelete = await roomNotificationRepository.findOne({
             where: { notificationId: notificationId },
         });
 

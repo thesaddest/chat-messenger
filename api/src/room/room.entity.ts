@@ -1,4 +1,4 @@
-import { Entity, Column, Relation, OneToMany, ManyToMany, JoinTable } from "typeorm";
+import { Entity, Column, Relation, ManyToMany, JoinTable } from "typeorm";
 import { BaseEntity } from "../common/entities/base.entity.js";
 import { Friend } from "../friend/friend.entity.js";
 import { User } from "../user/user.entity.js";
@@ -27,6 +27,7 @@ export class Room extends BaseEntity {
     @JoinTable({ name: "room_invited_friends_id" })
     invitedFriends: Relation<Friend[]>;
 
-    @OneToMany(() => User, (user) => user.roomsParticipant, { nullable: true, eager: true })
+    @ManyToMany(() => User, (user) => user.roomsParticipant, { nullable: true, eager: true })
+    @JoinTable({ name: "room_user_participants_id" })
     participants: Relation<User[]>;
 }

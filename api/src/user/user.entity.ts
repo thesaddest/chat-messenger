@@ -1,4 +1,4 @@
-import { Entity, Column, OneToMany, Relation, ManyToOne } from "typeorm";
+import { Entity, Column, OneToMany, Relation, ManyToMany } from "typeorm";
 import { BaseEntity } from "../common/entities/base.entity.js";
 import { Friend } from "../friend/friend.entity.js";
 import { File } from "../file/file.entity.js";
@@ -30,6 +30,6 @@ export class User extends BaseEntity {
     @OneToMany(() => File, (file) => file.user, { eager: true })
     files: Relation<File[]>;
 
-    @ManyToOne(() => Room, (room) => room.participants)
+    @ManyToMany(() => Room, (room) => room.participants)
     roomsParticipant: Relation<Room>;
 }
