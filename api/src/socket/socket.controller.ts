@@ -6,12 +6,18 @@ import { RoomDto } from "../room/room.dto.js";
 import { InviteFriendToRoomValues } from "./interfaces.js";
 import { userService } from "../user/user.service.js";
 import { Room } from "../room/room.entity.js";
+import { roomService } from "../room/room.service.js";
 
 export const onInitUser = async (socket: Socket): Promise<void> => {
     const user = await socketService.initUser(socket);
     const friendsRooms = await socketService.getFriendsRooms(socket);
 
-    socket.join(user.userId);
+    await socket.join(user.userId);
+
+    const rooms = await roomService.getUserRooms(user);
+    for (const room of rooms) {
+        await socket.join(room.roomId);
+    }
     socket.to(friendsRooms).emit(SOCKET_EVENTS.ON_INIT_USER, { connected: true, username: user.username });
 };
 

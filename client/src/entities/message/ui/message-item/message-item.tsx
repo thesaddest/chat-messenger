@@ -56,7 +56,18 @@ const StyledForwarded = styled.p<ForwardedProps>`
 
 export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
     const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
-    const { isMessageForwarded, isMessageSelected } = message;
+    const {
+        isMessageForwarded,
+        isMessageSelected,
+        to,
+        from,
+        forwardedFrom,
+        prevMessageFrom,
+        prevMessageContent,
+        attachedFilesAfterUpload,
+        content,
+        isMessageRead,
+    } = message;
     const dispatch = useAppDispatch();
 
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
@@ -99,27 +110,22 @@ export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
         <Dropdown menu={{ items }} trigger={["contextMenu"]} disabled={selectedMessages.length > 0}>
             <StyledContainer friend={friend} message={message} onClick={handleClick}>
                 {isMessageForwarded && (
-                    <StyledForwarded to={message.to} from={message.from}>
-                        Forwarded from {message.forwardedFrom}
+                    <StyledForwarded to={to} from={from}>
+                        Forwarded from {forwardedFrom}
                     </StyledForwarded>
                 )}
 
-                {message.prevMessageContent && message.prevMessageFrom && (
-                    <RepliedMessageItem
-                        prevMessageFrom={message.prevMessageFrom}
-                        content={message.prevMessageContent}
-                    />
+                {prevMessageContent && prevMessageFrom && (
+                    <RepliedMessageItem prevMessageFrom={prevMessageFrom} content={prevMessageContent} />
                 )}
 
-                {message.attachedFilesAfterUpload && (
-                    <AttachedFileList attachedFilesAfterUpload={message.attachedFilesAfterUpload} />
-                )}
+                {attachedFilesAfterUpload && <AttachedFileList attachedFilesAfterUpload={attachedFilesAfterUpload} />}
 
                 <StyledMessageContentHolder>
-                    <p>{message.content}</p>
+                    <p>{content}</p>
                 </StyledMessageContentHolder>
 
-                <MessageReadCheck isMessageRead={message.isMessageRead} />
+                <MessageReadCheck isMessageRead={isMessageRead} />
             </StyledContainer>
         </Dropdown>
     );

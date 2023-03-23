@@ -3,7 +3,6 @@ import { AppDataSource } from "../db/database.js";
 import { Room } from "./room.entity.js";
 import { v4 as uuidv4 } from "uuid";
 import { Friend } from "../friend/friend.entity.js";
-import { notificationService } from "../notification/notification.service.js";
 import { userService } from "../user/user.service.js";
 
 class RoomService {
@@ -64,6 +63,12 @@ class RoomService {
         room.invitedFriends = room.invitedFriends.filter((invitedFriend) => invitedFriend.username !== username);
 
         return await roomRepository.save(room);
+    }
+
+    async isRoomExists(roomId: string): Promise<boolean> {
+        const room = await this.getRoomById(roomId);
+
+        return !!room;
     }
 }
 

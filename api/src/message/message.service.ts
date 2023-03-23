@@ -6,6 +6,7 @@ import { User } from "../user/user.entity.js";
 import { userService } from "../user/user.service.js";
 import { File } from "../file/file.entity.js";
 import { fileService } from "../file/file.service.js";
+import { roomService } from "../room/room.service.js";
 
 class MessageService {
     async createMessage(messageDto: MessageDto, user: User): Promise<MessageDto> {
@@ -21,6 +22,7 @@ class MessageService {
             isMessageForwarded: messageDto.isMessageForwarded,
             prevMessageContent: messageDto.prevMessageContent,
             prevMessageFrom: messageDto.prevMessageFrom,
+            isGroupMessage: await roomService.isRoomExists(messageDto.to),
             files: messageDto.attachedFilesAfterUpload,
         };
         const message = messageRepository.create(newMessage);
@@ -46,6 +48,7 @@ class MessageService {
             isMessageForwarded: message.isMessageForwarded,
             prevMessageContent: message.prevMessageContent,
             prevMessageFrom: message.prevMessageFrom,
+            isGroupMessage: message.isGroupMessage,
             attachedFilesAfterUpload: message.files,
         };
     }
@@ -54,8 +57,21 @@ class MessageService {
         const messageRepository = AppDataSource.getRepository(Message);
         const sentToUserMessages = await messageRepository.find({ where: { to: user.userId } });
         const sentByUserMessages = await messageRepository.find({ where: { from: user.userId } });
-        const allMessages = sentToUserMessages
-            .concat(sentByUserMessages)
+        const userRooms = await roomService.getUserRooms(user);
+
+        const messagesInRooms = [];
+        for (const userRoom of userRooms) {
+            const messagesToPush = await messageRepository.find({ where: { to: userRoom.roomId } });
+            messagesInRooms.push(...messagesToPush);
+        }
+
+        //This filter is needed to filter the same messages that were sent FROM user TO room (group chat) so we won't have duplicates in allMessages
+        const filteredMessages = messagesInRooms.filter(
+            ({ to }) => !sentByUserMessages.some(({ from }) => from === to),
+        );
+
+        const allMessages = filteredMessages
+            .concat(sentToUserMessages)
             .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
         const messages = [];
@@ -71,6 +87,7 @@ class MessageService {
                 isMessageForwarded: message.isMessageForwarded,
                 prevMessageContent: message.prevMessageContent,
                 prevMessageFrom: message.prevMessageFrom,
+                isGroupMessage: message.isGroupMessage,
                 attachedFilesAfterUpload: message.files,
             });
         }
@@ -103,6 +120,7 @@ class MessageService {
             isMessageForwarded: message.isMessageForwarded,
             prevMessageContent: message.prevMessageContent,
             prevMessageFrom: message.prevMessageFrom,
+            isGroupMessage: message.isGroupMessage,
             attachedFilesAfterUpload: message.files,
         }));
     }
@@ -126,6 +144,7 @@ class MessageService {
                     forwardedFrom: await userService.getUsernameByUserId(savedReadMessage.from),
                     prevMessageContent: savedReadMessage.prevMessageContent,
                     prevMessageFrom: savedReadMessage.prevMessageFrom,
+                    isGroupMessage: savedReadMessage.isGroupMessage,
                     attachedFilesAfterUpload: savedReadMessage.files,
                 };
             }),
@@ -145,6 +164,7 @@ class MessageService {
             isMessageForwarded: true,
             prevMessageContent: messageDto.prevMessageContent,
             prevMessageFrom: messageDto.prevMessageFrom,
+            isGroupMessage: await roomService.isRoomExists(messageDto.to),
             files: messageDto.attachedFilesAfterUpload,
         };
         const forwardedMessage = messageRepository.create(newMessage);
@@ -161,6 +181,7 @@ class MessageService {
             isMessageForwarded: forwardedMessage.isMessageForwarded,
             prevMessageContent: forwardedMessage.prevMessageContent,
             prevMessageFrom: forwardedMessage.prevMessageFrom,
+            isGroupMessage: forwardedMessage.isGroupMessage,
             attachedFilesAfterUpload: messageDto.attachedFilesAfterUpload,
         };
     }
@@ -181,6 +202,7 @@ class MessageService {
                     forwardedFrom: await userService.getUsernameByUserId(message.from),
                     prevMessageContent: createdForwardedMessage.prevMessageContent,
                     prevMessageFrom: createdForwardedMessage.prevMessageFrom,
+                    isGroupMessage: createdForwardedMessage.isGroupMessage,
                     attachedFilesAfterUpload: createdForwardedMessage.attachedFilesAfterUpload,
                 };
             }),
@@ -200,6 +222,7 @@ class MessageService {
             forwardedFrom: newMessage.forwardedFrom,
             prevMessageContent: repliedMessage.content,
             prevMessageFrom: await userService.getUsernameByUserId(repliedMessage.from),
+            isGroupMessage: await roomService.isRoomExists(newMessage.to),
             files: repliedMessage.attachedFilesAfterUpload,
         };
 
@@ -216,6 +239,7 @@ class MessageService {
             forwardedFrom: messageInDb.forwardedFrom,
             prevMessageContent: messageInDb.prevMessageContent,
             prevMessageFrom: messageInDb.prevMessageFrom,
+            isGroupMessage: messageInDb.isGroupMessage,
             attachedFilesAfterUpload: messageInDb.attachedFilesAfterUpload,
         };
     }

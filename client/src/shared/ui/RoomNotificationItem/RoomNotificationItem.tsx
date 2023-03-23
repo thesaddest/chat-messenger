@@ -63,6 +63,7 @@ export const RoomNotificationItem: FC<IRoomNotificationItemProps> = ({ item }) =
                 icon={<CheckOutlined style={{ color: "whitesmoke" }} onClick={handleAccept} />}
             />
             <StyledDeclineButton
+                danger
                 type={"primary"}
                 shape={"circle"}
                 icon={<CloseOutlined style={{ color: "whitesmoke" }} onClick={handleDecline} />}

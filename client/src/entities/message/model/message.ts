@@ -59,6 +59,7 @@ export const createMessage = (message: IMessage): IMessage => {
         isMessageForwarded: message.isMessageForwarded !== undefined ? message.isMessageForwarded : false,
         prevMessageContent: message.prevMessageContent !== undefined ? message.prevMessageContent : undefined,
         prevMessageFrom: message.prevMessageFrom !== undefined ? message.prevMessageFrom : undefined,
+        isGroupMessage: message.isGroupMessage !== undefined ? message.isGroupMessage : undefined,
         attachedFilesToUpload: message.attachedFilesToUpload !== undefined ? message.attachedFilesToUpload : undefined,
         attachedFilesAfterUpload:
             message.attachedFilesAfterUpload !== undefined ? message.attachedFilesAfterUpload : undefined,

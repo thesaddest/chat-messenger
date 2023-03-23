@@ -141,18 +141,7 @@ export const roomModel = createSlice({
                 state.status = "failed";
             })
             .addCase(acceptInviteToJoinRoom.fulfilled, (state, action) => {
-                if (state.rooms.length === 0) {
-                    state.rooms.push(action.payload);
-                } else {
-                    const roomAcceptedInvite = state.rooms.find((room) => room.roomId === action.payload.roomId);
-
-                    if (!roomAcceptedInvite) {
-                        return;
-                    }
-
-                    roomAcceptedInvite.invitedFriends = action.payload.invitedFriends;
-                    roomAcceptedInvite.participants = action.payload.participants;
-                }
+                state.rooms.push(action.payload);
                 state.status = "succeeded";
             })
             .addCase(acceptInviteToJoinRoom.pending, (state) => {

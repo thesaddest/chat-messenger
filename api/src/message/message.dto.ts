@@ -47,5 +47,9 @@ export class MessageDto {
     @IsNotEmpty()
     prevMessageFrom?: string;
 
+    @IsBoolean()
+    @IsNotEmpty()
+    isGroupMessage: boolean;
+
     attachedFilesAfterUpload?: File[];
 }

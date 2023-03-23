@@ -15,6 +15,7 @@ import { CreateRoom } from "../../../features/create-room";
 import { ChatSwitch } from "../../chat-switch";
 import { setRoomIdActiveKey } from "../../../entities/room";
 import { Notification } from "../../../features/notification";
+import { ChatType } from "../../../pages/home";
 
 interface IStyledLeftDivProps {
     friendIdActiveKey: string;
@@ -23,8 +24,8 @@ interface IStyledLeftDivProps {
 }
 
 interface INavbarProps {
-    isSwitched: boolean;
-    setIsSwitched: Dispatch<SetStateAction<boolean>>;
+    chatType: ChatType;
+    setChatType: Dispatch<SetStateAction<ChatType>>;
 }
 
 const StyledRightDiv = styled.div`
@@ -102,7 +103,7 @@ const StyledCancelContainer = styled.div`
     justify-content: end;
 `;
 
-export const Navbar: FC<INavbarProps> = ({ isSwitched, setIsSwitched }) => {
+export const Navbar: FC<INavbarProps> = ({ chatType, setChatType }) => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
@@ -127,7 +128,7 @@ export const Navbar: FC<INavbarProps> = ({ isSwitched, setIsSwitched }) => {
                 (friendIdActiveKey === DEFAULT_ACTIVE_KEY && roomIdActiveKey === DEFAULT_ACTIVE_KEY) ? (
                     <>
                         <StyledModalButtonsContainer>
-                            {rooms.length > 0 && <ChatSwitch isSwitched={isSwitched} setIsSwitched={setIsSwitched} />}
+                            {rooms.length > 0 && <ChatSwitch chatType={chatType} setChatType={setChatType} />}
                             <AddFriend />
                             <CreateRoom />
                             <SearchFriend />

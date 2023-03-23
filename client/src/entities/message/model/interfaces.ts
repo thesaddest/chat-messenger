@@ -14,6 +14,7 @@ export interface IMessage {
     forwardedFrom?: string;
     prevMessageContent?: string;
     prevMessageFrom?: string;
+    isGroupMessage?: boolean;
     attachedFilesToUpload?: UploadFile[];
     attachedFilesAfterUpload?: IFile[];
 }

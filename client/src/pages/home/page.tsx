@@ -10,6 +10,8 @@ import { SkeletonChat } from "../../features/skeleton-chat";
 import { SelectChatToStartMessaging } from "../../shared/ui";
 import { DEFAULT_ACTIVE_KEY } from "../../shared/const";
 
+import { ChatType } from "./interfaces";
+
 const StyledHomeContainer = styled.div`
     height: 100vh;
     display: flex;
@@ -40,7 +42,7 @@ const StyledDivider = styled(Divider)`
 `;
 
 export const HomePage: FC = () => {
-    const [isSwitched, setIsSwitched] = useState<boolean>(false);
+    const [chatType, setChatType] = useState<ChatType>(ChatType.FRIEND);
 
     useSocket();
     const { width } = useWindowSize();
@@ -57,13 +59,13 @@ export const HomePage: FC = () => {
                     <SkeletonChat />
                 ) : (
                     <>
-                        <Navbar isSwitched={isSwitched} setIsSwitched={setIsSwitched} />
+                        <Navbar chatType={chatType} setChatType={setChatType} />
                         <StyledDivider />
                         {/*Check if IS NOT mobile and chat active keys ARE default = render SelectChatToStartMessaging */}
                         {width >= 426 &&
                             friendIdActiveKey === DEFAULT_ACTIVE_KEY &&
                             roomIdActiveKey === DEFAULT_ACTIVE_KEY && <SelectChatToStartMessaging />}
-                        {rooms.length > 0 && isSwitched ? <RoomTabsBox /> : <ChatTabsBox />}
+                        {rooms.length > 0 && chatType === ChatType.ROOM ? <RoomTabsBox /> : <ChatTabsBox />}
                     </>
                 )}
             </StyledHome>

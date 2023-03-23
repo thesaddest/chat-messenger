@@ -39,6 +39,9 @@ export class Message extends BaseEntity {
     @Column({ nullable: true })
     prevMessageFrom: string;
 
+    @Column({ nullable: false })
+    isGroupMessage: boolean;
+
     @OneToMany(() => File, (file) => file.message, { eager: true })
     files: Relation<File[]>;
 

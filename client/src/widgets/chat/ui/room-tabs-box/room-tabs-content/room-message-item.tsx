@@ -113,7 +113,7 @@ export const RoomMessageItem = memo<IRoomMessageItemProps>(({ room, message }) =
                 {message.attachedFilesAfterUpload && (
                     <AttachedFileList attachedFilesAfterUpload={message.attachedFilesAfterUpload} />
                 )}
-
+                {message.fromUsername}
                 <StyledMessageContentHolder>
                     <p>{message.content}</p>
                 </StyledMessageContentHolder>

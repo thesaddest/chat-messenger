@@ -1,10 +1,12 @@
+import styled from "styled-components";
 import { Button } from "antd";
 import { Dispatch, memo, SetStateAction, useCallback } from "react";
-import styled from "styled-components";
+
+import { ChatType } from "../../../pages/home";
 
 interface IChatSwitchProps {
-    isSwitched: boolean;
-    setIsSwitched: Dispatch<SetStateAction<boolean>>;
+    chatType: ChatType;
+    setChatType: Dispatch<SetStateAction<ChatType>>;
 }
 
 const StyledContainer = styled.div`
@@ -13,13 +15,16 @@ const StyledContainer = styled.div`
     align-items: center;
 `;
 
-export const ChatSwitch = memo<IChatSwitchProps>(({ isSwitched, setIsSwitched }) => {
-    const handleClick = useCallback(() => setIsSwitched((prevState) => !prevState), [setIsSwitched]);
+export const ChatSwitch = memo<IChatSwitchProps>(({ chatType, setChatType }) => {
+    const handleClick = useCallback(
+        () => setChatType(chatType === ChatType.FRIEND ? ChatType.ROOM : ChatType.FRIEND),
+        [chatType, setChatType],
+    );
 
     return (
         <StyledContainer>
             <Button onClick={handleClick} type={"primary"}>
-                {isSwitched ? "Rooms" : "Friends"}
+                {chatType === ChatType.ROOM ? "Rooms" : "Friends"}
             </Button>
         </StyledContainer>
     );

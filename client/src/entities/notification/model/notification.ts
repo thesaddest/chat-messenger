@@ -97,7 +97,7 @@ export const notificationModel = createSlice({
             })
             .addCase(deleteRoomNotification.fulfilled, (state, action) => {
                 state.notifications.roomNotifications = current(state.notifications.roomNotifications).filter(
-                    (roomNotification) => roomNotification.notificationId === action.payload.notificationId,
+                    (roomNotification) => roomNotification.notificationId !== action.payload.notificationId,
                 );
                 state.notificationLength -= 1;
                 state.status = "succeeded";
