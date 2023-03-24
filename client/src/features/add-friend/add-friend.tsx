@@ -1,7 +1,6 @@
 import { Button, ButtonProps, Form, Modal } from "antd";
 import { memo, SyntheticEvent, useCallback, useMemo, useState } from "react";
-
-import { AddFriendIcon } from "../../shared/ui";
+import { UserAddOutlined } from "@ant-design/icons";
 
 import { AddFriendPopupContent } from "./add-friend-popup-content";
 
@@ -29,7 +28,7 @@ export const AddFriend = memo(() => {
     return (
         <>
             <Button onClick={showModal} type="primary">
-                <AddFriendIcon />
+                <UserAddOutlined />
             </Button>
             <Modal
                 title="Add a friend!"

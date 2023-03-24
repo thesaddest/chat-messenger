@@ -3,8 +3,9 @@ import { Form, message, Upload } from "antd";
 import styled from "styled-components";
 import { UploadRequestOption } from "rc-upload/lib/interface";
 import { UploadChangeParam, RcFile } from "antd/es/upload";
+import { FileAddOutlined } from "@ant-design/icons";
 
-import { FileAdd, InputButton } from "../../shared/ui";
+import { InputButton } from "../../shared/ui";
 import { useAppDispatch } from "../../shared/lib/hooks";
 import { addPendingFile, uploadSingleFile } from "../../entities/file";
 
@@ -72,7 +73,7 @@ export const FileUpload = memo<IFileUploadProps>(({ username, chatId }) => {
             getValueFromEvent={({ fileList }) => fileList}
         >
             <Upload customRequest={customRequest} onChange={handleChange} multiple maxCount={10} showUploadList={false}>
-                <InputButton icon={<FileAdd />} type={"default"} />
+                <InputButton icon={<FileAddOutlined />} type={"default"} />
             </Upload>
         </StyledFormItemButtonContainer>
     );

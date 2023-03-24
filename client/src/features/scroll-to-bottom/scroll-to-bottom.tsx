@@ -1,8 +1,7 @@
 import { memo, RefObject, useCallback } from "react";
 import styled from "styled-components";
 import { Button } from "antd";
-
-import { Down } from "../../shared/ui";
+import { DownOutlined } from "@ant-design/icons";
 
 interface IScrollToBottomProps {
     bottomDiv: RefObject<HTMLDivElement>;
@@ -30,7 +29,7 @@ export const ScrollToBottom = memo<IScrollToBottomProps>(({ bottomDiv }) => {
 
     return (
         <StyledButton onClick={handleClick}>
-            <Down />
+            <DownOutlined />
         </StyledButton>
     );
 });

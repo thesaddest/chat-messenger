@@ -1,9 +1,10 @@
 import { memo, useCallback } from "react";
 import styled from "styled-components";
+import { SelectOutlined } from "@ant-design/icons";
 
 import { createMessage, deselectMessage, IMessage, selectMessage } from "../../entities/message";
 import { useAppDispatch } from "../../shared/lib/hooks";
-import { MenuButton, Select } from "../../shared/ui";
+import { MenuButton } from "../../shared/ui";
 
 interface ISelectMessageProps {
     selectedMessage: IMessage;
@@ -68,7 +69,7 @@ export const SelectMessage = memo<ISelectMessageProps>(({ selectedMessage }) => 
     return (
         <StyledButtonContainer>
             <MenuButton onClick={handleClick} type={"dashed"}>
-                <Select /> Select
+                <SelectOutlined /> Select
             </MenuButton>
         </StyledButtonContainer>
     );

@@ -1,9 +1,9 @@
 import { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
 import { Input, InputRef } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 
 import { useAppDispatch, useDebounce } from "../../lib/hooks";
 import { getFriendsBySearchQuery } from "../../../entities/friend";
-import { Search } from "../Icons";
 
 interface ISearchFriendInputProps {
     setModalSearchInputValue: Dispatch<SetStateAction<string>>;
@@ -24,5 +24,12 @@ export const SearchFriendInput: FC<ISearchFriendInputProps> = ({ setModalSearchI
         }
     });
 
-    return <Input ref={inputRef} prefix={<Search />} placeholder="Enter friend's username" onChange={handleChange} />;
+    return (
+        <Input
+            ref={inputRef}
+            prefix={<SearchOutlined />}
+            placeholder="Enter friend's username"
+            onChange={handleChange}
+        />
+    );
 };

@@ -1,8 +1,9 @@
 import { memo, useCallback } from "react";
 import styled from "styled-components";
 import { notification } from "antd";
+import { CopyOutlined } from "@ant-design/icons";
 
-import { Copy, MenuButton } from "../../shared/ui";
+import { MenuButton } from "../../shared/ui";
 import { IMessage } from "../../entities/message";
 
 interface ICopyMessageProps {
@@ -37,7 +38,7 @@ export const CopyMessage = memo<ICopyMessageProps>(({ selectedMessage }) => {
         <StyledButtonContainer>
             {contextHolder}
             <MenuButton onClick={handleCopy} type="dashed">
-                <Copy /> Copy
+                <CopyOutlined /> Copy
             </MenuButton>
         </StyledButtonContainer>
     );

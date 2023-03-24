@@ -4,23 +4,7 @@ export { Loader } from "./Loader";
 export { SharedAvatar } from "./Avatar";
 export { ChatNameConnected } from "./UsernameConnected";
 export { SkeletonNavbar, SkeletonFriendSidebarCard } from "./Skeleton";
-export {
-    Search,
-    AddFriendIcon,
-    ArrowLeft,
-    Delete,
-    MessageReadCheck,
-    ForwardMessage,
-    Reply,
-    VerticalPipe,
-    Close,
-    Down,
-    Copy,
-    Select,
-    FileAdd,
-    SendMessageIcon,
-    Folder,
-} from "./Icons";
+export { MessageReadCheck, Reply, VerticalPipe, Close } from "./Icons";
 export { MemoTitle } from "./Title";
 export { ScrollToSeeMore } from "./ScrollToSeeMore";
 export { SelectChatToStartMessaging } from "./SelectChatToStartMessaging";

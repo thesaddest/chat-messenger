@@ -1,9 +1,9 @@
 import { memo } from "react";
 import { Button } from "antd";
 import styled from "styled-components";
+import { FileOutlined } from "@ant-design/icons";
 
 import { IAttachedFileProps } from "../../model";
-import { Folder } from "../../../../shared/ui";
 
 const StyledContainer = styled.div`
     display: flex;
@@ -50,7 +50,7 @@ export const AttachedFileDocument = memo<IAttachedFileProps>(({ attachedFile }) 
             <StyledButtonContainer>
                 <StyledButton>
                     <a href={attachedFile.location}>
-                        <Folder />
+                        <FileOutlined />
                     </a>
                 </StyledButton>
             </StyledButtonContainer>

@@ -1,6 +1,5 @@
 import { memo } from "react";
-
-import { ArrowLeft } from "../Icons";
+import { LeftOutlined } from "@ant-design/icons";
 
 import { ZeroPaddingButton } from "./ZeroPaddingButton";
 
@@ -11,7 +10,7 @@ interface IBackButtonProps {
 export const BackButton = memo<IBackButtonProps>(({ onClick }) => {
     return (
         <ZeroPaddingButton type="link" onClick={onClick}>
-            <ArrowLeft /> Back
+            <LeftOutlined /> Back
         </ZeroPaddingButton>
     );
 });

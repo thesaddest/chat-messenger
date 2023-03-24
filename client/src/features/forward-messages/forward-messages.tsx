@@ -1,9 +1,10 @@
 import { memo, SyntheticEvent, useCallback, useState } from "react";
 import { Form, Modal } from "antd";
 import styled from "styled-components";
+import { RollbackOutlined } from "@ant-design/icons";
 
 import { IMessage } from "../../entities/message";
-import { ForwardMessage, MenuButton } from "../../shared/ui";
+import { MenuButton } from "../../shared/ui";
 import { useAppSelector } from "../../shared/lib/hooks";
 
 import { ForwardMessagesPopupContent } from "./forward-messages-popup-content";
@@ -40,7 +41,7 @@ export const ForwardMessages = memo<IForwardMessages>(({ selectedMessages }) => 
         friends && (
             <StyledButtonContainer>
                 <MenuButton onClick={showModal} type="dashed">
-                    <ForwardMessage /> Forward {selectedMessages.length > 1 && selectedMessages.length}
+                    <RollbackOutlined /> Forward {selectedMessages.length > 1 && selectedMessages.length}
                 </MenuButton>
                 <Modal title="Forward to..." open={isModalOpen} onCancel={handleCancel} centered={true} footer={null}>
                     <ForwardMessagesPopupContent

@@ -1,12 +1,13 @@
 import { Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
 import { Form, FormInstance, Input } from "antd";
+import { UserAddOutlined } from "@ant-design/icons";
 
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { AUTH_RULES } from "../../../shared/const";
-import { ErrorAlert, AddFriendIcon } from "../../../shared/ui";
+import { ErrorAlert } from "../../../shared/ui";
 import { IInviteFriendToRoomOnFinishValues, inviteFriendToJoinRoom } from "../../../entities/room";
 
-import { createRoomNotification } from "../../../entities/notification/model/notification";
+import { createRoomNotification } from "../../../entities/notification";
 
 import type { InputRef } from "antd";
 
@@ -69,7 +70,7 @@ export const InviteFriendToRoomPopupContent: FC<IInviteFriendToRoomPopupContentP
     return (
         <Form form={form} name="invite-friend-to-room-form" onFinish={onFinish}>
             <Form.Item name="friendUsername" rules={AUTH_RULES.USERNAME}>
-                <Input ref={inputRef} prefix={<AddFriendIcon />} placeholder="Enter friend's username" />
+                <Input ref={inputRef} prefix={<UserAddOutlined />} placeholder="Enter friend's username" />
             </Form.Item>
             {modalError && <ErrorAlert type="error" message={modalError} />}
         </Form>

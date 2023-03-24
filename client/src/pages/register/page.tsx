@@ -1,11 +1,11 @@
 import { Form, Button, Input, Typography } from "antd";
 import { FC, useState } from "react";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined, UserOutlined, LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import { AUTH_RULES } from "../../shared/const";
-import { ZeroPaddingButton, ErrorAlert, ArrowLeft } from "../../shared/ui";
+import { ZeroPaddingButton, ErrorAlert } from "../../shared/ui";
 import { register } from "../../entities/user";
 import { useAppDispatch } from "../../shared/lib/hooks";
 
@@ -78,7 +78,7 @@ export const RegisterPage: FC = () => {
                     <Button block type="primary" htmlType="submit">
                         Create Account
                     </Button>
-                    <ZeroPaddingButton icon={<ArrowLeft />} type="link" onClick={() => navigate("/")}>
+                    <ZeroPaddingButton icon={<LeftOutlined />} type="link" onClick={() => navigate("/")}>
                         Back
                     </ZeroPaddingButton>
                 </Form.Item>

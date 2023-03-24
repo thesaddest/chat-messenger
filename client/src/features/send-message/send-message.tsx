@@ -1,9 +1,9 @@
 import { memo } from "react";
 import styled from "styled-components";
 import { Form } from "antd";
+import { SendOutlined } from "@ant-design/icons";
 
 import { InputButton } from "../../shared/ui";
-import { SendMessageIcon } from "../../shared/ui";
 import { IPendingAttachedFile, isSendMessageNeedDisable } from "../../entities/file";
 
 interface ISendMessageProps {
@@ -31,7 +31,7 @@ export const SendMessage = memo<ISendMessageProps>(({ pendingFiles, chatId }) =>
         <StyledFormItemButtonContainer>
             <InputButton
                 type={"primary"}
-                icon={<SendMessageIcon />}
+                icon={<SendOutlined />}
                 htmlType={"submit"}
                 block={true}
                 disabled={isSendMessageNeedDisable(chatId, pendingFiles)}

@@ -1,8 +1,7 @@
 import { memo, SyntheticEvent, useCallback, useMemo, useState } from "react";
 import { Button, ButtonProps, Form, Modal } from "antd";
 import styled from "styled-components";
-
-import { AddFriendIcon } from "../../shared/ui";
+import { UserAddOutlined } from "@ant-design/icons";
 
 import { InviteFriendToRoomPopupContent } from "./invite-friend-to-room-popup-content";
 
@@ -46,7 +45,7 @@ export const InviteFriendToRoom = memo<IInviteFriendToRoomProps>(({ roomName }) 
     return (
         <StyledInviteFriendToRoom>
             <Button onClick={showModal} type="primary">
-                <AddFriendIcon />
+                <UserAddOutlined />
             </Button>
             <Modal
                 title="Invite friend to room"

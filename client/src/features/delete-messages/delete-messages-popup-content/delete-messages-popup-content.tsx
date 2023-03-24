@@ -1,6 +1,7 @@
 import { FC, useCallback } from "react";
 import styled from "styled-components";
 import { Button } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 
 import {
     deleteMessages,
@@ -9,7 +10,7 @@ import {
     deselectMessageToReply,
     IMessage,
 } from "../../../entities/message";
-import { Delete, MemoTitle } from "../../../shared/ui";
+import { MemoTitle } from "../../../shared/ui";
 import { useAppDispatch } from "../../../shared/lib/hooks";
 
 interface IDeleteMessagesPopupContentProps {
@@ -53,7 +54,7 @@ export const DeleteMessagesPopupContent: FC<IDeleteMessagesPopupContentProps> = 
             <MemoTitle title="Are you sure?" />
             <StyledButtonsContainer>
                 <Button type="dashed" danger onClick={handleDelete}>
-                    <Delete />
+                    <DeleteOutlined />
                     {selectedMessages.length} items
                 </Button>
                 <Button type="dashed" onClick={handleCancel}>
