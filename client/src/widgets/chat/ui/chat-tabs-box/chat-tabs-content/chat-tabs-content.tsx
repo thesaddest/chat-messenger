@@ -8,7 +8,7 @@ import { IMessage } from "../../../../../entities/message";
 import { useAppSelector } from "../../../../../shared/lib/hooks";
 import { RepliedMessage } from "../../replied-message";
 import { ChatInputBox } from "../../chat-input-box";
-import { IRoom } from "../../../../../entities/room";
+import { IRoom, isChatIsRoom } from "../../../../../entities/room";
 
 interface IChatTabsContentProps {
     chat: IFriend | IRoom;
@@ -27,7 +27,11 @@ export const ChatTabsContent: FC<IChatTabsContentProps> = ({ chat, messages }) =
             <ChatInfo chat={chat} />
             <MessagesList chat={chat} messages={messages} selectedMessageToReply={selectedMessageToReply} />
             <RepliedMessage selectedMessageToReply={selectedMessageToReply} />
-            {"roomId" in chat ? <ChatInputBox chatId={chat.roomId} /> : <ChatInputBox chatId={chat.userBehindFriend} />}
+            {isChatIsRoom(chat) ? (
+                <ChatInputBox chatId={chat.roomId} />
+            ) : (
+                <ChatInputBox chatId={chat.userBehindFriend} />
+            )}
         </StyledChatTabsContent>
     );
 };

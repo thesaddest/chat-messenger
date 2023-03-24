@@ -20,7 +20,10 @@ const initialState: RoomState = {
     roomIdActiveKey: DEFAULT_ACTIVE_KEY,
 };
 
-export const isRoom = (chats: IRoom[] | IFriend[]): chats is IRoom[] => chats.some((item) => "roomId" in item);
+export const isChatsAreRoom = (chats: IRoom[] | IFriend[]): chats is IRoom[] =>
+    chats.some((item) => isChatIsRoom(item));
+
+export const isChatIsRoom = (chat: IRoom | IFriend): chat is IRoom => "roomId" in chat;
 
 export const getRooms = createAsyncThunk<IRoom[], undefined, { rejectValue: string }>(
     "rooms/getRooms",

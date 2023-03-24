@@ -6,7 +6,7 @@ import { getFriendsWithLimit, IFriend, setFriendIdActiveKey } from "../../../../
 import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
 import { deselectAllSelectedMessages, deselectMessageToReply } from "../../../../entities/message";
-import { IRoom, isRoom, setRoomIdActiveKey } from "../../../../entities/room";
+import { IRoom, isChatsAreRoom, setRoomIdActiveKey } from "../../../../entities/room";
 import { ChatSidebarCard } from "../../../../features/chat-sidebar-card";
 
 import { ScrollToSeeMore } from "../../../../shared/ui";
@@ -103,7 +103,7 @@ export const ChatTabsBox: FC<IChatTabsBoxProps> = ({ chats }) => {
 
     const onTabChange = useCallback(
         (activeKey: string, chats: IRoom[] | IFriend[]) => {
-            const setActiveKey = isRoom(chats) ? setRoomIdActiveKey : setFriendIdActiveKey;
+            const setActiveKey = isChatsAreRoom(chats) ? setRoomIdActiveKey : setFriendIdActiveKey;
 
             const clearSelectedMessages = () => {
                 dispatch(deselectAllSelectedMessages(selectedMessages));
@@ -123,7 +123,7 @@ export const ChatTabsBox: FC<IChatTabsBoxProps> = ({ chats }) => {
         }
     }, 1000);
 
-    if (isRoom(chats)) {
+    if (isChatsAreRoom(chats)) {
         return chats.length > 0 ? (
             <StyledChatBoxTabs
                 onTabScroll={scrollHandler}

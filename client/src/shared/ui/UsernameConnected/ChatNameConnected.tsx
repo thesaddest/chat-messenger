@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 
 import { IFriend } from "../../../entities/friend";
-import { IRoom } from "../../../entities/room";
+import { IRoom, isChatIsRoom } from "../../../entities/room";
 
 interface IChatNameConnectedProps {
     chat: IRoom | IFriend;
@@ -44,7 +44,7 @@ const StyledConnected = styled.div`
 `;
 
 export const ChatNameConnected = memo<IChatNameConnectedProps>(({ chat }) => {
-    if ("roomId" in chat) {
+    if (isChatIsRoom(chat)) {
         return (
             <StyledChatNameConnectedContainer>
                 <p>{chat.roomName}</p>

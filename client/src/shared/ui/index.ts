@@ -6,7 +6,6 @@ export { ChatNameConnected } from "./UsernameConnected";
 export { SkeletonNavbar, SkeletonFriendSidebarCard } from "./Skeleton";
 export {
     Search,
-    AddFriendGroup,
     AddFriendIcon,
     ArrowLeft,
     Delete,

@@ -4,7 +4,7 @@ import { Dropdown, MenuProps } from "antd";
 
 import { deselectMessage, IMessage, selectMessage } from "../../model";
 import { IFriend } from "../../../friend";
-import { IRoom } from "../../../room";
+import { IRoom, isChatIsRoom } from "../../../room";
 import { ForwardMessages } from "../../../../features/forward-messages";
 import { ReplyToMessage } from "../../../../features/reply-to-message";
 import { CopyMessage } from "../../../../features/copy-message";
@@ -17,6 +17,7 @@ import { MessageItemContent } from "./message-item-content";
 interface MessageItemProps {
     chat: IFriend | IRoom;
     message: IMessage;
+    userId: string;
 }
 
 const StyledFriendMessageContainer = styled.div<{ friend: IFriend; message: IMessage }>`
@@ -34,14 +35,14 @@ const StyledFriendMessageContainer = styled.div<{ friend: IFriend; message: IMes
     cursor: pointer;
 `;
 
-const StyledRoomMessageContainer = styled.div<{ room: IRoom; message: IMessage }>`
-    background: ${({ message, room }) => (message.to !== room.roomId ? "#1677ff" : "lightgray")};
-    color: ${({ message, room }) => (message.to !== room.roomId ? "whitesmoke" : "black")};
-    border: 1px solid ${({ message, room }) => (message.to !== room.roomId ? "#1677ff" : "lightgray")};
+const StyledRoomMessageContainer = styled.div<{ room: IRoom; message: IMessage; userId: string }>`
+    background: ${({ message, userId }) => (message.from !== userId ? "#1677ff" : "lightgray")};
+    color: ${({ message, userId }) => (message.from !== userId ? "whitesmoke" : "black")};
+    border: 1px solid ${({ message, userId }) => (message.from !== userId ? "#1677ff" : "lightgray")};
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     border-radius: 20px;
-    margin: ${({ message, room }) =>
-        message.to === room.roomId ? "0.5rem 0.5rem 1rem auto" : "0.5rem auto 1rem 0.5rem"};
+    margin: ${({ message, userId }) =>
+        message.from === userId ? "0.5rem 0.5rem 1rem auto" : "0.5rem auto 1rem 0.5rem"};
     padding: 0.5rem 1rem;
     max-width: 50%;
     word-break: break-word;
@@ -49,7 +50,7 @@ const StyledRoomMessageContainer = styled.div<{ room: IRoom; message: IMessage }
     cursor: pointer;
 `;
 
-export const MessageItem = memo<MessageItemProps>(({ chat, message }) => {
+export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) => {
     const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
     const {
         isMessageForwarded,
@@ -104,10 +105,10 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message }) => {
         [message],
     );
 
-    if ("roomId" in chat) {
+    if (isChatIsRoom(chat)) {
         return (
             <Dropdown menu={{ items }} trigger={["contextMenu"]} disabled={selectedMessages.length > 0}>
-                <StyledRoomMessageContainer room={chat} message={message} onClick={handleClick}>
+                <StyledRoomMessageContainer room={chat} message={message} onClick={handleClick} userId={userId}>
                     <MessageItemContent
                         to={to}
                         from={from}

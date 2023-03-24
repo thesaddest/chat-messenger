@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { MessageItem } from "../message-item";
 import { IFriend } from "../../../friend";
-import { IRoom } from "../../../room";
+import { IRoom, isChatIsRoom } from "../../../room";
 import { getFilteredMessageByChatType, IMessage, readMessages } from "../../model";
 import { useAppDispatch, useAppSelector, useIsInViewport } from "../../../../shared/lib/hooks";
 import { ScrollToBottom } from "../../../../features/scroll-to-bottom";
@@ -56,7 +56,7 @@ export const MessagesList: FC<IMessagesListProps> = ({ chat, messages, selectedM
     }, [messages.length]);
 
     useEffect(() => {
-        if ("roomId" in chat) {
+        if (isChatIsRoom(chat)) {
             if (memoizedFilteredMessages.length > 0 && user && roomIdActiveKey === chat.roomId) {
                 dispatch(readMessages({ messages: memoizedFilteredMessages, user: user }));
             }
@@ -70,8 +70,9 @@ export const MessagesList: FC<IMessagesListProps> = ({ chat, messages, selectedM
     return (
         <StyledWrapper selectedMessageToReply={selectedMessageToReply}>
             {messages &&
+                user &&
                 memoizedFilteredMessages.map((msg, msgIndex) => (
-                    <MessageItem chat={chat} key={msgIndex + msg.content} message={msg} />
+                    <MessageItem chat={chat} key={msgIndex + msg.content} message={msg} userId={user?.userId} />
                 ))}
             {isButtonVisible && <ScrollToBottom bottomDiv={bottomDiv} />}
             <div ref={bottomDiv}></div>

@@ -1,4 +1,3 @@
-export * from "./AddFriendGroup";
 export * from "./Search";
 export * from "./AddFriendIcon";
 export * from "./ArrowLeft";

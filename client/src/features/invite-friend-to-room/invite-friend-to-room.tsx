@@ -1,5 +1,6 @@
-import { Button, ButtonProps, Form, Modal } from "antd";
 import { memo, SyntheticEvent, useCallback, useMemo, useState } from "react";
+import { Button, ButtonProps, Form, Modal } from "antd";
+import styled from "styled-components";
 
 import { AddFriendIcon } from "../../shared/ui";
 
@@ -8,6 +9,12 @@ import { InviteFriendToRoomPopupContent } from "./invite-friend-to-room-popup-co
 interface IInviteFriendToRoomProps {
     roomName: string;
 }
+
+const StyledInviteFriendToRoom = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
 
 export const InviteFriendToRoom = memo<IInviteFriendToRoomProps>(({ roomName }) => {
     const [form] = Form.useForm();
@@ -37,7 +44,7 @@ export const InviteFriendToRoom = memo<IInviteFriendToRoomProps>(({ roomName }) 
     );
 
     return (
-        <>
+        <StyledInviteFriendToRoom>
             <Button onClick={showModal} type="primary">
                 <AddFriendIcon />
             </Button>
@@ -56,6 +63,6 @@ export const InviteFriendToRoom = memo<IInviteFriendToRoomProps>(({ roomName }) 
                     setIsModalOpen={setIsModalOpen}
                 />
             </Modal>
-        </>
+        </StyledInviteFriendToRoom>
     );
 });

@@ -6,14 +6,14 @@ import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 import { IAddFriendValues, IFriend, IFriendStatus, IGetFriendsBySearchQuery, IGetMoreFriends } from "./interfaces";
 
 interface FriendState {
-    friends: IFriend[] | null;
+    friends: IFriend[];
     isLoading: boolean;
     error: string | null;
     friendIdActiveKey: string;
 }
 
 const initialState: FriendState = {
-    friends: null,
+    friends: [],
     isLoading: true,
     error: null,
     friendIdActiveKey: DEFAULT_ACTIVE_KEY,
@@ -121,7 +121,7 @@ export const friendModel = createSlice({
                 if (!action.payload) {
                     return;
                 }
-                state.friends = null;
+                state.friends = [];
                 state.error = action.payload;
                 state.isLoading = false;
             })
@@ -137,7 +137,6 @@ export const friendModel = createSlice({
                 if (!action.payload) {
                     return;
                 }
-                state.friends = null;
                 state.error = action.payload;
                 state.isLoading = false;
             })

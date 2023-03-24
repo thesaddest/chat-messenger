@@ -1,10 +1,10 @@
 import { IFriend } from "../../friend";
-import { IRoom } from "../../room";
+import { IRoom, isChatIsRoom } from "../../room";
 
 import { IMessage } from "./interfaces";
 
 export const getFilteredMessageByChatType = (messages: IMessage[], chat: IFriend | IRoom): IMessage[] => {
-    if ("roomId" in chat) {
+    if (isChatIsRoom(chat)) {
         return messages.filter(
             (message) => message.to === (chat.roomId || message.from === chat.roomId) && message.isGroupMessage,
         );
@@ -28,7 +28,7 @@ export const getUnreadMessageAmount = (
     chat: IFriend | IRoom,
 ): number => {
     const allMessagesInChat = getFilteredMessageByChatType(messages, chat);
-    if ("roomId" in chat) {
+    if (isChatIsRoom(chat)) {
         const messagesSentFromFriend = allMessagesInChat.filter(({ from }) => from === chat.roomId);
         const unreadMessages = messagesSentFromFriend.filter(
             (messageSentFromFriend) =>
