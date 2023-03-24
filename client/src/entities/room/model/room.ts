@@ -3,8 +3,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import RoomService from "../api/room.service";
 import { socket } from "../../../shared/socket-io";
 import { DEFAULT_ACTIVE_KEY, SOCKET_EVENTS } from "../../../shared/const";
-
-import { IRoomNotification } from "../../notification/model/interfaces";
+import { IRoomNotification } from "../../notification";
+import { IFriend } from "../../friend";
 
 import { IAcceptInviteToJoinRoom, ICreateRoomValues, IRoom } from "./interfaces";
 
@@ -19,6 +19,8 @@ const initialState: RoomState = {
     status: "start",
     roomIdActiveKey: DEFAULT_ACTIVE_KEY,
 };
+
+export const isRoom = (chats: IRoom[] | IFriend[]): chats is IRoom[] => chats.some((item) => "roomId" in item);
 
 export const getRooms = createAsyncThunk<IRoom[], undefined, { rejectValue: string }>(
     "rooms/getRooms",

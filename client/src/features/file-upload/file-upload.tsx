@@ -10,7 +10,7 @@ import { addPendingFile, uploadSingleFile } from "../../entities/file";
 
 interface IFileUploadProps {
     username: string;
-    friendIdActiveKey: string;
+    chatId: string;
 }
 
 const StyledFormItemButtonContainer = styled(Form.Item)`
@@ -28,7 +28,7 @@ const StyledFormItemButtonContainer = styled(Form.Item)`
     }
 `;
 
-export const FileUpload = memo<IFileUploadProps>(({ username, friendIdActiveKey }) => {
+export const FileUpload = memo<IFileUploadProps>(({ username, chatId }) => {
     const dispatch = useAppDispatch();
 
     const customRequest = useCallback(
@@ -36,12 +36,12 @@ export const FileUpload = memo<IFileUploadProps>(({ username, friendIdActiveKey 
             try {
                 if (options.onSuccess && options.file) {
                     const file = options.file as RcFile;
-                    dispatch(addPendingFile({ uid: file.uid, name: file.name, friendIdActiveKey: friendIdActiveKey }));
+                    dispatch(addPendingFile({ uid: file.uid, name: file.name, friendIdActiveKey: chatId }));
                     const data = await dispatch(
                         uploadSingleFile({
                             file: file,
                             username: username,
-                            friendIdActiveKey: friendIdActiveKey,
+                            friendIdActiveKey: chatId,
                         }),
                     );
                     options.onSuccess(data);
@@ -50,7 +50,7 @@ export const FileUpload = memo<IFileUploadProps>(({ username, friendIdActiveKey 
                 message.error(`${error}, file upload failed.`);
             }
         },
-        [dispatch, friendIdActiveKey, username],
+        [dispatch, chatId, username],
     );
 
     const handleChange = useCallback((info: UploadChangeParam) => {

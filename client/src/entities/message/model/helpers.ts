@@ -3,28 +3,46 @@ import { IRoom } from "../../room";
 
 import { IMessage } from "./interfaces";
 
-export const getFilteredMessageBySender = (messages: IMessage[], friend: IFriend): IMessage[] => {
-    return messages.filter(
-        (message) => message.to === friend.userBehindFriend || message.from === friend.userBehindFriend,
-    );
+export const getFilteredMessageByChatType = (messages: IMessage[], chat: IFriend | IRoom): IMessage[] => {
+    if ("roomId" in chat) {
+        return messages.filter(
+            (message) => message.to === (chat.roomId || message.from === chat.roomId) && message.isGroupMessage,
+        );
+    } else {
+        return messages.filter(
+            (message) =>
+                (message.to === chat.userBehindFriend || message.from === chat.userBehindFriend) &&
+                !message.isGroupMessage,
+        );
+    }
 };
 
-export const getFilteredMessageByRoomSender = (messages: IMessage[], room: IRoom): IMessage[] => {
-    return messages.filter((message) => message.to === room.roomId || message.from === room.roomId);
-};
-
-export const getLastMessageBySender = (messages: IMessage[], friend: IFriend): IMessage => {
-    const filteredMessages = getFilteredMessageBySender(messages, friend);
+export const getLastMessageByChatType = (messages: IMessage[], chat: IFriend | IRoom): IMessage => {
+    const filteredMessages = getFilteredMessageByChatType(messages, chat);
     return filteredMessages[filteredMessages.length - 1];
 };
 
-export const getUnreadMessageAmount = (readMessages: IMessage[], messages: IMessage[], friend: IFriend): number => {
-    const allMessagesInChat = getFilteredMessageBySender(messages, friend);
-    const messagesSentFromFriend = allMessagesInChat.filter(({ from }) => from === friend.userBehindFriend);
-    const unreadMessages = messagesSentFromFriend.filter(
-        (messageSentFromFriend) => !readMessages.find(({ messageId }) => messageSentFromFriend.messageId === messageId),
-    );
-    return unreadMessages.length;
+export const getUnreadMessageAmount = (
+    readMessages: IMessage[],
+    messages: IMessage[],
+    chat: IFriend | IRoom,
+): number => {
+    const allMessagesInChat = getFilteredMessageByChatType(messages, chat);
+    if ("roomId" in chat) {
+        const messagesSentFromFriend = allMessagesInChat.filter(({ from }) => from === chat.roomId);
+        const unreadMessages = messagesSentFromFriend.filter(
+            (messageSentFromFriend) =>
+                !readMessages.find(({ messageId }) => messageSentFromFriend.messageId === messageId),
+        );
+        return unreadMessages.length;
+    } else {
+        const messagesSentFromFriend = allMessagesInChat.filter(({ from }) => from === chat.userBehindFriend);
+        const unreadMessages = messagesSentFromFriend.filter(
+            (messageSentFromFriend) =>
+                !readMessages.find(({ messageId }) => messageSentFromFriend.messageId === messageId),
+        );
+        return unreadMessages.length;
+    }
 };
 
 export const setMessagesStateWithUniqueValues = (

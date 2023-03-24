@@ -1,1 +1,1 @@
-export * from "./UsernameConnected";
+export * from "./ChatNameConnected";

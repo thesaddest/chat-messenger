@@ -8,9 +8,10 @@ import { IMessage } from "../../../../../entities/message";
 import { useAppSelector } from "../../../../../shared/lib/hooks";
 import { RepliedMessage } from "../../replied-message";
 import { ChatInputBox } from "../../chat-input-box";
+import { IRoom } from "../../../../../entities/room";
 
 interface IChatTabsContentProps {
-    friend: IFriend;
+    chat: IFriend | IRoom;
     messages: IMessage[];
 }
 
@@ -18,15 +19,15 @@ const StyledChatTabsContent = styled.div`
     height: 75vh;
 `;
 
-export const ChatTabsContent: FC<IChatTabsContentProps> = ({ friend, messages }) => {
+export const ChatTabsContent: FC<IChatTabsContentProps> = ({ chat, messages }) => {
     const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
 
     return (
         <StyledChatTabsContent>
-            <ChatInfo friend={friend} />
-            <MessagesList friend={friend} messages={messages} selectedMessageToReply={selectedMessageToReply} />
+            <ChatInfo chat={chat} />
+            <MessagesList chat={chat} messages={messages} selectedMessageToReply={selectedMessageToReply} />
             <RepliedMessage selectedMessageToReply={selectedMessageToReply} />
-            <ChatInputBox friendId={friend.userBehindFriend} />
+            {"roomId" in chat ? <ChatInputBox chatId={chat.roomId} /> : <ChatInputBox chatId={chat.userBehindFriend} />}
         </StyledChatTabsContent>
     );
 };

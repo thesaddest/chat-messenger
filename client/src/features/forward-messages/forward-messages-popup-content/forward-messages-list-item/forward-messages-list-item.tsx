@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { IFriend, setFriendIdActiveKey } from "../../../../entities/friend";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
-import { FriendSidebarCard } from "../../../friend-sidebar-card";
+import { ChatSidebarCard } from "../../../chat-sidebar-card";
 import { deselectAllSelectedMessages, forwardMessages } from "../../../../entities/message";
 
 interface IForwardMessagesListItemProps {
@@ -47,7 +47,7 @@ export const ForwardMessagesListItem = memo<IForwardMessagesListItemProps>(
         return (
             messages && (
                 <StyledListItem onClick={handleClick}>
-                    <FriendSidebarCard friend={friend} messages={messages} />
+                    <ChatSidebarCard chat={friend} messages={messages} />
                 </StyledListItem>
             )
         );

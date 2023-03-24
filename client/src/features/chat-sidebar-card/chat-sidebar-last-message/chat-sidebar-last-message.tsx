@@ -16,7 +16,7 @@ const StyledLastMessageDiv = styled.div`
     }
 `;
 
-export const FriendSidebarLastMessage = memo<FriendCardProps>(({ messageContent }) => {
+export const ChatSidebarLastMessage = memo<FriendCardProps>(({ messageContent }) => {
     return (
         <StyledLastMessageDiv>
             <p>{messageContent}</p>

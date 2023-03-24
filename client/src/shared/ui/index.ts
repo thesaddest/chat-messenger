@@ -2,7 +2,7 @@ export { ErrorAlert } from "./Alert";
 export { ZeroPaddingButton, InputButton, MenuButton, CancelButton, BackButton } from "./Buttons";
 export { Loader } from "./Loader";
 export { SharedAvatar } from "./Avatar";
-export { UsernameConnected } from "./UsernameConnected";
+export { ChatNameConnected } from "./UsernameConnected";
 export { SkeletonNavbar, SkeletonFriendSidebarCard } from "./Skeleton";
 export {
     Search,

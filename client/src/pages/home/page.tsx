@@ -4,7 +4,7 @@ import { Divider } from "antd";
 
 import { useAppSelector, useWindowSize } from "../../shared/lib/hooks";
 import { Navbar } from "../../widgets/navbar";
-import { ChatTabsBox, RoomTabsBox } from "../../widgets/chat";
+import { ChatTabsBox } from "../../widgets/chat";
 import { useSocket } from "../../app/lib/hooks";
 import { SkeletonChat } from "../../features/skeleton-chat";
 import { SelectChatToStartMessaging } from "../../shared/ui";
@@ -51,6 +51,7 @@ export const HomePage: FC = () => {
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
     const rooms = useAppSelector((state) => state.room.rooms);
     const roomIdActiveKey = useAppSelector((state) => state.room.roomIdActiveKey);
+    const friends = useAppSelector((state) => state.friend.friends);
 
     return (
         <StyledHomeContainer>
@@ -65,7 +66,11 @@ export const HomePage: FC = () => {
                         {width >= 426 &&
                             friendIdActiveKey === DEFAULT_ACTIVE_KEY &&
                             roomIdActiveKey === DEFAULT_ACTIVE_KEY && <SelectChatToStartMessaging />}
-                        {rooms.length > 0 && chatType === ChatType.ROOM ? <RoomTabsBox /> : <ChatTabsBox />}
+                        {rooms.length > 0 && chatType === ChatType.ROOM ? (
+                            <ChatTabsBox chats={rooms} />
+                        ) : (
+                            friends && <ChatTabsBox chats={friends} />
+                        )}
                     </>
                 )}
             </StyledHome>

@@ -1,14 +1,15 @@
 import { Tabs } from "antd";
-import { memo, useCallback, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import styled from "styled-components";
 
-import { getFriendsWithLimit, setFriendIdActiveKey } from "../../../../entities/friend";
+import { getFriendsWithLimit, IFriend, setFriendIdActiveKey } from "../../../../entities/friend";
 import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
-import { FriendSidebarCard } from "../../../../features/friend-sidebar-card";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
-import { ScrollToSeeMore } from "../../../../shared/ui";
+import { deselectAllSelectedMessages, deselectMessageToReply } from "../../../../entities/message";
+import { IRoom, isRoom, setRoomIdActiveKey } from "../../../../entities/room";
+import { ChatSidebarCard } from "../../../../features/chat-sidebar-card";
 
-import { deselectMessageToReply, deselectAllSelectedMessages } from "../../../../entities/message";
+import { ScrollToSeeMore } from "../../../../shared/ui";
 
 import { ChatTabsContent } from "./chat-tabs-content";
 
@@ -16,6 +17,10 @@ import { ChatTabsContent } from "./chat-tabs-content";
 
 interface ITabsSrcollDirection {
     direction: "left" | "right" | "top" | "bottom";
+}
+
+interface IChatTabsBoxProps {
+    chats: IFriend[] | IRoom[];
 }
 
 const StyledChatBoxTabs = styled(Tabs)`
@@ -87,47 +92,74 @@ const StyledChatBoxTabs = styled(Tabs)`
     }
 `;
 
-export const ChatTabsBox = memo(() => {
+export const ChatTabsBox: FC<IChatTabsBoxProps> = ({ chats }) => {
     const [isScroll, setIsScroll] = useState<boolean>(false);
     const messages = useAppSelector((state) => state.message.messages);
     const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
     const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
-    const friends = useAppSelector((state) => state.friend.friends);
+    const roomIdActiveKey = useAppSelector((state) => state.room.roomIdActiveKey);
 
     const dispatch = useAppDispatch();
 
     const onTabChange = useCallback(
-        (activeKey: string) => {
-            dispatch(setFriendIdActiveKey(activeKey));
-            dispatch(deselectAllSelectedMessages(selectedMessages));
-            dispatch(deselectMessageToReply());
+        (activeKey: string, chats: IRoom[] | IFriend[]) => {
+            const setActiveKey = isRoom(chats) ? setRoomIdActiveKey : setFriendIdActiveKey;
+
+            const clearSelectedMessages = () => {
+                dispatch(deselectAllSelectedMessages(selectedMessages));
+                dispatch(deselectMessageToReply());
+            };
+
+            dispatch(setActiveKey(activeKey));
+            clearSelectedMessages();
         },
-        [selectedMessages, dispatch],
+        [dispatch, selectedMessages],
     );
 
     const scrollHandler = useDebounce((e: ITabsSrcollDirection) => {
-        if (e.direction === "bottom" && friends) {
+        if (e.direction === "bottom" && chats) {
             setIsScroll(true);
-            dispatch(getFriendsWithLimit({ skip: friends.length }));
+            dispatch(getFriendsWithLimit({ skip: chats.length }));
         }
     }, 1000);
 
-    return friends && friends.length > 0 ? (
-        <StyledChatBoxTabs
-            onTabScroll={scrollHandler}
-            tabPosition="left"
-            items={friends.map((friend) => {
-                return {
-                    label: messages && <FriendSidebarCard friend={friend} messages={messages} />,
-                    key: `${friend.userBehindFriend}`,
-                    children: messages && <ChatTabsContent messages={messages} friend={friend} />,
-                };
-            })}
-            activeKey={friendIdActiveKey}
-            onChange={onTabChange}
-            tabBarExtraContent={!isScroll && friends.length > 8 && <ScrollToSeeMore />}
-        />
-    ) : (
-        <StyledChatBoxTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
-    );
-});
+    if (isRoom(chats)) {
+        return chats.length > 0 ? (
+            <StyledChatBoxTabs
+                onTabScroll={scrollHandler}
+                tabPosition="left"
+                items={chats.map((chat) => {
+                    return {
+                        label: messages && <ChatSidebarCard chat={chat} messages={messages} />,
+                        key: chat.roomId,
+                        children: messages && <ChatTabsContent messages={messages} chat={chat} />,
+                    };
+                })}
+                activeKey={roomIdActiveKey}
+                onChange={(activeKey) => onTabChange(activeKey, chats)}
+                tabBarExtraContent={!isScroll && chats.length > 8 && <ScrollToSeeMore />}
+            />
+        ) : (
+            <StyledChatBoxTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
+        );
+    } else {
+        return chats.length > 0 ? (
+            <StyledChatBoxTabs
+                onTabScroll={scrollHandler}
+                tabPosition="left"
+                items={chats.map((chat) => {
+                    return {
+                        label: messages && <ChatSidebarCard chat={chat} messages={messages} />,
+                        key: chat.userBehindFriend,
+                        children: messages && <ChatTabsContent messages={messages} chat={chat} />,
+                    };
+                })}
+                activeKey={friendIdActiveKey}
+                onChange={(activeKey) => onTabChange(activeKey, chats)}
+                tabBarExtraContent={!isScroll && chats.length > 8 && <ScrollToSeeMore />}
+            />
+        ) : (
+            <StyledChatBoxTabs tabPosition="left" items={DEFAULT_TAB_ITEM} />
+        );
+    }
+};

@@ -9,7 +9,7 @@ interface IChatInputProps {
     form: FormInstance;
     uploadedFiles: IFile[];
     pendingFiles: IPendingAttachedFile[];
-    friendIdActiveKey: string;
+    chatId: string;
 }
 
 const StyledInputContainer = styled(Form.Item)`
@@ -79,17 +79,17 @@ const StyledInputContainer = styled(Form.Item)`
     }
 `;
 
-export const ChatInput: FC<IChatInputProps> = ({ form, friendIdActiveKey, pendingFiles, uploadedFiles }) => {
+export const ChatInput: FC<IChatInputProps> = ({ form, chatId, pendingFiles, uploadedFiles }) => {
     const inputRef = useRef<InputRef>(null);
 
     const onEnterPress = useCallback(
         (e: KeyboardEvent) => {
             e.preventDefault();
-            if (!isSendMessageNeedDisable(friendIdActiveKey, pendingFiles)) {
+            if (!isSendMessageNeedDisable(chatId, pendingFiles)) {
                 form.submit();
             }
         },
-        [form, friendIdActiveKey, pendingFiles],
+        [form, chatId, pendingFiles],
     );
 
     useEffect(() => {

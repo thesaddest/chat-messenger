@@ -3,7 +3,7 @@ import { FormInstance, List } from "antd";
 import styled from "styled-components";
 
 import { IFriend, setFriendIdActiveKey } from "../../../../entities/friend";
-import { FriendSidebarCard } from "../../../friend-sidebar-card";
+import { ChatSidebarCard } from "../../../chat-sidebar-card";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 
 interface IFriendPopupItemProps {
@@ -32,7 +32,7 @@ export const SearchPopupListItem = memo<IFriendPopupItemProps>(
         return (
             messages && (
                 <StyledListItem onClick={handleClick}>
-                    <FriendSidebarCard friend={friend} messages={messages} />
+                    <ChatSidebarCard chat={friend} messages={messages} />
                 </StyledListItem>
             )
         );

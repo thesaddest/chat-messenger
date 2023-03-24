@@ -3,29 +3,23 @@ import styled from "styled-components";
 import { Dropdown, MenuProps } from "antd";
 
 import { deselectMessage, IMessage, selectMessage } from "../../model";
-import { MessageReadCheck } from "../../../../shared/ui";
 import { IFriend } from "../../../friend";
-
-import { RepliedMessageItem } from "../replied-message-item";
+import { IRoom } from "../../../room";
 import { ForwardMessages } from "../../../../features/forward-messages";
 import { ReplyToMessage } from "../../../../features/reply-to-message";
 import { CopyMessage } from "../../../../features/copy-message";
 import { DeleteMessages } from "../../../../features/delete-messages";
 import { SelectMessage } from "../../../../features/select-message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
-import { AttachedFileList } from "../../../file";
+
+import { MessageItemContent } from "./message-item-content";
 
 interface MessageItemProps {
-    friend: IFriend;
+    chat: IFriend | IRoom;
     message: IMessage;
 }
 
-interface ForwardedProps {
-    to: string;
-    from: string;
-}
-
-const StyledContainer = styled.div<MessageItemProps>`
+const StyledFriendMessageContainer = styled.div<{ friend: IFriend; message: IMessage }>`
     background: ${({ message, friend }) => (message.to !== friend.userBehindFriend ? "#1677ff" : "lightgray")};
     color: ${({ message, friend }) => (message.to !== friend.userBehindFriend ? "whitesmoke" : "black")};
     border: 1px solid ${({ message, friend }) => (message.to !== friend.userBehindFriend ? "#1677ff" : "lightgray")};
@@ -40,21 +34,22 @@ const StyledContainer = styled.div<MessageItemProps>`
     cursor: pointer;
 `;
 
-const StyledMessageContentHolder = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: start;
-    flex-direction: column;
-    padding-right: 0.2rem;
+const StyledRoomMessageContainer = styled.div<{ room: IRoom; message: IMessage }>`
+    background: ${({ message, room }) => (message.to !== room.roomId ? "#1677ff" : "lightgray")};
+    color: ${({ message, room }) => (message.to !== room.roomId ? "whitesmoke" : "black")};
+    border: 1px solid ${({ message, room }) => (message.to !== room.roomId ? "#1677ff" : "lightgray")};
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    border-radius: 20px;
+    margin: ${({ message, room }) =>
+        message.to === room.roomId ? "0.5rem 0.5rem 1rem auto" : "0.5rem auto 1rem 0.5rem"};
+    padding: 0.5rem 1rem;
+    max-width: 50%;
+    word-break: break-word;
+    filter: ${({ message }) => message.isMessageSelected && "blur(2px)"};
+    cursor: pointer;
 `;
 
-const StyledForwarded = styled.p<ForwardedProps>`
-    font-size: 16px;
-    font-style: italic;
-    color: ${({ to, from }) => (to === from ? "whitesmoke" : "black")};
-`;
-
-export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
+export const MessageItem = memo<MessageItemProps>(({ chat, message }) => {
     const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
     const {
         isMessageForwarded,
@@ -67,7 +62,10 @@ export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
         attachedFilesAfterUpload,
         content,
         isMessageRead,
+        fromUsername,
+        isGroupMessage,
     } = message;
+
     const dispatch = useAppDispatch();
 
     const handleClick: MouseEventHandler<HTMLDivElement> = useCallback(() => {
@@ -106,27 +104,45 @@ export const MessageItem = memo<MessageItemProps>(({ friend, message }) => {
         [message],
     );
 
-    return (
-        <Dropdown menu={{ items }} trigger={["contextMenu"]} disabled={selectedMessages.length > 0}>
-            <StyledContainer friend={friend} message={message} onClick={handleClick}>
-                {isMessageForwarded && (
-                    <StyledForwarded to={to} from={from}>
-                        Forwarded from {forwardedFrom}
-                    </StyledForwarded>
-                )}
-
-                {prevMessageContent && prevMessageFrom && (
-                    <RepliedMessageItem prevMessageFrom={prevMessageFrom} content={prevMessageContent} />
-                )}
-
-                {attachedFilesAfterUpload && <AttachedFileList attachedFilesAfterUpload={attachedFilesAfterUpload} />}
-
-                <StyledMessageContentHolder>
-                    <p>{content}</p>
-                </StyledMessageContentHolder>
-
-                <MessageReadCheck isMessageRead={isMessageRead} />
-            </StyledContainer>
-        </Dropdown>
-    );
+    if ("roomId" in chat) {
+        return (
+            <Dropdown menu={{ items }} trigger={["contextMenu"]} disabled={selectedMessages.length > 0}>
+                <StyledRoomMessageContainer room={chat} message={message} onClick={handleClick}>
+                    <MessageItemContent
+                        to={to}
+                        from={from}
+                        content={content}
+                        prevMessageContent={prevMessageContent}
+                        prevMessageFrom={prevMessageFrom}
+                        isMessageForwarded={isMessageForwarded}
+                        isMessageRead={isMessageRead}
+                        forwardedFrom={forwardedFrom}
+                        attachedFilesAfterUpload={attachedFilesAfterUpload}
+                        fromUsername={fromUsername}
+                        isGroupMessage={isGroupMessage}
+                    />
+                </StyledRoomMessageContainer>
+            </Dropdown>
+        );
+    } else {
+        return (
+            <Dropdown menu={{ items }} trigger={["contextMenu"]} disabled={selectedMessages.length > 0}>
+                <StyledFriendMessageContainer friend={chat} message={message} onClick={handleClick}>
+                    <MessageItemContent
+                        to={to}
+                        from={from}
+                        content={content}
+                        prevMessageContent={prevMessageContent}
+                        prevMessageFrom={prevMessageFrom}
+                        isMessageForwarded={isMessageForwarded}
+                        isMessageRead={isMessageRead}
+                        forwardedFrom={forwardedFrom}
+                        attachedFilesAfterUpload={attachedFilesAfterUpload}
+                        fromUsername={fromUsername}
+                        isGroupMessage={isGroupMessage}
+                    />
+                </StyledFriendMessageContainer>
+            </Dropdown>
+        );
+    }
 });

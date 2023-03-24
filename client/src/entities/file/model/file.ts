@@ -25,8 +25,8 @@ export const isSendMessageNeedDisable = (
     );
 };
 
-export const isUploadedFilesBelongToFriend = (friendIdActiveKey: string, uploadedFiles: IFile[]) => {
-    return uploadedFiles.every((uploadedFile) => uploadedFile.sentTo === friendIdActiveKey);
+export const isUploadedFilesBelongToChat = (chatIdActiveKey: string, uploadedFiles: IFile[]) => {
+    return uploadedFiles.every((uploadedFile) => uploadedFile.sentTo === chatIdActiveKey);
 };
 
 export const uploadSingleFile = createAsyncThunk<IFile, IUploadFilePayload, { rejectValue: string }>(

@@ -1,14 +1,15 @@
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { MessageItem } from "../message-item";
 import { IFriend } from "../../../friend";
-import { getFilteredMessageBySender, IMessage, readMessages } from "../../model";
+import { IRoom } from "../../../room";
+import { getFilteredMessageByChatType, IMessage, readMessages } from "../../model";
 import { useAppDispatch, useAppSelector, useIsInViewport } from "../../../../shared/lib/hooks";
 import { ScrollToBottom } from "../../../../features/scroll-to-bottom";
 
 interface IMessagesListProps {
-    friend: IFriend;
+    chat: IFriend | IRoom;
     messages: IMessage[];
     selectedMessageToReply: IMessage | null;
 }
@@ -29,14 +30,16 @@ const StyledWrapper = styled.div<IStyledWrapperProps>`
     }
 `;
 
-export const MessagesList = memo<IMessagesListProps>(({ friend, messages, selectedMessageToReply }) => {
+export const MessagesList: FC<IMessagesListProps> = ({ chat, messages, selectedMessageToReply }) => {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
-    const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
+    const memoizedFilteredMessages = useMemo(() => getFilteredMessageByChatType(messages, chat), [messages, chat]);
     const bottomDiv = useRef<HTMLDivElement>(null);
-    const memoizedFilteredMessages = useMemo(() => getFilteredMessageBySender(messages, friend), [messages, friend]);
     const isInViewport = useIsInViewport(bottomDiv);
     const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
+
+    const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
+    const roomIdActiveKey = useAppSelector((state) => state.room.roomIdActiveKey);
 
     useEffect(() => {
         if (!isInViewport) {
@@ -53,19 +56,25 @@ export const MessagesList = memo<IMessagesListProps>(({ friend, messages, select
     }, [messages.length]);
 
     useEffect(() => {
-        if (memoizedFilteredMessages.length > 0 && user && friendIdActiveKey === friend.userBehindFriend) {
-            dispatch(readMessages({ messages: memoizedFilteredMessages, user: user }));
+        if ("roomId" in chat) {
+            if (memoizedFilteredMessages.length > 0 && user && roomIdActiveKey === chat.roomId) {
+                dispatch(readMessages({ messages: memoizedFilteredMessages, user: user }));
+            }
+        } else {
+            if (memoizedFilteredMessages.length > 0 && user && friendIdActiveKey === chat.userBehindFriend) {
+                dispatch(readMessages({ messages: memoizedFilteredMessages, user: user }));
+            }
         }
-    }, [dispatch, friend.userBehindFriend, friendIdActiveKey, memoizedFilteredMessages, user]);
+    }, [chat, dispatch, friendIdActiveKey, memoizedFilteredMessages, roomIdActiveKey, user]);
 
     return (
         <StyledWrapper selectedMessageToReply={selectedMessageToReply}>
             {messages &&
                 memoizedFilteredMessages.map((msg, msgIndex) => (
-                    <MessageItem friend={friend} key={msgIndex + msg.content} message={msg} />
+                    <MessageItem chat={chat} key={msgIndex + msg.content} message={msg} />
                 ))}
             {isButtonVisible && <ScrollToBottom bottomDiv={bottomDiv} />}
             <div ref={bottomDiv}></div>
         </StyledWrapper>
     );
-});
+};

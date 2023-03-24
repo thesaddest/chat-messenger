@@ -1,1 +1,1 @@
-export { ChatTabsBox, ChatInputBox, RoomTabsBox } from "./ui";
+export { ChatTabsBox, ChatInputBox } from "./ui";

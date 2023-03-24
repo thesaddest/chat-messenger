@@ -2,10 +2,11 @@ import { memo } from "react";
 import styled from "styled-components";
 
 import { IFriend } from "../../../../entities/friend";
-import { SharedAvatar, UsernameConnected } from "../../../../shared/ui";
+import { SharedAvatar, ChatNameConnected } from "../../../../shared/ui";
+import { IRoom } from "../../../../entities/room";
 
 interface IChatInfoProps {
-    friend: IFriend;
+    chat: IFriend | IRoom;
 }
 
 const ChatInfoContainer = styled.div`
@@ -23,12 +24,12 @@ const ChatInfoWrapper = styled.div`
     align-items: center;
 `;
 
-export const ChatInfo = memo<IChatInfoProps>(({ friend }) => {
+export const ChatInfo = memo<IChatInfoProps>(({ chat }) => {
     return (
         <ChatInfoContainer>
             <ChatInfoWrapper>
                 <SharedAvatar height={"40px"} width={"40px"} />
-                <UsernameConnected friend={friend} />
+                <ChatNameConnected chat={chat} />
             </ChatInfoWrapper>
         </ChatInfoContainer>
     );

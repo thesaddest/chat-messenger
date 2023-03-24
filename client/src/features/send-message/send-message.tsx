@@ -8,7 +8,7 @@ import { IPendingAttachedFile, isSendMessageNeedDisable } from "../../entities/f
 
 interface ISendMessageProps {
     pendingFiles: IPendingAttachedFile[];
-    friendIdActiveKey: string;
+    chatId: string;
 }
 
 const StyledFormItemButtonContainer = styled(Form.Item)`
@@ -26,7 +26,7 @@ const StyledFormItemButtonContainer = styled(Form.Item)`
     }
 `;
 
-export const SendMessage = memo<ISendMessageProps>(({ pendingFiles, friendIdActiveKey }) => {
+export const SendMessage = memo<ISendMessageProps>(({ pendingFiles, chatId }) => {
     return (
         <StyledFormItemButtonContainer>
             <InputButton
@@ -34,7 +34,7 @@ export const SendMessage = memo<ISendMessageProps>(({ pendingFiles, friendIdActi
                 icon={<SendMessageIcon />}
                 htmlType={"submit"}
                 block={true}
-                disabled={isSendMessageNeedDisable(friendIdActiveKey, pendingFiles)}
+                disabled={isSendMessageNeedDisable(chatId, pendingFiles)}
             />
         </StyledFormItemButtonContainer>
     );
