@@ -3,12 +3,11 @@ import { FC, useCallback, useState } from "react";
 import styled from "styled-components";
 
 import { getFriendsWithLimit, IFriend, setFriendIdActiveKey } from "../../../../entities/friend";
-import { DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM } from "../../../../shared/const";
+import { COLORS, DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM, SIZES } from "../../../../shared/const";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
 import { deselectAllSelectedMessages, deselectMessageToReply } from "../../../../entities/message";
 import { IRoom, isChatsAreRoom, setRoomIdActiveKey } from "../../../../entities/room";
 import { ChatSidebarCard } from "../../../../features/chat-sidebar-card";
-
 import { ScrollToSeeMore } from "../../../../shared/ui";
 
 import { ChatTabsContent } from "./chat-tabs-content";
@@ -47,21 +46,21 @@ const StyledChatBoxTabs = styled(Tabs)`
                 flex-direction: column;
             }
 
-            @media only screen and(max-width: 768px) {
+            @media only screen and(max-width: ${SIZES.TABLET}) {
                 padding-left: 0.2rem;
             }
         }
 
         .ant-tabs-tab-active {
-            border: 1px solid #1677ff;
-            background-color: #1677ff;
+            border: 1px solid ${COLORS.MAIN_BLUE};
+            background-color: ${COLORS.MAIN_BLUE};
 
             .ant-tabs-tab-btn {
-                color: whitesmoke;
+                color: ${COLORS.MAIN_WHITE};
             }
         }
 
-        @media only screen and (max-width: 425px) {
+        @media only screen and (max-width: ${SIZES.MOBILE}) {
             display: ${(props) => (props.activeKey === DEFAULT_ACTIVE_KEY ? "flex" : "none")};
         }
     }
@@ -82,12 +81,12 @@ const StyledChatBoxTabs = styled(Tabs)`
             }
         }
 
-        @media only screen and (max-width: 425px) {
+        @media only screen and (max-width: ${SIZES.MOBILE}) {
             display: ${(props) => (props.activeKey === DEFAULT_ACTIVE_KEY ? "none" : "flex")};
         }
     }
 
-    @media only screen and (max-width: 425px) {
+    @media only screen and (max-width: ${SIZES.MOBILE}) {
         height: 95vh;
     }
 `;

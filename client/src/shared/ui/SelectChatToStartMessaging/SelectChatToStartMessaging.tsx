@@ -2,6 +2,8 @@ import { memo } from "react";
 import { Empty } from "antd";
 import styled from "styled-components";
 
+import { COLORS } from "../../const";
+
 const StyledEmpty = styled(Empty)`
     position: absolute;
     left: 60%;
@@ -9,9 +11,9 @@ const StyledEmpty = styled(Empty)`
     transform: translate(-50%, -60%);
 
     span {
-        color: whitesmoke;
-        border: 1px solid lightgray;
-        background: lightgray;
+        color: ${COLORS.MAIN_WHITE};
+        border: 1px solid ${COLORS.LIGHTGREY};
+        background: ${COLORS.LIGHTGREY};
         border-radius: 45px;
         padding: 0.25rem;
     }

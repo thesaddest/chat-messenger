@@ -3,14 +3,16 @@ import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/
 import NotificationService from "../api/notification.service";
 
 import { socket } from "../../../shared/socket-io";
-import { SOCKET_EVENTS } from "../../../shared/const";
+import { SOCKET_EVENTS, STATE_STATUSES } from "../../../shared/const";
+
+import { NOTIFICATION_API } from "../api/api.constants";
 
 import { ICreateRoomNotification, IDeleteRoomNotification, INotification, IRoomNotification } from "./interfaces";
 
 interface RoomState {
     notifications: INotification;
     notificationLength: number;
-    status: "start" | "pending" | "succeeded" | "failed";
+    status: STATE_STATUSES;
 }
 
 const initialState: RoomState = {
@@ -26,11 +28,11 @@ const initialState: RoomState = {
         ],
     },
     notificationLength: 0,
-    status: "start",
+    status: STATE_STATUSES.START,
 };
 
 export const getAllRoomNotifications = createAsyncThunk<IRoomNotification[], undefined, { rejectValue: string }>(
-    "notification/getAllRoomNotifications",
+    `${NOTIFICATION_API.ENTITY}/${NOTIFICATION_API.ALL_ROOM_NOTIFICATIONS}`,
     async function (_, { rejectWithValue }) {
         const { data } = await NotificationService.getAllRoomNotifications();
 
@@ -46,33 +48,39 @@ export const createRoomNotification = createAsyncThunk<
     IRoomNotification,
     ICreateRoomNotification,
     { rejectValue: string }
->("notification/createRoomNotification", async function (createRoomNotificationPayload, { rejectWithValue }) {
-    const { data } = await NotificationService.createRoomNotification(createRoomNotificationPayload);
+>(
+    `${NOTIFICATION_API.ENTITY}/${NOTIFICATION_API.CREATE_ROOM_NOTIFICATION}`,
+    async function (createRoomNotificationPayload, { rejectWithValue }) {
+        const { data } = await NotificationService.createRoomNotification(createRoomNotificationPayload);
 
-    if (!data) {
-        return rejectWithValue("Error while getting messages");
-    }
+        if (!data) {
+            return rejectWithValue("Error while getting messages");
+        }
 
-    socket.emit(SOCKET_EVENTS.INVITE_TO_ROOM, data);
-    return data;
-});
+        socket.emit(SOCKET_EVENTS.INVITE_TO_ROOM, data);
+        return data;
+    },
+);
 
 export const deleteRoomNotification = createAsyncThunk<
     IRoomNotification,
     IDeleteRoomNotification,
     { rejectValue: string }
->("notification/deleteRoomNotification", async function (createRoomNotificationPayload, { rejectWithValue }) {
-    const { data } = await NotificationService.deleteRoomNotification(createRoomNotificationPayload);
+>(
+    `${NOTIFICATION_API.ENTITY}/${NOTIFICATION_API.DELETE_ROOM_NOTIFICATION}`,
+    async function (createRoomNotificationPayload, { rejectWithValue }) {
+        const { data } = await NotificationService.deleteRoomNotification(createRoomNotificationPayload);
 
-    if (!data) {
-        return rejectWithValue("Error while getting messages");
-    }
+        if (!data) {
+            return rejectWithValue("Error while getting messages");
+        }
 
-    return data;
-});
+        return data;
+    },
+);
 
 export const notificationModel = createSlice({
-    name: "notifications",
+    name: `${NOTIFICATION_API.ENTITY}`,
     initialState,
     reducers: {
         receiveNotificationInviteToJoinRoom: (state, action: PayloadAction<IRoomNotification>) => {
@@ -87,26 +95,26 @@ export const notificationModel = createSlice({
             .addCase(getAllRoomNotifications.fulfilled, (state, action) => {
                 state.notifications.roomNotifications = action.payload;
                 state.notificationLength = action.payload.length;
-                state.status = "succeeded";
+                state.status = STATE_STATUSES.SUCCEEDED;
             })
             .addCase(getAllRoomNotifications.pending, (state) => {
-                state.status = "pending";
+                state.status = STATE_STATUSES.PENDING;
             })
             .addCase(getAllRoomNotifications.rejected, (state) => {
-                state.status = "failed";
+                state.status = STATE_STATUSES.FAILED;
             })
             .addCase(deleteRoomNotification.fulfilled, (state, action) => {
                 state.notifications.roomNotifications = current(state.notifications.roomNotifications).filter(
                     (roomNotification) => roomNotification.notificationId !== action.payload.notificationId,
                 );
                 state.notificationLength -= 1;
-                state.status = "succeeded";
+                state.status = STATE_STATUSES.SUCCEEDED;
             })
             .addCase(deleteRoomNotification.pending, (state) => {
-                state.status = "pending";
+                state.status = STATE_STATUSES.PENDING;
             })
             .addCase(deleteRoomNotification.rejected, (state) => {
-                state.status = "failed";
+                state.status = STATE_STATUSES.FAILED;
             });
     },
 });

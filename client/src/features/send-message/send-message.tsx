@@ -5,6 +5,7 @@ import { SendOutlined } from "@ant-design/icons";
 
 import { InputButton } from "../../shared/ui";
 import { IPendingAttachedFile, isSendMessageNeedDisable } from "../../entities/file";
+import { SIZES } from "../../shared/const";
 
 interface ISendMessageProps {
     pendingFiles: IPendingAttachedFile[];
@@ -19,7 +20,7 @@ const StyledFormItemButtonContainer = styled(Form.Item)`
     margin: 0;
     padding-right: 0.15rem;
 
-    @media only screen and (min-width: 1080px) {
+    @media only screen and (min-width: ${SIZES.DESKTOP}) {
         .ant-form-item-row {
             width: 40px;
         }

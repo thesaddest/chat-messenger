@@ -8,6 +8,7 @@ import { FileAddOutlined } from "@ant-design/icons";
 import { InputButton } from "../../shared/ui";
 import { useAppDispatch } from "../../shared/lib/hooks";
 import { addPendingFile, uploadSingleFile } from "../../entities/file";
+import { SIZES } from "../../shared/const";
 
 interface IFileUploadProps {
     username: string;
@@ -22,7 +23,7 @@ const StyledFormItemButtonContainer = styled(Form.Item)`
     margin: 0;
     padding-left: 0.15rem;
 
-    @media only screen and (min-width: 1080px) {
+    @media only screen and (min-width: ${SIZES.DESKTOP}) {
         .ant-form-item-row {
             width: 40px;
         }

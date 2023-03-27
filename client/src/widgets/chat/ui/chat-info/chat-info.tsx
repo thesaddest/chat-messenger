@@ -5,6 +5,7 @@ import { IFriend } from "../../../../entities/friend";
 import { SharedAvatar, ChatNameConnected } from "../../../../shared/ui";
 import { IRoom, isChatIsRoom } from "../../../../entities/room";
 import { InviteFriendToRoom } from "../../../../features/invite-friend-to-room";
+import { COLORS } from "../../../../shared/const";
 
 interface IChatInfoProps {
     chat: IFriend | IRoom;
@@ -16,7 +17,7 @@ const ChatInfoContainer = styled.div`
     align-items: center;
     height: 5vh;
     width: 100%;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid ${COLORS.LIGHTGREY};
 `;
 
 const AvatarChatNameContainer = styled.div`

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { List } from "antd";
 
-import { INotification } from "../../../entities/notification/model/interfaces";
+import { INotification } from "../../../entities/notification";
 import { RoomNotificationItem } from "../../../shared/ui";
 
 interface INotificationPopupContentProps {
@@ -12,6 +12,17 @@ export const NotificationPopupContent: FC<INotificationPopupContentProps> = ({ n
     const data = notifications.roomNotifications;
 
     return (
-        <List dataSource={data} itemLayout={"horizontal"} renderItem={(item) => <RoomNotificationItem item={item} />} />
+        <List
+            dataSource={data}
+            itemLayout={"horizontal"}
+            renderItem={({ roomName, roomId, notificationId, sentBy }) => (
+                <RoomNotificationItem
+                    roomName={roomName}
+                    roomId={roomId}
+                    notificationId={notificationId}
+                    sentBy={sentBy}
+                />
+            )}
+        />
     );
 };

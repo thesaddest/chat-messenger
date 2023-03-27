@@ -2,6 +2,7 @@ import { memo } from "react";
 import styled from "styled-components";
 
 import { VerticalPipe } from "../../../../shared/ui";
+import { COLORS } from "../../../../shared/const";
 
 interface IRepliedMessageItemProps {
     prevMessageFrom: string;
@@ -26,7 +27,7 @@ const StyledUsernameMessageContainer = styled.div`
     p {
         font-size: 16px;
         font-weight: 600;
-        color: whitesmoke;
+        color: ${COLORS.MAIN_WHITE};
     }
 
     span {

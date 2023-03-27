@@ -12,6 +12,7 @@ import {
 } from "../../../entities/message";
 import { MemoTitle } from "../../../shared/ui";
 import { useAppDispatch } from "../../../shared/lib/hooks";
+import { SIZES } from "../../../shared/const";
 
 interface IDeleteMessagesPopupContentProps {
     selectedMessages: IMessage[];
@@ -30,7 +31,7 @@ const StyledButtonsContainer = styled.div`
     justify-content: space-evenly;
     align-items: center;
 
-    @media only screen and (max-width: 425px) {
+    @media only screen and (max-width: ${SIZES.MOBILE}) {
         width: 100%;
     }
 `;

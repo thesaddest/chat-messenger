@@ -3,6 +3,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import FriendService from "../api/friend.service";
 import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
 
+import { FRIEND_API } from "../api/api.constants";
+
 import { IAddFriendValues, IFriend, IFriendStatus, IGetFriendsBySearchQuery, IGetMoreFriends } from "./interfaces";
 
 interface FriendState {
@@ -38,7 +40,7 @@ const isFriendsStateNeedUpdate = (friends: IFriend[], action: PayloadAction<IFri
 };
 
 export const getFriendsBySearchQuery = createAsyncThunk<IFriend[], IGetFriendsBySearchQuery, { rejectValue: string }>(
-    "friends/getFriendsBySearchQuery",
+    `${FRIEND_API.ENTITY}/${FRIEND_API.SEARCH}`,
     async function (searchQuery, { rejectWithValue }) {
         try {
             const { data } = await FriendService.getFriendsBySearchQuery(searchQuery);
@@ -51,7 +53,7 @@ export const getFriendsBySearchQuery = createAsyncThunk<IFriend[], IGetFriendsBy
 );
 
 export const getFriends = createAsyncThunk<IFriend[], undefined, { rejectValue: string }>(
-    "friends/getFriends",
+    `${FRIEND_API.ENTITY}/${FRIEND_API.ALL_FRIENDS}`,
     async function (_, { rejectWithValue }) {
         const { data } = await FriendService.getFriends();
 
@@ -90,7 +92,7 @@ export const addFriend = createAsyncThunk<IFriend, IAddFriendValues, { rejectVal
 );
 
 export const friendModel = createSlice({
-    name: "friend",
+    name: `${FRIEND_API.ENTITY}`,
     initialState,
     reducers: {
         initUser(state, action: PayloadAction<IFriendStatus>) {

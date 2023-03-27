@@ -4,6 +4,8 @@ import { AxiosRequestConfig } from "axios";
 import api from "../../../shared/api/axios-instance";
 import { IFile } from "../model";
 
+import { FILE_API } from "./api.constants";
+
 export default class FileService {
     static async uploadFile(
         formData: FormData,
@@ -19,6 +21,6 @@ export default class FileService {
 
             return config;
         });
-        return api.post<IFile>("/file/upload-single-file", formData);
+        return api.post<IFile>(`${FILE_API.ENTITY}/${FILE_API.UPLOAD_SINGLE_FILE}`, formData);
     }
 }

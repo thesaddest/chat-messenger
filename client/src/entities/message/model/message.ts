@@ -5,6 +5,7 @@ import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS } from "../../../shared/const";
 import { IUser } from "../../user";
 import { IFile } from "../../file";
+import { MESSAGE_API } from "../api/api.constants";
 
 import { IForwardMessagesPayload, IMessage, IReplyToMessagePayload } from "./interfaces";
 import {
@@ -67,7 +68,7 @@ export const createMessage = (message: IMessage): IMessage => {
 };
 
 export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
-    "messages/sendMessage",
+    `${MESSAGE_API.ENTITY}/${MESSAGE_API.SEND_MESSAGE}`,
     async function (messageData, { rejectWithValue }) {
         try {
             const { data } = await MessageService.sendMessage(messageData);
@@ -82,7 +83,7 @@ export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: s
 );
 
 export const getMessages = createAsyncThunk<IMessage[], undefined, { rejectValue: string }>(
-    "messages/getMessages",
+    `${MESSAGE_API.ENTITY}/${MESSAGE_API.ALL_MESSAGES}`,
     async function (_, { rejectWithValue }) {
         const { data } = await MessageService.getMessages();
 
@@ -95,7 +96,7 @@ export const getMessages = createAsyncThunk<IMessage[], undefined, { rejectValue
 );
 
 export const deleteMessages = createAsyncThunk<IMessage[], IMessage[], { rejectValue: string }>(
-    "messages/deleteMessages",
+    `${MESSAGE_API.ENTITY}/${MESSAGE_API.DELETE_MESSAGES}`,
     async function (messages, { rejectWithValue }) {
         const { data } = await MessageService.deleteMessages(messages);
 
@@ -109,7 +110,7 @@ export const deleteMessages = createAsyncThunk<IMessage[], IMessage[], { rejectV
 );
 
 export const readMessages = createAsyncThunk<IMessage[], IReadMessagePayload, { rejectValue: string }>(
-    "messages/readMessages",
+    `${MESSAGE_API.ENTITY}/${MESSAGE_API.READ_MESSAGES}`,
     async function ({ messages, user }, { rejectWithValue }) {
         const messagesSentFromFriend = messages.filter((message) => message.from !== user.userId);
         if (messagesSentFromFriend.length === 0) {
@@ -133,7 +134,7 @@ export const readMessages = createAsyncThunk<IMessage[], IReadMessagePayload, { 
 );
 
 export const forwardMessages = createAsyncThunk<IMessage[], IForwardMessagesPayload, { rejectValue: string }>(
-    "messages/forwardMessages",
+    `${MESSAGE_API.ENTITY}/${MESSAGE_API.FORWARD_MESSAGES}`,
     async function (forwardMessagesPayload, { rejectWithValue }) {
         const { data } = await MessageService.forwardMessages(forwardMessagesPayload);
 
@@ -147,7 +148,7 @@ export const forwardMessages = createAsyncThunk<IMessage[], IForwardMessagesPayl
 );
 
 export const replyToMessage = createAsyncThunk<IMessage, IReplyToMessagePayload, { rejectValue: string }>(
-    "messages/replyToMessage",
+    `${MESSAGE_API.ENTITY}/${MESSAGE_API.REPLY_TO_MESSAGE}`,
     async function (repliedMessagePayload, { rejectWithValue }) {
         const { data } = await MessageService.replyToMessage(repliedMessagePayload);
 
@@ -164,25 +165,28 @@ export const sendMessageWithAttachedFiles = createAsyncThunk<
     IMessage,
     ISendMessageWithAttachedFilesPayload,
     { rejectValue: string }
->("messages/sendMessageWithAttachedFiles", async function (messageWithAttachedFilesPayload, { rejectWithValue }) {
-    const messageToSend = createMessage({
-        to: messageWithAttachedFilesPayload.newMessage.to,
-        from: messageWithAttachedFilesPayload.newMessage.from,
-        content: messageWithAttachedFilesPayload.newMessage.content,
-        attachedFilesAfterUpload: messageWithAttachedFilesPayload.uploadedFiles,
-    });
-    const { data } = await MessageService.sendMessage(messageToSend);
+>(
+    `${MESSAGE_API.ENTITY}/${MESSAGE_API.SEND_MESSAGE}-with-attached-file`,
+    async function (messageWithAttachedFilesPayload, { rejectWithValue }) {
+        const messageToSend = createMessage({
+            to: messageWithAttachedFilesPayload.newMessage.to,
+            from: messageWithAttachedFilesPayload.newMessage.from,
+            content: messageWithAttachedFilesPayload.newMessage.content,
+            attachedFilesAfterUpload: messageWithAttachedFilesPayload.uploadedFiles,
+        });
+        const { data } = await MessageService.sendMessage(messageToSend);
 
-    if (!data) {
-        return rejectWithValue("Error while sending message with attached files");
-    }
+        if (!data) {
+            return rejectWithValue("Error while sending message with attached files");
+        }
 
-    socket.emit(SOCKET_EVENTS.SEND_MESSAGE, data);
-    return data;
-});
+        socket.emit(SOCKET_EVENTS.SEND_MESSAGE, data);
+        return data;
+    },
+);
 
 export const messageModel = createSlice({
-    name: "messages",
+    name: `${MESSAGE_API.ENTITY}`,
     initialState,
     reducers: {
         addMessage: (state, action: PayloadAction<IMessage>) => {

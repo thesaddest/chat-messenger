@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { FileOutlined } from "@ant-design/icons";
 
 import { IAttachedFileProps } from "../../model";
+import { COLORS, SIZES } from "../../../../shared/const";
 
 const StyledContainer = styled.div`
     display: flex;
@@ -25,7 +26,7 @@ const StyledButton = styled(Button)`
     padding: 0.5rem;
     height: 36px;
 
-    @media only screen and (min-width: 1080px) {
+    @media only screen and (min-width: ${SIZES.DESKTOP}) {
         display: flex;
         height: 40px;
         width: 40px;
@@ -41,7 +42,7 @@ const StyledFileNameContainer = styled.div`
 
   p {
     font-weight: 600;
-    color: whitesmoke;
+    color: ${COLORS.MAIN_WHITE};;
 `;
 
 export const AttachedFileDocument = memo<IAttachedFileProps>(({ attachedFile }) => {

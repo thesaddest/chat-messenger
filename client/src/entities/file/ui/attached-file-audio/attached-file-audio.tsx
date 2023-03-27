@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { CustomerServiceOutlined } from "@ant-design/icons";
 
 import { IAttachedFileProps } from "../../model";
+import { COLORS } from "../../../../shared/const";
 
 const StyledAudio = styled.audio`
     max-height: 100%;
@@ -20,7 +21,7 @@ const StyledFileNameContainer = styled.div`
 
   p {
     font-weight: 600;
-    color: whitesmoke;
+    color: ${COLORS.MAIN_WHITE};
 `;
 
 const StyledContainer = styled.div`
@@ -49,7 +50,7 @@ export const AttachedFileAudio = memo<IAttachedFileProps>(({ attachedFile }) => 
         <StyledContainer>
             <StyledFileNameAndIconContainer>
                 <StyledIconContainer>
-                    <CustomerServiceOutlined style={{ fontSize: "24px", color: "whitesmoke" }} />
+                    <CustomerServiceOutlined style={{ fontSize: "24px", color: `${COLORS.MAIN_WHITE};` }} />
                 </StyledIconContainer>
                 <StyledFileNameContainer>
                     <p>{attachedFile.originalName}</p>

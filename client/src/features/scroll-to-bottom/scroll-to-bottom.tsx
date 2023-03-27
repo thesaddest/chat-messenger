@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { Button } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 
+import { COLORS } from "../../shared/const";
+
 interface IScrollToBottomProps {
     bottomDiv: RefObject<HTMLDivElement>;
 }
@@ -15,8 +17,8 @@ const StyledButton = styled(Button)`
     border-radius: 50%;
     height: 2.5rem;
     width: 2.5rem;
-    background: whitesmoke;
-    color: black;
+    background: ${COLORS.MAIN_WHITE};
+    color: ${COLORS.MAIN_BLACK};
     border: 0;
 `;
 

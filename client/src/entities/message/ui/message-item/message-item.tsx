@@ -11,6 +11,7 @@ import { CopyMessage } from "../../../../features/copy-message";
 import { DeleteMessages } from "../../../../features/delete-messages";
 import { SelectMessage } from "../../../../features/select-message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
+import { COLORS } from "../../../../shared/const";
 
 import { MessageItemContent } from "./message-item-content";
 
@@ -21,9 +22,13 @@ interface MessageItemProps {
 }
 
 const StyledFriendMessageContainer = styled.div<{ friend: IFriend; message: IMessage }>`
-    background: ${({ message, friend }) => (message.to !== friend.userBehindFriend ? "#1677ff" : "lightgray")};
-    color: ${({ message, friend }) => (message.to !== friend.userBehindFriend ? "whitesmoke" : "black")};
-    border: 1px solid ${({ message, friend }) => (message.to !== friend.userBehindFriend ? "#1677ff" : "lightgray")};
+    background: ${({ message, friend }) =>
+        message.to !== friend.userBehindFriend ? `${COLORS.MAIN_BLUE}` : `${COLORS.LIGHTGREY}`};
+    color: ${({ message, friend }) =>
+        message.to !== friend.userBehindFriend ? `${COLORS.MAIN_WHITE};` : `${COLORS.MAIN_BLACK}`};
+    border: 1px solid
+        ${({ message, friend }) =>
+            message.to !== friend.userBehindFriend ? `${COLORS.MAIN_BLUE}` : `${COLORS.LIGHTGREY}`};
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     border-radius: 20px;
     margin: ${({ message, friend }) =>
@@ -36,9 +41,10 @@ const StyledFriendMessageContainer = styled.div<{ friend: IFriend; message: IMes
 `;
 
 const StyledRoomMessageContainer = styled.div<{ room: IRoom; message: IMessage; userId: string }>`
-    background: ${({ message, userId }) => (message.from !== userId ? "#1677ff" : "lightgray")};
-    color: ${({ message, userId }) => (message.from !== userId ? "whitesmoke" : "black")};
-    border: 1px solid ${({ message, userId }) => (message.from !== userId ? "#1677ff" : "lightgray")};
+    background: ${({ message, userId }) => (message.from !== userId ? `${COLORS.MAIN_BLUE}` : `${COLORS.LIGHTGREY}`)};
+    color: ${({ message, userId }) => (message.from !== userId ? `${COLORS.MAIN_WHITE};` : `${COLORS.MAIN_BLACK}`)};
+    border: 1px solid
+        ${({ message, userId }) => (message.from !== userId ? `${COLORS.MAIN_BLUE}` : `${COLORS.LIGHTGREY}`)};
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     border-radius: 20px;
     margin: ${({ message, userId }) =>

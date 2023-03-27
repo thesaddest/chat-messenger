@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import UserService from "../api/user.service";
 import { ILoginValues } from "../../../pages/login/interfaces";
 import { IRegisterValues } from "../../../pages/register/interfaces";
+import { USER_API } from "../api/api.constants";
 
 import { IUser } from "./interfaces";
 
@@ -21,7 +22,7 @@ const initialState: AuthState = {
 };
 
 export const login = createAsyncThunk<IUser, ILoginValues, { rejectValue: string }>(
-    "auth/login",
+    `${USER_API.ENTITY}/${USER_API.LOGIN}`,
     async function (userData, { rejectWithValue }) {
         try {
             const { data } = await UserService.login(userData);
@@ -36,7 +37,7 @@ export const login = createAsyncThunk<IUser, ILoginValues, { rejectValue: string
 );
 
 export const register = createAsyncThunk<IUser, IRegisterValues, { rejectValue: string }>(
-    "auth/register",
+    `${USER_API.ENTITY}/${USER_API.REGISTER}`,
     async function (userData, { rejectWithValue }) {
         try {
             const { data } = await UserService.register(userData);
@@ -51,7 +52,7 @@ export const register = createAsyncThunk<IUser, IRegisterValues, { rejectValue: 
 );
 
 export const userModel = createSlice({
-    name: "auth",
+    name: `${USER_API.ENTITY}`,
     initialState,
     reducers: {
         socketError(state, action: PayloadAction<string>) {

@@ -2,6 +2,8 @@ import { FC } from "react";
 import { Skeleton } from "antd";
 import styled from "styled-components";
 
+import { SIZES } from "../../const";
+
 const StyledNavbarContainer = styled.div`
     display: flex;
     align-items: center;
@@ -10,7 +12,7 @@ const StyledNavbarContainer = styled.div`
     padding: 0.5rem 0 0 0.5rem;
     width: 100%;
 
-    @media only screen and (max-width: 425px) {
+    @media only screen and (max-width: ${SIZES.MOBILE}) {
         justify-content: space-evenly;
     }
 `;
@@ -20,15 +22,15 @@ const StyledButtonsContainer = styled.div`
     gap: 0.5rem;
     padding: 0 2rem 0 2rem;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: ${SIZES.TABLET}) {
         padding-right: 2rem;
     }
 
-    @media only screen and (min-width: 768px) {
+    @media only screen and (min-width: ${SIZES.TABLET}) {
         padding: 0;
     }
 
-    @media only screen and (min-width: 1080px) {
+    @media only screen and (min-width: ${SIZES.DESKTOP}) {
         padding-left: 9rem;
     }
 `;
@@ -37,7 +39,7 @@ const StyledInputContainer = styled.div`
     display: flex;
     padding-left: 1rem;
 
-    @media only screen and (max-width: 425px) {
+    @media only screen and (max-width: ${SIZES.MOBILE}) {
         padding-right: 1.5rem;
     }
 `;

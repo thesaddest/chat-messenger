@@ -1,19 +1,21 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import FileService from "../api/file.service";
+import { STATE_STATUSES } from "../../../shared/const";
+import { FILE_API } from "../api/api.constants";
 
-import { IAttachedFileStatus, IFile, IPendingAttachedFile, IUploadFilePayload } from "./interfaces";
+import { IFile, IPendingAttachedFile, IUploadFilePayload } from "./interfaces";
 
 interface FileState {
     pendingFiles: IPendingAttachedFile[];
     uploadedFiles: IFile[];
-    status: IAttachedFileStatus;
+    status: STATE_STATUSES;
 }
 
 const initialState: FileState = {
     pendingFiles: [],
     uploadedFiles: [],
-    status: "start",
+    status: STATE_STATUSES.START,
 };
 
 export const isSendMessageNeedDisable = (
@@ -30,7 +32,7 @@ export const isUploadedFilesBelongToChat = (chatIdActiveKey: string, uploadedFil
 };
 
 export const uploadSingleFile = createAsyncThunk<IFile, IUploadFilePayload, { rejectValue: string }>(
-    "files/uploadSingleFile",
+    `${FILE_API.ENTITY}/${FILE_API.UPLOAD_SINGLE_FILE}`,
     async function ({ file, username, friendIdActiveKey }, { rejectWithValue }) {
         const formData = new FormData();
         formData.append("file", file);
@@ -45,7 +47,7 @@ export const uploadSingleFile = createAsyncThunk<IFile, IUploadFilePayload, { re
 );
 
 export const fileModel = createSlice({
-    name: "files",
+    name: `${FILE_API.ENTITY}`,
     initialState,
     reducers: {
         clearFileStateAfterUpload: (state, action: PayloadAction<IFile[]>) => {
@@ -55,7 +57,7 @@ export const fileModel = createSlice({
         },
         addPendingFile: (state, action: PayloadAction<IPendingAttachedFile>) => {
             state.pendingFiles.push(action.payload);
-            state.status = "pending";
+            state.status = STATE_STATUSES.PENDING;
         },
     },
     extraReducers: (builder) => {
@@ -65,13 +67,13 @@ export const fileModel = createSlice({
                 state.pendingFiles = state.pendingFiles.filter(
                     (pendingFile) => pendingFile.name !== action.payload.originalName,
                 );
-                state.status = "succeeded";
+                state.status = STATE_STATUSES.SUCCEEDED;
             })
             .addCase(uploadSingleFile.pending, (state) => {
-                state.status = "pending";
+                state.status = STATE_STATUSES.PENDING;
             })
             .addCase(uploadSingleFile.rejected, (state) => {
-                state.status = "failed";
+                state.status = STATE_STATUSES.FAILED;
             });
     },
 });

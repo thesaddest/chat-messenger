@@ -2,7 +2,7 @@ import { FC, useEffect, useRef, KeyboardEvent, useCallback } from "react";
 import { Form, FormInstance, Input, InputRef } from "antd";
 import styled from "styled-components";
 
-import { CHAT_RULES } from "../../../../../shared/const";
+import { CHAT_RULES, SIZES } from "../../../../../shared/const";
 import { IFile, IPendingAttachedFile, isSendMessageNeedDisable } from "../../../../../entities/file";
 
 interface IChatInputProps {
@@ -74,7 +74,7 @@ const StyledInputContainer = styled(Form.Item)`
         padding: 0 0 0.2rem 0.5rem;
     }
 
-    @media only screen and (min-width: 1080px) {
+    @media only screen and (min-width: ${SIZES.DESKTOP}) {
         width: 90%;
     }
 `;

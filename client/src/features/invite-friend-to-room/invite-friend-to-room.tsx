@@ -1,7 +1,9 @@
-import { memo, SyntheticEvent, useCallback, useMemo, useState } from "react";
+import { memo, useMemo } from "react";
 import { Button, ButtonProps, Form, Modal } from "antd";
 import styled from "styled-components";
 import { UserAddOutlined } from "@ant-design/icons";
+
+import { useModal } from "../../shared/lib/hooks";
 
 import { InviteFriendToRoomPopupContent } from "./invite-friend-to-room-popup-content";
 
@@ -17,22 +19,7 @@ const StyledInviteFriendToRoom = styled.div`
 
 export const InviteFriendToRoom = memo<IInviteFriendToRoomProps>(({ roomName }) => {
     const [form] = Form.useForm();
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [modalError, setModalError] = useState<string>("");
-
-    const showModal = useCallback(() => {
-        setIsModalOpen(true);
-    }, []);
-
-    const handleCancel = useCallback(
-        (e: SyntheticEvent) => {
-            e.stopPropagation();
-            setIsModalOpen(false);
-            setModalError("");
-            form.resetFields();
-        },
-        [form],
-    );
+    const { isModalOpen, showModal, handleCancel, modalError, setModalError, setIsModalOpen } = useModal();
 
     const OK_BUTTON_PROPS: ButtonProps = useMemo(
         () => ({

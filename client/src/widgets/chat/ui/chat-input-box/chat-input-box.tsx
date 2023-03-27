@@ -14,6 +14,7 @@ import { clearFileStateAfterUpload, isUploadedFilesBelongToChat, UploadedFilesLi
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 import { FileUpload } from "../../../../features/file-upload";
 import { SendMessage } from "../../../../features/send-message";
+import { COLORS } from "../../../../shared/const";
 
 import { ChatInput } from "./chat-input";
 
@@ -34,7 +35,7 @@ const StyledForm = styled(Form)`
     align-items: center;
     height: 100%;
     width: 100%;
-    background: lightgray;
+    background: ${COLORS.LIGHTGREY};
     border-radius: 20px;
     margin: 0 1rem 0 1rem;
 `;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { useWindowSize } from "../../../shared/lib/hooks";
 import { CancelButton, BackButton } from "../../../shared/ui";
-import { DEFAULT_ACTIVE_KEY } from "../../../shared/const";
+import { DEFAULT_ACTIVE_KEY, MAX_MOBILE_WIDTH_HOOK, SIZES } from "../../../shared/const";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { setFriendIdActiveKey } from "../../../entities/friend";
 import { AddFriend } from "../../../features/add-friend";
@@ -34,7 +34,7 @@ const StyledRightDiv = styled.div`
     justify-content: space-between;
     padding: 0 1rem 0 1rem;
 
-    @media only screen and (max-width: 425px) {
+    @media only screen and (max-width: ${SIZES.MOBILE}) {
         width: 100%;
         flex: 0;
     }
@@ -46,7 +46,7 @@ const StyledLeftDiv = styled.div<IStyledLeftDivProps>`
     align-items: center;
     flex: 1;
 
-    @media only screen and (max-width: 425px) {
+    @media only screen and (max-width: ${SIZES.MOBILE}) {
         display: ${({ selectedMessages }) => (selectedMessages.length > 0 ? "none" : "flex")};
         justify-content: ${({ friendIdActiveKey, roomIdActiveKey }) =>
             friendIdActiveKey === DEFAULT_ACTIVE_KEY && roomIdActiveKey === DEFAULT_ACTIVE_KEY
@@ -72,7 +72,7 @@ const StyledHeader = styled.header`
         margin: 0;
     }
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: ${SIZES.TABLET}) {
         h4 {
             font-size: 18px;
             word-break: normal;
@@ -84,7 +84,7 @@ const StyledModalButtonsContainer = styled.div`
     display: flex;
     gap: 0.5rem;
 
-    @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: ${SIZES.TABLET}) {
         padding-left: 0.5rem;
     }
 `;
@@ -124,7 +124,7 @@ export const Navbar: FC<INavbarProps> = ({ chatType, setChatType }) => {
                 roomIdActiveKey={roomIdActiveKey}
                 selectedMessages={selectedMessages}
             >
-                {width >= 426 ||
+                {width >= MAX_MOBILE_WIDTH_HOOK ||
                 (friendIdActiveKey === DEFAULT_ACTIVE_KEY && roomIdActiveKey === DEFAULT_ACTIVE_KEY) ? (
                     <>
                         <StyledModalButtonsContainer>

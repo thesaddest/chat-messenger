@@ -8,7 +8,7 @@ import { ChatTabsBox } from "../../widgets/chat";
 import { useSocket } from "../../app/lib/hooks";
 import { SkeletonChat } from "../../features/skeleton-chat";
 import { SelectChatToStartMessaging } from "../../shared/ui";
-import { DEFAULT_ACTIVE_KEY } from "../../shared/const";
+import { COLORS, DEFAULT_ACTIVE_KEY, MAX_MOBILE_WIDTH_HOOK, SIZES } from "../../shared/const";
 
 import { ChatType } from "./interfaces";
 
@@ -18,18 +18,18 @@ const StyledHomeContainer = styled.div`
     justify-content: center;
     align-items: center;
 
-    @media only screen and (max-width: 425px) {
+    @media only screen and (max-width: ${SIZES.MOBILE}) {
         overflow: hidden;
     }
 `;
 
 const StyledHome = styled.div`
-    border: 1px solid lightgray;
+    border: 1px solid ${COLORS.LIGHTGREY};
     border-radius: 10px;
     width: 65vw;
     height: 80vh;
 
-    @media only screen and (max-width: 425px) {
+    @media only screen and (max-width: ${SIZES.MOBILE}) {
         overflow: hidden;
         height: 100vh;
         width: 100vw;
@@ -38,7 +38,7 @@ const StyledHome = styled.div`
 
 const StyledDivider = styled(Divider)`
     margin: 0;
-    background-color: lightgray;
+    background-color: ${COLORS.LIGHTGREY};
 `;
 
 export const HomePage: FC = () => {
@@ -63,7 +63,7 @@ export const HomePage: FC = () => {
                         <Navbar chatType={chatType} setChatType={setChatType} />
                         <StyledDivider />
                         {/*Check if IS NOT mobile and chat active keys ARE default = render SelectChatToStartMessaging */}
-                        {width >= 426 &&
+                        {width >= MAX_MOBILE_WIDTH_HOOK &&
                             friendIdActiveKey === DEFAULT_ACTIVE_KEY &&
                             roomIdActiveKey === DEFAULT_ACTIVE_KEY && <SelectChatToStartMessaging />}
                         {rooms.length > 0 && chatType === ChatType.ROOM ? (

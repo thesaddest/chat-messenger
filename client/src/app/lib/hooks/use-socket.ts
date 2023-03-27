@@ -19,8 +19,8 @@ import { friendJoinedRoom, getRooms, IRoom } from "../../../entities/room";
 import {
     getAllRoomNotifications,
     receiveNotificationInviteToJoinRoom,
-} from "../../../entities/notification/model/notification";
-import { IRoomNotification } from "../../../entities/notification/model/interfaces";
+    IRoomNotification,
+} from "../../../entities/notification";
 
 export const useSocket = () => {
     const dispatch = useAppDispatch();

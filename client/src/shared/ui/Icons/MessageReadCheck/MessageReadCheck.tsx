@@ -2,13 +2,15 @@ import { CheckOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { memo } from "react";
 
+import { COLORS } from "../../../const";
+
 interface IMessageReadCheckProps {
     isMessageRead?: boolean;
 }
 
 const StyledIsMessageReadContainer = styled.div<IMessageReadCheckProps>`
     position: absolute;
-    color: ${(props) => (props.isMessageRead ? "whitesmoke" : "black")};
+    color: ${(props) => (props.isMessageRead ? `${COLORS.MAIN_WHITE};` : `${COLORS.MAIN_BLACK}`)};
     bottom: 0;
     left: 100%;
 `;

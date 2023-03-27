@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { RepliedMessageItem } from "../../replied-message-item";
 import { AttachedFileList, IFile } from "../../../../file";
 import { MessageReadCheck } from "../../../../../shared/ui";
+import { COLORS } from "../../../../../shared/const";
 
 interface IMessageItemContentProps {
     isMessageForwarded?: boolean;
@@ -27,7 +28,7 @@ interface ForwardedProps {
 const StyledForwarded = styled.p<ForwardedProps>`
     font-size: 16px;
     font-style: italic;
-    color: ${({ to, from }) => (to === from ? "whitesmoke" : "black")};
+    color: ${({ to, from }) => (to === from ? `${COLORS.MAIN_WHITE};` : `${COLORS.MAIN_BLACK}`)};
 `;
 
 const StyledMessageContentHolder = styled.div`

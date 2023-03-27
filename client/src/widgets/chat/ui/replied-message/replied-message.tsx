@@ -5,6 +5,7 @@ import { Button } from "antd";
 import { deselectMessageToReply, IMessage } from "../../../../entities/message";
 import { Close, Reply } from "../../../../shared/ui";
 import { useAppDispatch } from "../../../../shared/lib/hooks";
+import { COLORS } from "../../../../shared/const";
 
 interface IRepliedMessageProps {
     selectedMessageToReply: IMessage | null;
@@ -42,7 +43,7 @@ const StyledUsernameMessageContainer = styled.div`
     p {
         font-size: 16px;
         font-weight: 600;
-        color: #1677ff;
+        color: ${COLORS.MAIN_BLUE};
     }
 
     span {
@@ -69,7 +70,7 @@ export const RepliedMessage = memo<IRepliedMessageProps>(({ selectedMessageToRep
         <StyledWrapper selectedMessageToReply={selectedMessageToReply}>
             <StyledContainer>
                 <StyledReplyContainer>
-                    <Reply color={"#1677ff"} fontSize={"20px"} />
+                    <Reply color={`${COLORS.MAIN_BLUE}`} fontSize={"20px"} />
                 </StyledReplyContainer>
                 <StyledUsernameMessageContainer>
                     <p>{selectedMessageToReply?.fromUsername}</p>
@@ -77,7 +78,7 @@ export const RepliedMessage = memo<IRepliedMessageProps>(({ selectedMessageToRep
                 </StyledUsernameMessageContainer>
                 <div>
                     <StyledButton onClick={onClick}>
-                        <Close color={"lightgray"} fontSize={"20px"} />
+                        <Close color={`${COLORS.LIGHTGREY}`} fontSize={"20px"} />
                     </StyledButton>
                 </div>
             </StyledContainer>

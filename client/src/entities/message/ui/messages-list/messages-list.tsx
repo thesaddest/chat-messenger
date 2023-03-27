@@ -7,6 +7,7 @@ import { IRoom, isChatIsRoom } from "../../../room";
 import { getFilteredMessageByChatType, IMessage, readMessages } from "../../model";
 import { useAppDispatch, useAppSelector, useIsInViewport } from "../../../../shared/lib/hooks";
 import { ScrollToBottom } from "../../../../features/scroll-to-bottom";
+import { SIZES } from "../../../../shared/const";
 
 interface IMessagesListProps {
     chat: IFriend | IRoom;
@@ -25,7 +26,7 @@ const StyledWrapper = styled.div<IStyledWrapperProps>`
     flex-direction: column;
     text-align: center;
 
-    @media only screen and (max-width: 425px) {
+    @media only screen and (max-width: ${SIZES.MOBILE}) {
         height: ${({ selectedMessageToReply }) => (selectedMessageToReply ? "75vh" : "80vh")};
     }
 `;

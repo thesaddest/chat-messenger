@@ -2,21 +2,23 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import RoomService from "../api/room.service";
 import { socket } from "../../../shared/socket-io";
-import { DEFAULT_ACTIVE_KEY, SOCKET_EVENTS } from "../../../shared/const";
+import { DEFAULT_ACTIVE_KEY, SOCKET_EVENTS, STATE_STATUSES } from "../../../shared/const";
 import { IRoomNotification } from "../../notification";
 import { IFriend } from "../../friend";
+
+import { ROOM_API } from "../api/api.constants";
 
 import { IAcceptInviteToJoinRoom, ICreateRoomValues, IRoom } from "./interfaces";
 
 interface RoomState {
     rooms: IRoom[];
     roomIdActiveKey: string;
-    status: "start" | "pending" | "succeeded" | "failed";
+    status: STATE_STATUSES;
 }
 
 const initialState: RoomState = {
     rooms: [],
-    status: "start",
+    status: STATE_STATUSES.START,
     roomIdActiveKey: DEFAULT_ACTIVE_KEY,
 };
 
@@ -26,7 +28,7 @@ export const isChatsAreRoom = (chats: IRoom[] | IFriend[]): chats is IRoom[] =>
 export const isChatIsRoom = (chat: IRoom | IFriend): chat is IRoom => "roomId" in chat;
 
 export const getRooms = createAsyncThunk<IRoom[], undefined, { rejectValue: string }>(
-    "rooms/getRooms",
+    `${ROOM_API.ENTITY}/${ROOM_API.ALL_ROOMS}`,
     async function (_, { rejectWithValue }) {
         const { data } = await RoomService.getRooms();
 
@@ -39,7 +41,7 @@ export const getRooms = createAsyncThunk<IRoom[], undefined, { rejectValue: stri
 );
 
 export const createRoom = createAsyncThunk<IRoom, ICreateRoomValues, { rejectValue: string }>(
-    "rooms/createRoom",
+    `${ROOM_API.ENTITY}/${ROOM_API.CREATE_ROOM}`,
     async function (createRoomValues, { rejectWithValue }) {
         const { data } = await RoomService.createRoom(createRoomValues);
 
@@ -53,7 +55,7 @@ export const createRoom = createAsyncThunk<IRoom, ICreateRoomValues, { rejectVal
 );
 
 export const inviteFriendToJoinRoom = createAsyncThunk<IRoom, IRoomNotification, { rejectValue: string }>(
-    "rooms/inviteFriendToJoinRoom",
+    `${ROOM_API.ENTITY}/${ROOM_API.INVITE_FRIEND_TO_JOIN_ROOM}`,
     async function ({ roomId, roomName, friendUsername, sentBy, notificationId }, { rejectWithValue }) {
         try {
             const { data } = await RoomService.inviteFriendToJoinRoom({
@@ -72,7 +74,7 @@ export const inviteFriendToJoinRoom = createAsyncThunk<IRoom, IRoomNotification,
 );
 
 export const acceptInviteToJoinRoom = createAsyncThunk<IRoom, IAcceptInviteToJoinRoom, { rejectValue: string }>(
-    "rooms/acceptInviteToJoinRoom",
+    `${ROOM_API.ENTITY}/${ROOM_API.ACCEPT_INVITE_TO_JOIN_ROOM}`,
     async function ({ roomId, username }, { rejectWithValue }) {
         try {
             const { data } = await RoomService.acceptInviteToJoinRoom({
@@ -90,7 +92,7 @@ export const acceptInviteToJoinRoom = createAsyncThunk<IRoom, IAcceptInviteToJoi
 );
 
 export const roomModel = createSlice({
-    name: "rooms",
+    name: `${ROOM_API.ENTITY}`,
     initialState,
     reducers: {
         setRoomIdActiveKey(state, action: PayloadAction<string>) {
@@ -111,23 +113,23 @@ export const roomModel = createSlice({
         builder
             .addCase(getRooms.fulfilled, (state, action) => {
                 state.rooms = action.payload;
-                state.status = "succeeded";
+                state.status = STATE_STATUSES.SUCCEEDED;
             })
             .addCase(getRooms.pending, (state) => {
-                state.status = "pending";
+                state.status = STATE_STATUSES.PENDING;
             })
             .addCase(getRooms.rejected, (state) => {
-                state.status = "failed";
+                state.status = STATE_STATUSES.FAILED;
             })
             .addCase(createRoom.fulfilled, (state, action) => {
                 state.rooms.push(action.payload);
-                state.status = "succeeded";
+                state.status = STATE_STATUSES.SUCCEEDED;
             })
             .addCase(createRoom.pending, (state) => {
-                state.status = "pending";
+                state.status = STATE_STATUSES.PENDING;
             })
             .addCase(createRoom.rejected, (state) => {
-                state.status = "failed";
+                state.status = STATE_STATUSES.FAILED;
             })
             .addCase(inviteFriendToJoinRoom.fulfilled, (state, action) => {
                 const roomToInviteFriend = state.rooms.find((room) => room.roomId === action.payload.roomId);
@@ -137,23 +139,23 @@ export const roomModel = createSlice({
                 }
 
                 roomToInviteFriend.invitedFriends = action.payload.invitedFriends;
-                state.status = "succeeded";
+                state.status = STATE_STATUSES.SUCCEEDED;
             })
             .addCase(inviteFriendToJoinRoom.pending, (state) => {
-                state.status = "pending";
+                state.status = STATE_STATUSES.PENDING;
             })
             .addCase(inviteFriendToJoinRoom.rejected, (state) => {
-                state.status = "failed";
+                state.status = STATE_STATUSES.FAILED;
             })
             .addCase(acceptInviteToJoinRoom.fulfilled, (state, action) => {
                 state.rooms.push(action.payload);
-                state.status = "succeeded";
+                state.status = STATE_STATUSES.SUCCEEDED;
             })
             .addCase(acceptInviteToJoinRoom.pending, (state) => {
-                state.status = "pending";
+                state.status = STATE_STATUSES.PENDING;
             })
             .addCase(acceptInviteToJoinRoom.rejected, (state) => {
-                state.status = "failed";
+                state.status = STATE_STATUSES.FAILED;
             });
     },
 });

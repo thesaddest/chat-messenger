@@ -4,6 +4,7 @@ import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 
 import { IFriend } from "../../../entities/friend";
 import { IRoom, isChatIsRoom } from "../../../entities/room";
+import { COLORS, SIZES } from "../../const";
 
 interface IChatNameConnectedProps {
     chat: IRoom | IFriend;
@@ -18,11 +19,11 @@ const StyledChatNameConnectedContainer = styled.div`
         text-overflow: ellipsis;
         overflow: hidden;
 
-        @media only screen and (max-width: 768px) {
+        @media only screen and (max-width: ${SIZES.TABLET}) {
             font-size: 16px;
         }
 
-        @media only screen and (max-width: 425px) {
+        @media only screen and (max-width: ${SIZES.MOBILE}) {
             font-size: 18px;
         }
     }
@@ -35,11 +36,11 @@ const StyledConnected = styled.div`
     padding-left: 0.25rem;
 
     span.anticon.anticon-minus-circle {
-        color: #f5222d;
+        color: ${COLORS.MAIN_RED};
     }
 
     span.anticon.anticon-check-circle {
-        color: #52c41a;
+        color: ${COLORS.MAIN_GREEN};
     }
 `;
 

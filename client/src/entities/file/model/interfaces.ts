@@ -35,5 +35,4 @@ export interface IPendingAttachedFile {
     friendIdActiveKey: string;
 }
 
-export type IAttachedFileStatus = "start" | "pending" | "succeeded" | "failed";
 export type PendingFile = string | Blob | RcFile;

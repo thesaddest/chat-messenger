@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { Button } from "antd";
 import { ButtonType } from "antd/es/button/button";
 
+import { SIZES } from "../../const";
+
 interface IInputButtonProps {
     icon: ReactNode;
     block?: boolean;
@@ -18,7 +20,7 @@ const StyledButton = styled(Button)`
     padding: 0.5rem;
     height: 36px;
 
-    @media only screen and (min-width: 1080px) {
+    @media only screen and (min-width: ${SIZES.DESKTOP}) {
         display: flex;
         height: 40px;
         width: 40px;
