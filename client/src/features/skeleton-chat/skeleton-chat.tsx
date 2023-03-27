@@ -18,9 +18,7 @@ const StyledSkeletonContainer = styled.div`
     gap: 8px;
 `;
 
-const skeletonList = Array.from({ length: 8 }).map((_) => {
-    return <SkeletonFriendSidebarCard />;
-});
+const skeletonList = Array.from({ length: 8 }).map((_) => <SkeletonFriendSidebarCard />);
 
 export const SkeletonChat: FC = () => {
     return (

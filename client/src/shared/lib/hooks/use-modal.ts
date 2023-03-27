@@ -3,6 +3,7 @@ import { useState, useCallback, SyntheticEvent } from "react";
 export const useModal = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [modalError, setModalError] = useState<string>("");
+
     const showModal = useCallback(() => {
         setIsModalOpen(true);
     }, []);

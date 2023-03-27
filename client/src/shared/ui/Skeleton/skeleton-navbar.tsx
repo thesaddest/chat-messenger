@@ -53,6 +53,8 @@ export const SkeletonNavbar: FC = () => {
             <StyledButtonsContainer>
                 <Skeleton.Button active style={{ minWidth: "42px", width: "46px", height: "32px" }} />
                 <Skeleton.Button active style={{ minWidth: "42px", width: "46px", height: "32px" }} />
+                <Skeleton.Button active style={{ minWidth: "42px", width: "46px", height: "32px" }} />
+                <Skeleton.Button active style={{ minWidth: "42px", width: "46px", height: "32px" }} />
             </StyledButtonsContainer>
         </StyledNavbarContainer>
     );
