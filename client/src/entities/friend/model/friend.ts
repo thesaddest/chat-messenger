@@ -66,7 +66,7 @@ export const getFriends = createAsyncThunk<IFriend[], undefined, { rejectValue: 
 );
 
 export const getFriendsWithLimit = createAsyncThunk<IFriend[], IGetMoreFriends, { rejectValue: string }>(
-    "friends/getFriendsWithLimit",
+    `${FRIEND_API.ENTITY}/${FRIEND_API.SEARCH}-with-limit`,
     async function (moreFriendsData, { rejectWithValue }) {
         try {
             const { data } = await FriendService.getFriendsWithLimit(moreFriendsData);
@@ -79,7 +79,7 @@ export const getFriendsWithLimit = createAsyncThunk<IFriend[], IGetMoreFriends, 
 );
 
 export const addFriend = createAsyncThunk<IFriend, IAddFriendValues, { rejectValue: string }>(
-    "friends/addFriend",
+    `${FRIEND_API.ENTITY}/${FRIEND_API.ADD_FRIEND}`,
     async function (username, { rejectWithValue }) {
         try {
             const { data } = await FriendService.addFriend(username);

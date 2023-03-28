@@ -5,7 +5,6 @@ import { socket } from "../../../shared/socket-io";
 import { DEFAULT_ACTIVE_KEY, SOCKET_EVENTS, STATE_STATUSES } from "../../../shared/const";
 import { IRoomNotification } from "../../notification";
 import { IFriend } from "../../friend";
-
 import { ROOM_API } from "../api/api.constants";
 
 import { IAcceptInviteToJoinRoom, ICreateRoomValues, IRoom } from "./interfaces";
@@ -21,6 +20,8 @@ const initialState: RoomState = {
     status: STATE_STATUSES.START,
     roomIdActiveKey: DEFAULT_ACTIVE_KEY,
 };
+
+export const isChatCreatedByCurrentUser = (chat: IRoom, username: string): boolean => chat.createdBy === username;
 
 export const isChatsAreRoom = (chats: IRoom[] | IFriend[]): chats is IRoom[] =>
     chats.some((item) => isChatIsRoom(item));

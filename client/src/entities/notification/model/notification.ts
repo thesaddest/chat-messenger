@@ -1,10 +1,8 @@
 import { createAsyncThunk, createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 
 import NotificationService from "../api/notification.service";
-
 import { socket } from "../../../shared/socket-io";
 import { SOCKET_EVENTS, STATE_STATUSES } from "../../../shared/const";
-
 import { NOTIFICATION_API } from "../api/api.constants";
 
 import { ICreateRoomNotification, IDeleteRoomNotification, INotification, IRoomNotification } from "./interfaces";

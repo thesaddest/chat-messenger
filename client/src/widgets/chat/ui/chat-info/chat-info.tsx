@@ -3,9 +3,10 @@ import styled from "styled-components";
 
 import { IFriend } from "../../../../entities/friend";
 import { SharedAvatar, ChatNameConnected } from "../../../../shared/ui";
-import { IRoom, isChatIsRoom } from "../../../../entities/room";
+import { IRoom, isChatCreatedByCurrentUser, isChatIsRoom } from "../../../../entities/room";
 import { InviteFriendToRoom } from "../../../../features/invite-friend-to-room";
 import { COLORS } from "../../../../shared/const";
+import { useAppSelector } from "../../../../shared/lib/hooks";
 
 interface IChatInfoProps {
     chat: IFriend | IRoom;
@@ -36,6 +37,7 @@ const InviteFriendToRoomContainer = styled.div`
 `;
 
 export const ChatInfo = memo<IChatInfoProps>(({ chat }) => {
+    const username = useAppSelector((state) => state.auth.user?.username);
     return (
         <ChatInfoContainer>
             <AvatarChatNameContainer>
@@ -43,7 +45,9 @@ export const ChatInfo = memo<IChatInfoProps>(({ chat }) => {
                 <ChatNameConnected chat={chat} />
             </AvatarChatNameContainer>
             <InviteFriendToRoomContainer>
-                {isChatIsRoom(chat) && <InviteFriendToRoom roomName={chat.roomName} />}
+                {username && isChatIsRoom(chat) && isChatCreatedByCurrentUser(chat, username) && (
+                    <InviteFriendToRoom roomName={chat.roomName} />
+                )}
             </InviteFriendToRoomContainer>
         </ChatInfoContainer>
     );
