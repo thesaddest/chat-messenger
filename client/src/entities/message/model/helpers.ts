@@ -29,10 +29,9 @@ export const getUnreadMessageAmount = (
 ): number => {
     const allMessagesInChat = getFilteredMessageByChatType(messages, chat);
     if (isChatIsRoom(chat)) {
-        const messagesSentFromFriend = allMessagesInChat.filter(({ from }) => from === chat.roomId);
-        const unreadMessages = messagesSentFromFriend.filter(
-            (messageSentFromFriend) =>
-                !readMessages.find(({ messageId }) => messageSentFromFriend.messageId === messageId),
+        const messagesSentToChat = allMessagesInChat.filter(({ to }) => to === chat.roomId);
+        const unreadMessages = messagesSentToChat.filter(
+            (messageSentToChat) => !readMessages.find(({ messageId }) => messageSentToChat.messageId === messageId),
         );
         return unreadMessages.length;
     } else {
