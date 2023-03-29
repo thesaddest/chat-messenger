@@ -13,6 +13,7 @@ export const NotificationPopupContent: FC<INotificationPopupContentProps> = ({ n
 
     return (
         <List
+            locale={{ emptyText: "No notifications" }}
             dataSource={data}
             itemLayout={"horizontal"}
             renderItem={({ roomName, roomId, notificationId, sentBy }) => (
