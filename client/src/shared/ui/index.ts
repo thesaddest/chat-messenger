@@ -11,3 +11,4 @@ export { SelectChatToStartMessaging } from "./SelectChatToStartMessaging";
 export { MessagesCountBadge } from "./MessagesCountBadge";
 export { SearchFriendInput } from "./SearchFriendInput";
 export { RoomNotificationItem } from "./RoomNotificationItem";
+export { BurgerMenu } from "./BugerMenu";

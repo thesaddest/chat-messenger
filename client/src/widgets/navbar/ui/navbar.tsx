@@ -2,24 +2,19 @@ import { Dispatch, FC, SetStateAction, useCallback } from "react";
 import styled from "styled-components";
 
 import { useWindowSize } from "../../../shared/lib/hooks";
-import { CancelButton, BackButton } from "../../../shared/ui";
+import { CancelButton, BackButton, BurgerMenu } from "../../../shared/ui";
 import { DEFAULT_ACTIVE_KEY, MAX_MOBILE_WIDTH_HOOK, SIZES } from "../../../shared/const";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { setFriendIdActiveKey } from "../../../entities/friend";
-import { AddFriend } from "../../../features/add-friend";
-import { SearchFriend } from "../../../features/search-friend";
 import { deselectAllSelectedMessages, IMessage } from "../../../entities/message";
 import { ForwardMessages } from "../../../features/forward-messages";
 import { DeleteMessages } from "../../../features/delete-messages";
-import { CreateRoom } from "../../../features/create-room";
 import { ChatSwitch } from "../../chat-switch";
 import { setRoomIdActiveKey } from "../../../entities/room";
 import { Notification } from "../../../features/notification";
 import { ChatType } from "../../../pages/home";
 
-interface IStyledLeftDivProps {
-    friendIdActiveKey: string;
-    roomIdActiveKey: string;
+interface IStyledDivProps {
     selectedMessages: IMessage[];
 }
 
@@ -28,31 +23,25 @@ interface INavbarProps {
     setChatType: Dispatch<SetStateAction<ChatType>>;
 }
 
-const StyledRightDiv = styled.div`
-    display: flex;
-    flex: 2;
+const StyledRightDiv = styled.div<IStyledDivProps>`
+    display: ${({ selectedMessages }) => (selectedMessages.length > 0 ? "flex" : "none")};
     justify-content: space-between;
     padding: 0 1rem 0 1rem;
 
     @media only screen and (max-width: ${SIZES.MOBILE}) {
         width: 100%;
-        flex: 0;
     }
 `;
 
-const StyledLeftDiv = styled.div<IStyledLeftDivProps>`
+const StyledLeftDiv = styled.div<IStyledDivProps>`
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    flex: 1;
+    width: 100%;
+    padding: 0 1rem 0 1rem;
 
     @media only screen and (max-width: ${SIZES.MOBILE}) {
         display: ${({ selectedMessages }) => (selectedMessages.length > 0 ? "none" : "flex")};
-        justify-content: ${({ friendIdActiveKey, roomIdActiveKey }) =>
-            friendIdActiveKey === DEFAULT_ACTIVE_KEY && roomIdActiveKey === DEFAULT_ACTIVE_KEY
-                ? "space-evenly"
-                : "start"};
-        flex: 3;
         padding-left: 0.5rem;
 
         .ant-btn > .anticon + span {
@@ -80,15 +69,6 @@ const StyledHeader = styled.header`
     }
 `;
 
-const StyledModalButtonsContainer = styled.div`
-    display: flex;
-    gap: 0.5rem;
-
-    @media only screen and (max-width: ${SIZES.TABLET}) {
-        padding-left: 0.5rem;
-    }
-`;
-
 const StyledForwardDeleteContainer = styled.div`
     display: flex;
     width: 100%;
@@ -103,6 +83,21 @@ const StyledCancelContainer = styled.div`
     justify-content: end;
 `;
 
+const StyledNavbarMenuContainer = styled.div<IStyledDivProps>`
+    display: ${({ selectedMessages }) => (selectedMessages.length > 0 ? "none" : "flex")};
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+`;
+
+const StyledNotificationSwitchHolder = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 0.5rem;
+`;
+
 export const Navbar: FC<INavbarProps> = ({ chatType, setChatType }) => {
     const { width } = useWindowSize();
     const dispatch = useAppDispatch();
@@ -111,43 +106,39 @@ export const Navbar: FC<INavbarProps> = ({ chatType, setChatType }) => {
     const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
     const rooms = useAppSelector((state) => state.room.rooms);
 
-    const onClick = useCallback(() => {
+    const onBackButtonClick = useCallback(() => {
         dispatch(setRoomIdActiveKey(DEFAULT_ACTIVE_KEY));
         dispatch(setFriendIdActiveKey(DEFAULT_ACTIVE_KEY));
         dispatch(deselectAllSelectedMessages(selectedMessages));
     }, [dispatch, selectedMessages]);
 
     return (
-        <StyledHeader>
-            <StyledLeftDiv
-                friendIdActiveKey={friendIdActiveKey}
-                roomIdActiveKey={roomIdActiveKey}
-                selectedMessages={selectedMessages}
-            >
-                {width >= MAX_MOBILE_WIDTH_HOOK ||
-                (friendIdActiveKey === DEFAULT_ACTIVE_KEY && roomIdActiveKey === DEFAULT_ACTIVE_KEY) ? (
-                    <>
-                        <StyledModalButtonsContainer>
-                            {rooms.length > 0 && <ChatSwitch chatType={chatType} setChatType={setChatType} />}
-                            <AddFriend />
-                            <CreateRoom />
-                            <SearchFriend />
-                            <Notification />
-                        </StyledModalButtonsContainer>
-                    </>
-                ) : (
-                    selectedMessages.length === 0 && <BackButton onClick={onClick} />
-                )}
-            </StyledLeftDiv>
-            <StyledRightDiv>
-                <StyledForwardDeleteContainer>
-                    {selectedMessages.length > 0 && <ForwardMessages selectedMessages={selectedMessages} />}
-                    {selectedMessages.length > 0 && <DeleteMessages selectedMessages={selectedMessages} />}
-                </StyledForwardDeleteContainer>
-                <StyledCancelContainer>
-                    {selectedMessages.length > 0 && <CancelButton selectedMessages={selectedMessages} />}
-                </StyledCancelContainer>
-            </StyledRightDiv>
-        </StyledHeader>
+        <>
+            <StyledHeader>
+                <StyledLeftDiv selectedMessages={selectedMessages}>
+                    {width >= MAX_MOBILE_WIDTH_HOOK ||
+                    (friendIdActiveKey === DEFAULT_ACTIVE_KEY && roomIdActiveKey === DEFAULT_ACTIVE_KEY) ? (
+                        <StyledNavbarMenuContainer selectedMessages={selectedMessages}>
+                            <BurgerMenu />
+                            <StyledNotificationSwitchHolder>
+                                {rooms.length > 0 && <ChatSwitch chatType={chatType} setChatType={setChatType} />}
+                                <Notification />
+                            </StyledNotificationSwitchHolder>
+                        </StyledNavbarMenuContainer>
+                    ) : (
+                        selectedMessages.length === 0 && <BackButton onClick={onBackButtonClick} />
+                    )}
+                </StyledLeftDiv>
+                <StyledRightDiv selectedMessages={selectedMessages}>
+                    <StyledForwardDeleteContainer>
+                        {selectedMessages.length > 0 && <ForwardMessages selectedMessages={selectedMessages} />}
+                        {selectedMessages.length > 0 && <DeleteMessages selectedMessages={selectedMessages} />}
+                    </StyledForwardDeleteContainer>
+                    <StyledCancelContainer>
+                        {selectedMessages.length > 0 && <CancelButton selectedMessages={selectedMessages} />}
+                    </StyledCancelContainer>
+                </StyledRightDiv>
+            </StyledHeader>
+        </>
     );
 };

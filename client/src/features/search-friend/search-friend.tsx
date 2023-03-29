@@ -1,8 +1,10 @@
 import { memo, SyntheticEvent, useCallback, useState } from "react";
-import { Button, Form, Modal } from "antd";
+import { Form, Modal } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 import { useAppSelector } from "../../shared/lib/hooks";
+
+import { MenuButton } from "../../shared/ui";
 
 import { SearchFriendPopupContent } from "./search-friend-popup-content";
 
@@ -30,11 +32,11 @@ export const SearchFriend = memo(() => {
     return (
         friends && (
             <>
-                <Button type="primary" onClick={showModal}>
-                    <SearchOutlined />
-                </Button>
+                <MenuButton type="primary" onClick={showModal}>
+                    <SearchOutlined /> Search
+                </MenuButton>
                 <Modal
-                    title="Search for a friend!"
+                    title="Search for a chat!"
                     open={isModalOpen}
                     onCancel={handleCancel}
                     centered={true}

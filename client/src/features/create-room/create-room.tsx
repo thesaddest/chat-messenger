@@ -1,8 +1,9 @@
-import { Button, ButtonProps, Form, Modal } from "antd";
+import { ButtonProps, Form, Modal } from "antd";
 import { WechatOutlined } from "@ant-design/icons";
 import { useMemo } from "react";
 
 import { useModal } from "../../shared/lib/hooks";
+import { MenuButton } from "../../shared/ui";
 
 import { CreateRoomPopupContent } from "./create-room-popup-content";
 
@@ -14,9 +15,9 @@ export const CreateRoom = () => {
 
     return (
         <>
-            <Button type={"primary"} onClick={showModal}>
-                <WechatOutlined />
-            </Button>
+            <MenuButton type={"primary"} onClick={showModal}>
+                <WechatOutlined /> Create a room
+            </MenuButton>
             <Modal
                 title="Create a room!"
                 open={isModalOpen}

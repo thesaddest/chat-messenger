@@ -15,7 +15,6 @@ const StyledButtonContainer = styled.div`
 
 export const ReplyToMessage = memo<IReplyToMessageProps>(({ selectedMessage }) => {
     const dispatch = useAppDispatch();
-    console.log(selectedMessage);
 
     const onClick = useCallback(() => {
         dispatch(deselectMessage(selectedMessage));

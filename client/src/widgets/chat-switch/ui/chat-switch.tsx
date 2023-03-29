@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { Button } from "antd";
 import { Dispatch, memo, SetStateAction, useCallback } from "react";
+import { Switch } from "antd";
+import { UserOutlined, TeamOutlined } from "@ant-design/icons";
 
 import { ChatType } from "../../../pages/home";
 
@@ -9,12 +9,6 @@ interface IChatSwitchProps {
     setChatType: Dispatch<SetStateAction<ChatType>>;
 }
 
-const StyledContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
-
 export const ChatSwitch = memo<IChatSwitchProps>(({ chatType, setChatType }) => {
     const handleClick = useCallback(
         () => setChatType(chatType === ChatType.FRIEND ? ChatType.ROOM : ChatType.FRIEND),
@@ -22,10 +16,11 @@ export const ChatSwitch = memo<IChatSwitchProps>(({ chatType, setChatType }) => 
     );
 
     return (
-        <StyledContainer>
-            <Button onClick={handleClick} type={"primary"}>
-                {chatType === ChatType.ROOM ? "Rooms" : "Friends"}
-            </Button>
-        </StyledContainer>
+        <Switch
+            onClick={handleClick}
+            checkedChildren={<UserOutlined />}
+            unCheckedChildren={<TeamOutlined />}
+            defaultChecked
+        />
     );
 });
