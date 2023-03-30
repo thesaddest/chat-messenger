@@ -18,7 +18,7 @@ router.get("/friend/search", friendController.getFriendsBySearchQuery);
 
 router.get("/message/messages", messageController.getMessages);
 router.post("/message/message", messageController.sendMessage);
-router.post("/message/delete", messageController.deleteMessages);
+router.delete("/message/delete", messageController.deleteMessages);
 router.post("/message/read", messageController.readMessages);
 router.post("/message/forward", messageController.forwardMessages);
 router.post("/message/reply", messageController.replyToMessage);
