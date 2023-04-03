@@ -29,4 +29,8 @@ export default class MessageService {
     static async replyToMessage(replyToMessagePayload: IReplyToMessagePayload): Promise<AxiosResponse<IMessage>> {
         return api.post<IMessage>(`${MESSAGE_API.ENTITY}/${MESSAGE_API.REPLY_TO_MESSAGE}`, replyToMessagePayload);
     }
+
+    static async hideMessage(message: IMessage): Promise<AxiosResponse<IMessage>> {
+        return api.post<IMessage>(`${MESSAGE_API.ENTITY}/${MESSAGE_API.HIDE_MESSAGE}`, message);
+    }
 }

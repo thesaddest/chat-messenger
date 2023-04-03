@@ -1,4 +1,4 @@
-import { memo, ReactNode } from "react";
+import { memo, MouseEventHandler, ReactNode } from "react";
 import styled from "styled-components";
 import { Button } from "antd";
 import { ButtonType } from "antd/es/button/button";
@@ -11,6 +11,8 @@ interface IInputButtonProps {
     type: ButtonType;
     htmlType?: any;
     disabled?: boolean;
+    textInsteadIcon?: string;
+    onClick?: MouseEventHandler<HTMLElement>;
 }
 
 const StyledButton = styled(Button)`
@@ -27,8 +29,10 @@ const StyledButton = styled(Button)`
     }
 `;
 
-export const InputButton = memo<IInputButtonProps>(({ block, icon, type, htmlType, disabled }) => (
-    <StyledButton block={block} type={type} htmlType={htmlType} disabled={disabled}>
-        {icon}
-    </StyledButton>
-));
+export const InputButton = memo<IInputButtonProps>(
+    ({ block, icon, type, htmlType, disabled, textInsteadIcon, onClick }) => (
+        <StyledButton block={block} type={type} htmlType={htmlType} disabled={disabled} onClick={onClick}>
+            {textInsteadIcon ? textInsteadIcon : icon}
+        </StyledButton>
+    ),
+);

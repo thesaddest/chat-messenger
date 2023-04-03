@@ -17,6 +17,7 @@ class UserController {
             newUser.email = email;
             newUser.username = username;
             newUser.password = password;
+            newUser.deviceId = req.headers["user-agent"];
 
             const errors = await validate(newUser);
 
@@ -39,6 +40,7 @@ class UserController {
             const userData = new UserLoginDto();
             userData.email = email;
             userData.password = password;
+            userData.deviceId = req.headers["user-agent"];
 
             const loggedUser = await authService.login(userData);
 

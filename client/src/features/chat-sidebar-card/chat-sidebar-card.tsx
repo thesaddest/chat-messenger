@@ -28,11 +28,13 @@ const StyledChatsCardDiv = styled.div`
 `;
 
 export const ChatSidebarCard: FC<FriendSidebarCardProps> = ({ chat, messages }) => {
+    const userId = useAppSelector((state) => state.auth.user?.userId);
+
     const readMessages = useAppSelector((state) => state.message.readMessages);
     const memoizedLastMessage = useMemo(() => getLastMessageByChatType(messages, chat), [messages, chat]);
     const memoizedUnreadMessageAmount = useMemo(
-        () => getUnreadMessageAmount(readMessages, messages, chat),
-        [readMessages, messages, chat],
+        () => getUnreadMessageAmount(readMessages, messages, chat, userId),
+        [userId, readMessages, messages, chat],
     );
 
     return (

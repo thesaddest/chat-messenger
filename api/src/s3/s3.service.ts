@@ -1,4 +1,4 @@
-import { DeleteObjectCommand, DeleteObjectCommandOutput, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, DeleteObjectCommandOutput, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 class S3Service {
     private readonly s3: S3Client;
@@ -22,6 +22,21 @@ class S3Service {
         });
 
         return await this.s3.send(deleteCommand);
+    }
+
+    async uploadImageWithHiddenMessage(fileKey: string, fileBuffer: Buffer): Promise<string> {
+        const uploadCommand = new PutObjectCommand({
+            Bucket: this.bucketName,
+            Key: `${fileKey}`,
+            Body: fileBuffer,
+        });
+        await this.s3.send(uploadCommand);
+
+        return await this.getUploadedObjectUrl(fileKey);
+    }
+
+    private async getUploadedObjectUrl(fileKey: string): Promise<string> {
+        return `https://${this.bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
     }
 }
 

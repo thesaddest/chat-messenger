@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Form } from "antd";
 import styled from "styled-components";
 
@@ -9,12 +9,15 @@ import {
     replyToMessage,
     sendMessageWithAttachedFiles,
     sendMessage,
+    sendHiddenMessage,
 } from "../../../../entities/message";
 import { clearFileStateAfterUpload, isUploadedFilesBelongToChat, UploadedFilesList } from "../../../../entities/file";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 import { FileUpload } from "../../../../features/file-upload";
 import { SendMessage } from "../../../../features/send-message";
 import { COLORS } from "../../../../shared/const";
+
+import { HideMessage } from "../../../../features/hide-message";
 
 import { ChatInput } from "./chat-input";
 
@@ -41,6 +44,8 @@ const StyledForm = styled(Form)`
 `;
 
 export const ChatInputBox: FC<ChatInputBoxProps> = ({ chatId }) => {
+    const [message, setMessage] = useState<string>("");
+    const [isMessageHidden, setIsMessageHidden] = useState<boolean>(false);
     const [form] = Form.useForm();
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
@@ -68,10 +73,15 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ chatId }) => {
                 dispatch(replyToMessage({ newMessage: message, repliedMessage: selectedMessageToReply }));
                 dispatch(deselectMessageToReply());
             }
-            if (!selectedMessageToReply && !values.uploadedFiles) {
+            if (isMessageHidden && !values.uploadedFiles && !selectedMessageToReply) {
+                dispatch(sendHiddenMessage(message));
+                setIsMessageHidden(false);
+            }
+            if (!selectedMessageToReply && !values.uploadedFiles && !isMessageHidden) {
                 dispatch(sendMessage(message));
             }
             form.resetFields();
+            setMessage("");
         }
     };
 
@@ -84,8 +94,15 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ chatId }) => {
                     <UploadedFilesList uploadedFiles={uploadedFiles} />
                 )}
 
-                <ChatInput pendingFiles={pendingFiles} chatId={chatId} form={form} uploadedFiles={uploadedFiles} />
+                <ChatInput
+                    pendingFiles={pendingFiles}
+                    chatId={chatId}
+                    form={form}
+                    uploadedFiles={uploadedFiles}
+                    setMessage={setMessage}
+                />
 
+                {message && <HideMessage setIsMessageHidden={setIsMessageHidden} />}
                 <SendMessage pendingFiles={pendingFiles} chatId={chatId} />
             </StyledForm>
         </StyledWrapper>

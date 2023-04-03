@@ -24,7 +24,7 @@ export class MessageDto {
 
     @IsBoolean()
     @IsNotEmpty()
-    isMessageSelected?: boolean;
+    isMessageSelected: boolean;
 
     @IsBoolean()
     @IsNotEmpty()
@@ -40,15 +40,25 @@ export class MessageDto {
 
     @IsString()
     @IsNotEmpty()
-    prevMessageContent?: string;
+    prevMessageContent: string;
 
     @IsString()
     @IsNotEmpty()
-    prevMessageFrom?: string;
+    prevMessageFrom: string;
 
     @IsBoolean()
     @IsNotEmpty()
     isGroupMessage: boolean;
+
+    @IsBoolean()
+    @IsNotEmpty()
+    isHiddenMessage?: boolean;
+
+    @IsString()
+    s3Location?: string;
+
+    @IsString()
+    friendDeviceId?: string;
 
     attachedFilesAfterUpload?: File[];
 }

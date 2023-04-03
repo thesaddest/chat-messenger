@@ -7,6 +7,7 @@ import { userService } from "../user/user.service.js";
 import { File } from "../file/file.entity.js";
 import { fileService } from "../file/file.service.js";
 import { roomService } from "../room/room.service.js";
+import { steganographyService } from "../steganography/steganography.service.js";
 
 class MessageService {
     async createMessage(messageDto: MessageDto, user: User): Promise<MessageDto> {
@@ -23,6 +24,7 @@ class MessageService {
             prevMessageContent: messageDto.prevMessageContent,
             prevMessageFrom: messageDto.prevMessageFrom,
             isGroupMessage: await roomService.isRoomExists(messageDto.to),
+            isHiddenMessage: messageDto.isHiddenMessage,
             files: messageDto.attachedFilesAfterUpload,
         };
         const message = messageRepository.create(newMessage);
@@ -49,6 +51,8 @@ class MessageService {
             prevMessageContent: message.prevMessageContent,
             prevMessageFrom: message.prevMessageFrom,
             isGroupMessage: message.isGroupMessage,
+            isHiddenMessage: message.isHiddenMessage,
+            s3Location: message.s3Location,
             attachedFilesAfterUpload: message.files,
         };
     }
@@ -59,19 +63,16 @@ class MessageService {
         const sentByUserMessages = await messageRepository.find({ where: { from: user.userId } });
         const userRooms = await roomService.getUserRooms(user);
 
-        const messagesInRooms = [];
+        const messagesInRooms: Message[] = [];
         for (const userRoom of userRooms) {
             const messagesToPush = await messageRepository.find({ where: { to: userRoom.roomId } });
             messagesInRooms.push(...messagesToPush);
         }
 
-        //This filter is needed to filter the same messages that were sent FROM user TO room (group chat) so we won't have duplicates in allMessages
-        const filteredMessages = messagesInRooms.filter(
-            ({ to }) => !sentByUserMessages.some(({ from }) => from === to),
-        );
-
-        const allMessages = filteredMessages
-            .concat(sentToUserMessages)
+        const allMessages = sentByUserMessages
+            .concat(sentToUserMessages, messagesInRooms)
+            //filter is needed to avoid duplicates
+            .filter((message, index, self) => index === self.findIndex((m) => m.messageId === message.messageId))
             .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
         const messages = [];
@@ -88,6 +89,8 @@ class MessageService {
                 prevMessageContent: message.prevMessageContent,
                 prevMessageFrom: message.prevMessageFrom,
                 isGroupMessage: message.isGroupMessage,
+                isHiddenMessage: message.isHiddenMessage,
+                s3Location: message.s3Location,
                 attachedFilesAfterUpload: message.files,
             });
         }
@@ -120,6 +123,8 @@ class MessageService {
             isMessageForwarded: message.isMessageForwarded,
             prevMessageContent: message.prevMessageContent,
             prevMessageFrom: message.prevMessageFrom,
+            isHiddenMessage: message.isHiddenMessage,
+            s3Location: message.s3Location,
             isGroupMessage: message.isGroupMessage,
             attachedFilesAfterUpload: message.files,
         }));
@@ -145,6 +150,8 @@ class MessageService {
                     prevMessageContent: savedReadMessage.prevMessageContent,
                     prevMessageFrom: savedReadMessage.prevMessageFrom,
                     isGroupMessage: savedReadMessage.isGroupMessage,
+                    isHiddenMessage: savedReadMessage.isHiddenMessage,
+                    s3Location: savedReadMessage.s3Location,
                     attachedFilesAfterUpload: savedReadMessage.files,
                 };
             }),
@@ -165,6 +172,8 @@ class MessageService {
             prevMessageContent: messageDto.prevMessageContent,
             prevMessageFrom: messageDto.prevMessageFrom,
             isGroupMessage: await roomService.isRoomExists(messageDto.to),
+            isHiddenMessage: messageDto.isHiddenMessage,
+            s3Location: messageDto.s3Location,
             files: messageDto.attachedFilesAfterUpload,
         };
         const forwardedMessage = messageRepository.create(newMessage);
@@ -182,6 +191,8 @@ class MessageService {
             prevMessageContent: forwardedMessage.prevMessageContent,
             prevMessageFrom: forwardedMessage.prevMessageFrom,
             isGroupMessage: forwardedMessage.isGroupMessage,
+            isHiddenMessage: forwardedMessage.isHiddenMessage,
+            s3Location: forwardedMessage.s3Location,
             attachedFilesAfterUpload: messageDto.attachedFilesAfterUpload,
         };
     }
@@ -203,6 +214,8 @@ class MessageService {
                     prevMessageContent: createdForwardedMessage.prevMessageContent,
                     prevMessageFrom: createdForwardedMessage.prevMessageFrom,
                     isGroupMessage: createdForwardedMessage.isGroupMessage,
+                    isHiddenMessage: createdForwardedMessage.isHiddenMessage,
+                    s3Location: createdForwardedMessage.s3Location,
                     attachedFilesAfterUpload: createdForwardedMessage.attachedFilesAfterUpload,
                 };
             }),
@@ -223,6 +236,8 @@ class MessageService {
             prevMessageContent: repliedMessage.content,
             prevMessageFrom: await userService.getUsernameByUserId(repliedMessage.from),
             isGroupMessage: await roomService.isRoomExists(newMessage.to),
+            isHiddenMessage: repliedMessage.isHiddenMessage,
+            s3Location: repliedMessage.s3Location,
             files: repliedMessage.attachedFilesAfterUpload,
         };
 
@@ -240,7 +255,38 @@ class MessageService {
             prevMessageContent: messageInDb.prevMessageContent,
             prevMessageFrom: messageInDb.prevMessageFrom,
             isGroupMessage: messageInDb.isGroupMessage,
+            isHiddenMessage: messageInDb.isHiddenMessage,
+            s3Location: messageInDb.s3Location,
             attachedFilesAfterUpload: messageInDb.attachedFilesAfterUpload,
+        };
+    }
+
+    async hideMessage(messageDto: MessageDto, user: User): Promise<MessageDto> {
+        const messageRepository = AppDataSource.getRepository(Message);
+        const messageInDb = await this.createMessage(messageDto, user);
+
+        messageInDb.isHiddenMessage = true;
+        messageInDb.content = "hidden";
+        messageInDb.friendDeviceId = await userService.getDeviceIdByUser(messageInDb.to);
+        messageInDb.s3Location = await steganographyService.embedMessage(messageInDb.content, user.username);
+
+        const message = await messageRepository.save(messageInDb);
+
+        return {
+            messageId: message.messageId,
+            to: message.to,
+            from: message.from,
+            fromUsername: message.fromUsername,
+            content: message.content,
+            isMessageSelected: false,
+            isMessageRead: message.isMessageRead,
+            isMessageForwarded: message.isMessageForwarded,
+            prevMessageContent: message.prevMessageContent,
+            prevMessageFrom: message.prevMessageFrom,
+            isGroupMessage: message.isGroupMessage,
+            isHiddenMessage: message.isHiddenMessage,
+            s3Location: message.s3Location,
+            attachedFilesAfterUpload: message.files,
         };
     }
 }

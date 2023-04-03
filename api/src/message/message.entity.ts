@@ -42,6 +42,15 @@ export class Message extends BaseEntity {
     @Column({ nullable: false })
     isGroupMessage: boolean;
 
+    @Column({ nullable: true })
+    isHiddenMessage: boolean;
+
+    @Column({ nullable: true })
+    s3Location: string;
+
+    @Column({ nullable: true })
+    friendDeviceId: string;
+
     @OneToMany(() => File, (file) => file.message, { eager: true })
     files: Relation<File[]>;
 

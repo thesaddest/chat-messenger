@@ -24,6 +24,9 @@ export class User extends BaseEntity {
     @Column({ nullable: false })
     password: string;
 
+    @Column({ nullable: true })
+    deviceId: string;
+
     @OneToMany(() => Friend, (friend) => friend.user, { eager: true })
     friends: Relation<Friend[]>;
 

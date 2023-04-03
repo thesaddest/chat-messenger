@@ -13,6 +13,10 @@ export class UserRegisterDto {
     @IsNotEmpty()
     @MinLength(6)
     password: string;
+
+    @IsString()
+    @IsNotEmpty()
+    deviceId: string;
 }
 
 export class UserLoginDto {
@@ -23,4 +27,8 @@ export class UserLoginDto {
     @IsNotEmpty()
     @MinLength(6)
     password: string;
+
+    @IsString()
+    @IsNotEmpty()
+    deviceId: string;
 }

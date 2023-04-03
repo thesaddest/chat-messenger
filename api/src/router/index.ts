@@ -23,6 +23,7 @@ router.delete("/message/delete", messageController.deleteMessages);
 router.post("/message/read", messageController.readMessages);
 router.post("/message/forward", messageController.forwardMessages);
 router.post("/message/reply", messageController.replyToMessage);
+router.post("/message/hide", messageController.hideMessage);
 
 router.post("/file/upload-single-file", multerUploadMiddleware.single("file"), fileController.uploadSingleFile);
 
@@ -35,5 +36,4 @@ router.get("/notification/room-notifications", notificationController.getAllRoom
 router.post("/notification/create-room-notification", notificationController.createRoomNotification);
 router.delete("/notification/delete-room-notification", notificationController.deleteRoomNotification);
 
-router.post("/steganography/embed-message", steganographyController.embedMessage);
 router.post("/steganography/reveal-message", steganographyController.revealMessage);

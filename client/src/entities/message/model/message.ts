@@ -61,6 +61,9 @@ export const createMessage = (message: IMessage): IMessage => {
         prevMessageContent: message.prevMessageContent !== undefined ? message.prevMessageContent : undefined,
         prevMessageFrom: message.prevMessageFrom !== undefined ? message.prevMessageFrom : undefined,
         isGroupMessage: message.isGroupMessage !== undefined ? message.isGroupMessage : undefined,
+        isHiddenMessage: message.isHiddenMessage !== undefined ? message.isHiddenMessage : undefined,
+        s3Location: message.s3Location !== undefined ? message.s3Location : undefined,
+        friendDeviceId: message.friendDeviceId !== undefined ? message.friendDeviceId : undefined,
         attachedFilesToUpload: message.attachedFilesToUpload !== undefined ? message.attachedFilesToUpload : undefined,
         attachedFilesAfterUpload:
             message.attachedFilesAfterUpload !== undefined ? message.attachedFilesAfterUpload : undefined,
@@ -74,6 +77,7 @@ export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: s
             const { data } = await MessageService.sendMessage(messageData);
 
             socket.emit(SOCKET_EVENTS.SEND_MESSAGE, data);
+            socket.emit(SOCKET_EVENTS.GET_DEVICE_ID);
 
             return data;
         } catch (e) {
@@ -175,6 +179,26 @@ export const sendMessageWithAttachedFiles = createAsyncThunk<
             attachedFilesAfterUpload: messageWithAttachedFilesPayload.uploadedFiles,
         });
         const { data } = await MessageService.sendMessage(messageToSend);
+
+        if (!data) {
+            return rejectWithValue("Error while sending message with attached files");
+        }
+
+        socket.emit(SOCKET_EVENTS.SEND_MESSAGE, data);
+        return data;
+    },
+);
+
+export const sendHiddenMessage = createAsyncThunk<any, IMessage, { rejectValue: string }>(
+    `${MESSAGE_API.ENTITY}/hidden-${MESSAGE_API.SEND_MESSAGE}`,
+    async function (message, { rejectWithValue }) {
+        const messageToSend = createMessage({
+            to: message.to,
+            from: message.from,
+            content: message.content,
+            isHiddenMessage: true,
+        });
+        const { data } = await MessageService.hideMessage(messageToSend);
 
         if (!data) {
             return rejectWithValue("Error while sending message with attached files");
@@ -412,6 +436,21 @@ export const messageModel = createSlice({
                 state.error = null;
             })
             .addCase(sendMessageWithAttachedFiles.rejected, (state, action) => {
+                if (!action.payload) {
+                    return;
+                }
+                state.error = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(sendHiddenMessage.fulfilled, (state, action) => {
+                if (!state.messages) {
+                    return;
+                }
+                state.messages.push(action.payload);
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(sendHiddenMessage.rejected, (state, action) => {
                 if (!action.payload) {
                     return;
                 }

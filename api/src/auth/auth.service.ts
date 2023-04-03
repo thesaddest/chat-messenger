@@ -22,7 +22,13 @@ class AuthService {
 
         const hashedPassword = await this.createHashedPassword(userDto.password);
         const userId = uuidv4();
-        const user = await userService.createUser(userId, userDto.email, userDto.username, hashedPassword);
+        const user = await userService.createUser(
+            userId,
+            userDto.email,
+            userDto.username,
+            hashedPassword,
+            userDto.deviceId,
+        );
         const token = await jwtService.generateTokens(user);
 
         return {
@@ -43,6 +49,11 @@ class AuthService {
         const isPassEqual = await bcrypt.compare(userDto.password, user.password);
         if (!isPassEqual) {
             throw ErrorException.BadRequest(`Incorrect password`);
+        }
+
+        const isDeviceTheSame = userDto.deviceId === user.deviceId;
+        if (!isDeviceTheSame) {
+            await userService.setNewDeviceIdForUser(user.userId, userDto.deviceId);
         }
 
         const token = await jwtService.generateTokens({ email: user.email, password: user.password });

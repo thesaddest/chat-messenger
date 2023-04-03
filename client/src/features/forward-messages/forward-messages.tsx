@@ -3,9 +3,9 @@ import { Form, Modal } from "antd";
 import styled from "styled-components";
 import { RollbackOutlined } from "@ant-design/icons";
 
-import { IMessage } from "../../entities/message";
+import { IMessage, selectMessage } from "../../entities/message";
 import { MenuButton } from "../../shared/ui";
-import { useAppSelector } from "../../shared/lib/hooks";
+import { useAppDispatch, useAppSelector } from "../../shared/lib/hooks";
 
 import { ForwardMessagesPopupContent } from "./forward-messages-popup-content";
 
@@ -19,6 +19,7 @@ const StyledButtonContainer = styled.div`
 
 export const ForwardMessages = memo<IForwardMessages>(({ selectedMessages }) => {
     const [form] = Form.useForm();
+    const dispatch = useAppDispatch();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [modalSearchInputValue, setModalSearchInputValue] = useState<string>("");
 
@@ -33,14 +34,15 @@ export const ForwardMessages = memo<IForwardMessages>(({ selectedMessages }) => 
         },
         [form],
     );
-    const showModal = useCallback(() => {
+    const handleForwardButtonClick = useCallback(() => {
+        dispatch(selectMessage(selectedMessages[0]));
         setIsModalOpen(true);
-    }, []);
+    }, [dispatch, selectedMessages]);
 
     return (
         friends && (
             <StyledButtonContainer>
-                <MenuButton onClick={showModal} type="dashed">
+                <MenuButton onClick={handleForwardButtonClick} type="dashed">
                     <RollbackOutlined /> Forward {selectedMessages.length > 1 && selectedMessages.length}
                 </MenuButton>
                 <Modal title="Forward to..." open={isModalOpen} onCancel={handleCancel} centered={true} footer={null}>

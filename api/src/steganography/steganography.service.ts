@@ -1,14 +1,14 @@
 import Jimp from "jimp";
-import os from "os";
+import { s3Service } from "../s3/s3.service.js";
+import { v4 as uuidv4 } from "uuid";
 
 class SteganographyService {
-    async embedMessage(message: string) {
-        const image = await Jimp.read("https://chat-messenger.s3.eu-central-1.amazonaws.com/iis.png");
+    async embedMessage(message: string, username: string) {
+        const image = await Jimp.read("https://chat-messenger.s3.eu-central-1.amazonaws.com/STEGANOGRAPHY/iis.png");
         const binaryMessage = message
             .split("")
             .map((char) => char.charCodeAt(0).toString(2).padStart(8, "0"))
             .join("");
-
         const messageLength = binaryMessage.length;
         let pixelIndex = 0;
         for (let i = 0; i < messageLength; i++) {
@@ -17,12 +17,15 @@ class SteganographyService {
             image.bitmap.data[pixelIndex] = parseInt(newBinaryPixel, 2);
             pixelIndex += 4; // RGBA pixels are 4 bytes long
         }
-        //TODO: save to S3
-        return await image.writeAsync("hidden.png");
+
+        return await s3Service.uploadImageWithHiddenMessage(
+            `${username}/${uuidv4()}.png`,
+            await image.getBufferAsync(Jimp.MIME_PNG),
+        );
     }
 
-    async revealMessage(pathToImage: string): Promise<string> {
-        const image = await Jimp.read(pathToImage);
+    async revealMessage(s3Link: string): Promise<string> {
+        const image = await Jimp.read(s3Link);
 
         let binaryMessage = "";
         for (let y = 0; y < image.bitmap.height; y++) {
@@ -34,7 +37,7 @@ class SteganographyService {
                 if (binaryMessage.length % 8 === 0) {
                     const message = [];
                     for (let i = 0; i < binaryMessage.length; i += 8) {
-                        const binaryChar = binaryMessage.substr(i, 8);
+                        const binaryChar = binaryMessage.substring(i, i + 8);
                         const charCode = parseInt(binaryChar, 2);
                         const char = String.fromCharCode(charCode);
                         message.push(char);
@@ -53,14 +56,6 @@ class SteganographyService {
                 }
             }
         }
-    }
-
-    async getUniqueDeviceId(): Promise<string> {
-        const networkInterfaces = os.networkInterfaces();
-        const primaryInterface = Object.values(networkInterfaces)
-            .flat()
-            .find((item) => !item.internal && item.mac !== "00:00:00:00:00:00");
-        return primaryInterface.mac;
     }
 }
 

@@ -4,34 +4,20 @@ import { userService } from "../user/user.service.js";
 import { ErrorException } from "../error-handler/error-exception.js";
 
 class SteganographyController {
-    async embedMessage(req: Request, res: Response, next: NextFunction) {
-        try {
-            const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
-
-            if (!user) {
-                return next(ErrorException.UnauthorizedError());
-            }
-
-            const result = await steganographyService.embedMessage("TEST");
-            res.json(result);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     async revealMessage(req: Request, res: Response, next: NextFunction) {
         try {
-            const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
+            // const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
+            //
+            // if (!user) {
+            //     return next(ErrorException.UnauthorizedError());
+            // }
+            // TODO: change to dynamic;
+            const { s3Link } = req.body;
 
-            if (!user) {
-                return next(ErrorException.UnauthorizedError());
-            }
-            //TODO: change to dynamic;
-            const pathToImage = "https://chat-messenger.s3.eu-central-1.amazonaws.com/iis.png";
-            const result = await steganographyService.revealMessage(pathToImage);
+            const result = await steganographyService.revealMessage(s3Link);
             res.json(result);
-        } catch (err) {
-            console.error(err);
+        } catch (e) {
+            next(e);
         }
     }
 }

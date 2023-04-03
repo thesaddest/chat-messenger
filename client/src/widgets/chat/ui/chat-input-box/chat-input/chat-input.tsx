@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, KeyboardEvent, useCallback } from "react";
+import { FC, useEffect, useRef, KeyboardEvent, useCallback, Dispatch, SetStateAction } from "react";
 import { Form, FormInstance, Input, InputRef } from "antd";
 import styled from "styled-components";
 
@@ -10,6 +10,7 @@ interface IChatInputProps {
     uploadedFiles: IFile[];
     pendingFiles: IPendingAttachedFile[];
     chatId: string;
+    setMessage: Dispatch<SetStateAction<string>>;
 }
 
 const StyledInputContainer = styled(Form.Item)`
@@ -79,7 +80,7 @@ const StyledInputContainer = styled(Form.Item)`
     }
 `;
 
-export const ChatInput: FC<IChatInputProps> = ({ form, chatId, pendingFiles, uploadedFiles }) => {
+export const ChatInput: FC<IChatInputProps> = ({ form, chatId, pendingFiles, uploadedFiles, setMessage }) => {
     const inputRef = useRef<InputRef>(null);
 
     const onEnterPress = useCallback(
@@ -98,7 +99,13 @@ export const ChatInput: FC<IChatInputProps> = ({ form, chatId, pendingFiles, upl
 
     return (
         <StyledInputContainer name="message" rules={uploadedFiles.length === 0 ? CHAT_RULES.MESSAGE : undefined}>
-            <Input ref={inputRef} placeholder="Write a message..." onPressEnter={onEnterPress} autoComplete="off" />
+            <Input
+                ref={inputRef}
+                placeholder="Write a message..."
+                onPressEnter={onEnterPress}
+                autoComplete="off"
+                onChange={(e) => setMessage(e.target.value)}
+            />
         </StyledInputContainer>
     );
 };

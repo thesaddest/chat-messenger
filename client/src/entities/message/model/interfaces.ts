@@ -15,6 +15,9 @@ export interface IMessage {
     prevMessageContent?: string;
     prevMessageFrom?: string;
     isGroupMessage?: boolean;
+    isHiddenMessage?: boolean;
+    s3Location?: string;
+    friendDeviceId?: string;
     attachedFilesToUpload?: UploadFile[];
     attachedFilesAfterUpload?: IFile[];
 }

@@ -120,6 +120,23 @@ class MessageController {
             next(e);
         }
     }
+
+    async hideMessage(req: ITypedRequest<MessageDto>, res: Response, next: NextFunction) {
+        try {
+            const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
+
+            if (!user) {
+                return next(ErrorException.UnauthorizedError());
+            }
+
+            const messageDto = req.body;
+            const hiddenMessage = await messageService.hideMessage(messageDto, user);
+
+            return res.json(hiddenMessage);
+        } catch (e) {
+            next(e);
+        }
+    }
 }
 
 export const messageController = new MessageController();

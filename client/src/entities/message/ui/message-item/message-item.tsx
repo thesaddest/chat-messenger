@@ -71,6 +71,8 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
         isMessageRead,
         fromUsername,
         isGroupMessage,
+        isHiddenMessage,
+        s3Location,
     } = message;
 
     const dispatch = useAppDispatch();
@@ -127,6 +129,8 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
                         attachedFilesAfterUpload={attachedFilesAfterUpload}
                         fromUsername={fromUsername}
                         isGroupMessage={isGroupMessage}
+                        isHiddenMessage={isHiddenMessage}
+                        s3Location={s3Location}
                     />
                 </StyledRoomMessageContainer>
             </Dropdown>
@@ -147,6 +151,8 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
                         attachedFilesAfterUpload={attachedFilesAfterUpload}
                         fromUsername={fromUsername}
                         isGroupMessage={isGroupMessage}
+                        isHiddenMessage={isHiddenMessage}
+                        s3Location={s3Location}
                     />
                 </StyledFriendMessageContainer>
             </Dropdown>

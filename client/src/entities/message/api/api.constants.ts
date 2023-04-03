@@ -6,4 +6,5 @@ export const MESSAGE_API = {
     READ_MESSAGES: "read",
     FORWARD_MESSAGES: "forward",
     REPLY_TO_MESSAGE: "reply",
+    HIDE_MESSAGE: "hide",
 };
