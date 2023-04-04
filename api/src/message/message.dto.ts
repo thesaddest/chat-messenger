@@ -55,7 +55,7 @@ export class MessageDto {
     isHiddenMessage?: boolean;
 
     @IsString()
-    s3Location?: string;
+    hiddenS3Location?: string;
 
     @IsString()
     friendDeviceId?: string;

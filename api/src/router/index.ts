@@ -6,7 +6,6 @@ import { fileController } from "../file/file.controller.js";
 import { multerUploadMiddleware } from "../libs/multer-s3.js";
 import { roomController } from "../room/room.controller.js";
 import { notificationController } from "../notification/notification.controller.js";
-import { steganographyController } from "../steganography/steganography.controller.js";
 
 export const router = Router();
 
@@ -24,6 +23,7 @@ router.post("/message/read", messageController.readMessages);
 router.post("/message/forward", messageController.forwardMessages);
 router.post("/message/reply", messageController.replyToMessage);
 router.post("/message/hide", messageController.hideMessage);
+router.post("/message/reveal-hidden-message", messageController.revealHiddenMessage);
 
 router.post("/file/upload-single-file", multerUploadMiddleware.single("file"), fileController.uploadSingleFile);
 
@@ -35,5 +35,3 @@ router.post("/room/accept-invite-to-join-room", roomController.acceptInviteToJoi
 router.get("/notification/room-notifications", notificationController.getAllRoomNotifications);
 router.post("/notification/create-room-notification", notificationController.createRoomNotification);
 router.delete("/notification/delete-room-notification", notificationController.deleteRoomNotification);
-
-router.post("/steganography/reveal-message", steganographyController.revealMessage);

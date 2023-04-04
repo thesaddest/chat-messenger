@@ -66,6 +66,10 @@ class AuthService {
         };
     }
 
+    async generateUniqueDeviceId(userAgent: string): Promise<string> {
+        return `${uuidv4()}-${userAgent}`;
+    }
+
     async createHashedPassword(password: string): Promise<string> {
         return bcrypt.hash(password, 10);
     }

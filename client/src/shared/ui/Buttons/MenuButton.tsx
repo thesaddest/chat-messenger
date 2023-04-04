@@ -6,7 +6,7 @@ import { ButtonShape } from "antd/es/button/button";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 
 interface IMenuButtonProps {
-    onClick: MouseEventHandler<HTMLElement>;
+    onClick?: MouseEventHandler<HTMLElement>;
     type: ButtonType;
     children: ReactNode;
     danger?: boolean;

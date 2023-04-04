@@ -10,6 +10,7 @@ import { ReplyToMessage } from "../../../../features/reply-to-message";
 import { CopyMessage } from "../../../../features/copy-message";
 import { DeleteMessages } from "../../../../features/delete-messages";
 import { SelectMessage } from "../../../../features/select-message";
+import { RevealHiddenMessage } from "../../../../features/reveal-hidden-message";
 import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 import { COLORS } from "../../../../shared/const";
 
@@ -72,7 +73,7 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
         fromUsername,
         isGroupMessage,
         isHiddenMessage,
-        s3Location,
+        hiddenS3Location,
     } = message;
 
     const dispatch = useAppDispatch();
@@ -106,11 +107,15 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
                 key: 4,
             },
             {
-                label: <DeleteMessages selectedMessages={[message]} />,
+                label: isHiddenMessage && <RevealHiddenMessage messageToReveal={message} />,
                 key: 5,
             },
+            {
+                label: <DeleteMessages selectedMessages={[message]} />,
+                key: 6,
+            },
         ],
-        [message],
+        [isHiddenMessage, message],
     );
 
     if (isChatIsRoom(chat)) {
@@ -130,7 +135,7 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
                         fromUsername={fromUsername}
                         isGroupMessage={isGroupMessage}
                         isHiddenMessage={isHiddenMessage}
-                        s3Location={s3Location}
+                        hiddenS3Location={hiddenS3Location}
                     />
                 </StyledRoomMessageContainer>
             </Dropdown>
@@ -152,7 +157,7 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
                         fromUsername={fromUsername}
                         isGroupMessage={isGroupMessage}
                         isHiddenMessage={isHiddenMessage}
-                        s3Location={s3Location}
+                        hiddenS3Location={hiddenS3Location}
                     />
                 </StyledFriendMessageContainer>
             </Dropdown>

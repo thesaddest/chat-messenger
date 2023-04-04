@@ -7,4 +7,5 @@ export const MESSAGE_API = {
     FORWARD_MESSAGES: "forward",
     REPLY_TO_MESSAGE: "reply",
     HIDE_MESSAGE: "hide",
+    REVEAL_HIDDEN_MESSAGE: "reveal-hidden-message",
 };

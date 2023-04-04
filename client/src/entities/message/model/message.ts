@@ -62,7 +62,7 @@ export const createMessage = (message: IMessage): IMessage => {
         prevMessageFrom: message.prevMessageFrom !== undefined ? message.prevMessageFrom : undefined,
         isGroupMessage: message.isGroupMessage !== undefined ? message.isGroupMessage : undefined,
         isHiddenMessage: message.isHiddenMessage !== undefined ? message.isHiddenMessage : undefined,
-        s3Location: message.s3Location !== undefined ? message.s3Location : undefined,
+        hiddenS3Location: message.hiddenS3Location !== undefined ? message.hiddenS3Location : undefined,
         friendDeviceId: message.friendDeviceId !== undefined ? message.friendDeviceId : undefined,
         attachedFilesToUpload: message.attachedFilesToUpload !== undefined ? message.attachedFilesToUpload : undefined,
         attachedFilesAfterUpload:
@@ -77,8 +77,6 @@ export const sendMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: s
             const { data } = await MessageService.sendMessage(messageData);
 
             socket.emit(SOCKET_EVENTS.SEND_MESSAGE, data);
-            socket.emit(SOCKET_EVENTS.GET_DEVICE_ID);
-
             return data;
         } catch (e) {
             return rejectWithValue("Error while sending message");
@@ -189,7 +187,7 @@ export const sendMessageWithAttachedFiles = createAsyncThunk<
     },
 );
 
-export const sendHiddenMessage = createAsyncThunk<any, IMessage, { rejectValue: string }>(
+export const sendHiddenMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
     `${MESSAGE_API.ENTITY}/hidden-${MESSAGE_API.SEND_MESSAGE}`,
     async function (message, { rejectWithValue }) {
         const messageToSend = createMessage({
@@ -201,10 +199,23 @@ export const sendHiddenMessage = createAsyncThunk<any, IMessage, { rejectValue: 
         const { data } = await MessageService.hideMessage(messageToSend);
 
         if (!data) {
-            return rejectWithValue("Error while sending message with attached files");
+            return rejectWithValue("Error while hiding message");
         }
 
         socket.emit(SOCKET_EVENTS.SEND_MESSAGE, data);
+        return data;
+    },
+);
+
+export const revealHiddenMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
+    `${MESSAGE_API.ENTITY}/${MESSAGE_API.REVEAL_HIDDEN_MESSAGE}`,
+    async function (message, { rejectWithValue }) {
+        const { data } = await MessageService.revealHiddenMessage(message);
+
+        if (!data) {
+            return rejectWithValue("Error while revealing message");
+        }
+
         return data;
     },
 );
@@ -451,6 +462,23 @@ export const messageModel = createSlice({
                 state.error = null;
             })
             .addCase(sendHiddenMessage.rejected, (state, action) => {
+                if (!action.payload) {
+                    return;
+                }
+                state.error = action.payload;
+                state.isLoading = false;
+            })
+            .addCase(revealHiddenMessage.fulfilled, (state, action) => {
+                if (!state.messages) {
+                    return;
+                }
+                state.messages = state.messages.map((message) =>
+                    message.messageId === action.payload.messageId ? action.payload : message,
+                );
+                state.isLoading = false;
+                state.error = null;
+            })
+            .addCase(revealHiddenMessage.rejected, (state, action) => {
                 if (!action.payload) {
                     return;
                 }

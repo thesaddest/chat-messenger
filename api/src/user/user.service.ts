@@ -45,13 +45,11 @@ class UserService {
 
     async setNewDeviceIdForUser(userId: string, deviceId: string): Promise<User> {
         const userRepository = AppDataSource.getRepository(User);
-        const user = await userRepository.findOne({ where: { userId: userId } });
-
-        user.deviceId = deviceId;
-        return await userRepository.save(user);
+        await userRepository.update({ userId: userId }, { deviceId: deviceId });
+        return await userRepository.findOne({ where: { userId: userId } });
     }
 
-    async getDeviceIdByUser(userId: string): Promise<string> {
+    async getDeviceIdByUserId(userId: string): Promise<string> {
         const userRepository = AppDataSource.getRepository(User);
         const user = await userRepository.findOne({ where: { userId: userId } });
 

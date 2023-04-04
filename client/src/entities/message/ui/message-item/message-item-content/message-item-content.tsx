@@ -19,7 +19,7 @@ interface IMessageItemContentProps {
     fromUsername?: string;
     isGroupMessage?: boolean;
     isHiddenMessage?: boolean;
-    s3Location?: string;
+    hiddenS3Location?: string;
 }
 
 interface ForwardedProps {
@@ -55,7 +55,7 @@ export const MessageItemContent = memo<IMessageItemContentProps>(
         fromUsername,
         isGroupMessage,
         isHiddenMessage,
-        s3Location,
+        hiddenS3Location,
     }) => {
         return (
             <>
@@ -72,13 +72,11 @@ export const MessageItemContent = memo<IMessageItemContentProps>(
                     {attachedFilesAfterUpload && (
                         <AttachedFileList attachedFilesAfterUpload={attachedFilesAfterUpload} />
                     )}
-                    <p>
-                        {isHiddenMessage ? (
-                            <img src={s3Location} width={"100%"} height={"100%"} alt={content} />
-                        ) : (
-                            content
-                        )}
-                    </p>
+                    {isHiddenMessage ? (
+                        <img src={hiddenS3Location} width={"100%"} height={"100%"} alt={content} />
+                    ) : (
+                        <p>{content}</p>
+                    )}
                 </StyledMessageContentHolder>
                 <MessageReadCheck isMessageRead={isMessageRead} />
             </>

@@ -137,6 +137,25 @@ class MessageController {
             next(e);
         }
     }
+
+    async revealHiddenMessage(req: ITypedRequest<MessageDto>, res: Response, next: NextFunction) {
+        const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
+
+        if (!user) {
+            return next(ErrorException.UnauthorizedError());
+        }
+
+        const messageDto = req.body;
+        const deviceId = await userService.getDeviceIdByUserId(user.userId);
+        const messageFriendDeviceId = await messageService.getFriendDeviceIdFromMessage(messageDto.messageId);
+
+        if (deviceId !== messageFriendDeviceId) {
+            return next(ErrorException.BadRequest("Inappropriate device."));
+        }
+
+        const revealedMessage = await messageService.revealHiddenMessage(messageDto);
+        return res.json(revealedMessage);
+    }
 }
 
 export const messageController = new MessageController();

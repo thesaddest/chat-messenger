@@ -46,7 +46,7 @@ export class Message extends BaseEntity {
     isHiddenMessage: boolean;
 
     @Column({ nullable: true })
-    s3Location: string;
+    hiddenS3Location: string;
 
     @Column({ nullable: true })
     friendDeviceId: string;

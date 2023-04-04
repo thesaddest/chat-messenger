@@ -1,10 +1,8 @@
 import Jimp from "jimp";
-import { s3Service } from "../s3/s3.service.js";
-import { v4 as uuidv4 } from "uuid";
 
 class SteganographyService {
-    async embedMessage(message: string, username: string) {
-        const image = await Jimp.read("https://chat-messenger.s3.eu-central-1.amazonaws.com/STEGANOGRAPHY/iis.png");
+    async embedMessage(message: string): Promise<Buffer> {
+        const image = await Jimp.read(process.env.AWS_STEGANOGRAPHY_IMAGE_PATH);
         const binaryMessage = message
             .split("")
             .map((char) => char.charCodeAt(0).toString(2).padStart(8, "0"))
@@ -18,10 +16,7 @@ class SteganographyService {
             pixelIndex += 4; // RGBA pixels are 4 bytes long
         }
 
-        return await s3Service.uploadImageWithHiddenMessage(
-            `${username}/${uuidv4()}.png`,
-            await image.getBufferAsync(Jimp.MIME_PNG),
-        );
+        return await image.getBufferAsync(Jimp.MIME_PNG);
     }
 
     async revealMessage(s3Link: string): Promise<string> {
