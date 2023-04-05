@@ -210,13 +210,13 @@ export const sendHiddenMessage = createAsyncThunk<IMessage, IMessage, { rejectVa
 export const revealHiddenMessage = createAsyncThunk<IMessage, IMessage, { rejectValue: string }>(
     `${MESSAGE_API.ENTITY}/${MESSAGE_API.REVEAL_HIDDEN_MESSAGE}`,
     async function (message, { rejectWithValue }) {
-        const { data } = await MessageService.revealHiddenMessage(message);
+        try {
+            const { data } = await MessageService.revealHiddenMessage(message);
 
-        if (!data) {
-            return rejectWithValue("Error while revealing message");
+            return data;
+        } catch (e: any) {
+            return rejectWithValue(e.response.data.message);
         }
-
-        return data;
     },
 );
 
@@ -472,9 +472,9 @@ export const messageModel = createSlice({
                 if (!state.messages) {
                     return;
                 }
-                state.messages = state.messages.map((message) =>
-                    message.messageId === action.payload.messageId ? action.payload : message,
-                );
+                // state.messages = state.messages.map((message) =>
+                //     message.messageId === action.payload.messageId ? action.payload : message,
+                // );
                 state.isLoading = false;
                 state.error = null;
             })

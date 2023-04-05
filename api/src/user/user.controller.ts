@@ -17,7 +17,7 @@ class UserController {
             newUser.email = email;
             newUser.username = username;
             newUser.password = password;
-            newUser.deviceId = await authService.generateUniqueDeviceId(req.headers["user-agent"]);
+            newUser.deviceId = req.headers["user-agent"];
 
             const errors = await validate(newUser);
 
@@ -39,7 +39,7 @@ class UserController {
             const userData = new UserLoginDto();
             userData.email = email;
             userData.password = password;
-            userData.deviceId = await authService.generateUniqueDeviceId(req.headers["user-agent"]);
+            userData.deviceId = req.headers["user-agent"];
 
             const loggedUser = await authService.login(userData);
             return res.json(loggedUser);

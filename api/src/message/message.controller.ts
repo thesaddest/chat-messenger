@@ -150,7 +150,7 @@ class MessageController {
         const messageFriendDeviceId = await messageService.getFriendDeviceIdFromMessage(messageDto.messageId);
 
         if (deviceId !== messageFriendDeviceId) {
-            return next(ErrorException.BadRequest("Inappropriate device."));
+            return next(ErrorException.BadRequest("Can't reveal the message. Inappropriate device."));
         }
 
         const revealedMessage = await messageService.revealHiddenMessage(messageDto);

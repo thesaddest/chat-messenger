@@ -307,7 +307,6 @@ class MessageService {
 
         const dbMessage = await messageRepository.findOne({ where: { messageId: messageDto.messageId } });
         dbMessage.content = messageContent;
-        dbMessage.hiddenS3Location = null;
         dbMessage.isHiddenMessage = false;
         await messageRepository.save(dbMessage);
 

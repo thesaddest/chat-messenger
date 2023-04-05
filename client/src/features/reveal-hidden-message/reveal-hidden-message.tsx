@@ -1,11 +1,13 @@
-import { memo, useCallback } from "react";
+import { memo, SyntheticEvent, useCallback, useState } from "react";
 import { FileUnknownOutlined } from "@ant-design/icons";
 import { Modal } from "antd";
 import styled from "styled-components";
 
 import { MenuButton } from "../../shared/ui";
 import { useAppDispatch, useModal } from "../../shared/lib/hooks";
-import { IMessage, revealHiddenMessage } from "../../entities/message";
+import { deleteMessages, IMessage } from "../../entities/message";
+
+import { RevealHiddenMessagePopupContent } from "./reveal-hidden-message-popup-content";
 
 const StyledButtonContainer = styled.div`
     padding: 0.25rem;
@@ -16,13 +18,25 @@ interface IRevealHiddenMessageProps {
 }
 
 export const RevealHiddenMessage = memo<IRevealHiddenMessageProps>(({ messageToReveal }) => {
+    const [isMessageRevealed, setIsMessageRevealed] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-    const { isModalOpen, showModal, modalError, setModalError, setIsModalOpen, handleCancel } = useModal();
+    const { isModalOpen, modalError, setModalError, setIsModalOpen } = useModal();
+
+    const handleCancel = useCallback(
+        (e: SyntheticEvent) => {
+            if (isMessageRevealed) {
+                dispatch(deleteMessages([messageToReveal]));
+            }
+            e.stopPropagation();
+            setIsModalOpen(false);
+            setModalError("");
+        },
+        [dispatch, isMessageRevealed, messageToReveal, setIsModalOpen, setModalError],
+    );
 
     const handleClick = useCallback(() => {
         setIsModalOpen(true);
-        dispatch(revealHiddenMessage(messageToReveal));
-    }, [setIsModalOpen, dispatch, messageToReveal]);
+    }, [setIsModalOpen]);
 
     return (
         <>
@@ -31,7 +45,15 @@ export const RevealHiddenMessage = memo<IRevealHiddenMessageProps>(({ messageToR
                     <FileUnknownOutlined /> Reveal
                 </MenuButton>
             </StyledButtonContainer>
-            <Modal title="Add a friend!" open={isModalOpen} centered={true} onCancel={handleCancel}></Modal>
+            <Modal open={isModalOpen} centered={true} onCancel={handleCancel} footer={null}>
+                <RevealHiddenMessagePopupContent
+                    setIsMessageRevealed={setIsMessageRevealed}
+                    messageToReveal={messageToReveal}
+                    setIsModalOpen={setIsModalOpen}
+                    modalError={modalError}
+                    setModalError={setModalError}
+                />
+            </Modal>
         </>
     );
 });
