@@ -296,7 +296,6 @@ class MessageService {
             prevMessageFrom: updatedMessage.prevMessageFrom,
             isGroupMessage: updatedMessage.isGroupMessage,
             isHiddenMessage: updatedMessage.isHiddenMessage,
-            hiddenS3Location: updatedMessage.hiddenS3Location,
             attachedFilesAfterUpload: updatedMessage.files,
         };
     }

@@ -37,7 +37,7 @@ const StyledFriendMessageContainer = styled.div<{ friend: IFriend; message: IMes
     padding: 0.5rem 1rem;
     max-width: 50%;
     word-break: break-word;
-    filter: ${({ message }) => message.isMessageSelected && "blur(2px)"};
+    filter: ${({ message }) => (message.isMessageSelected || message.isHiddenMessage) && "blur(2px)"};
     cursor: pointer;
 `;
 
@@ -53,7 +53,7 @@ const StyledRoomMessageContainer = styled.div<{ room: IRoom; message: IMessage; 
     padding: 0.5rem 1rem;
     max-width: 50%;
     word-break: break-word;
-    filter: ${({ message }) => message.isMessageSelected && "blur(2px)"};
+    filter: ${({ message }) => (message.isMessageSelected || message.isHiddenMessage) && "blur(2px)"};
     cursor: pointer;
 `;
 
@@ -73,7 +73,6 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
         fromUsername,
         isGroupMessage,
         isHiddenMessage,
-        hiddenS3Location,
     } = message;
 
     const dispatch = useAppDispatch();
@@ -134,8 +133,6 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
                         attachedFilesAfterUpload={attachedFilesAfterUpload}
                         fromUsername={fromUsername}
                         isGroupMessage={isGroupMessage}
-                        isHiddenMessage={isHiddenMessage}
-                        hiddenS3Location={hiddenS3Location}
                     />
                 </StyledRoomMessageContainer>
             </Dropdown>
@@ -156,8 +153,6 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
                         attachedFilesAfterUpload={attachedFilesAfterUpload}
                         fromUsername={fromUsername}
                         isGroupMessage={isGroupMessage}
-                        isHiddenMessage={isHiddenMessage}
-                        hiddenS3Location={hiddenS3Location}
                     />
                 </StyledFriendMessageContainer>
             </Dropdown>
