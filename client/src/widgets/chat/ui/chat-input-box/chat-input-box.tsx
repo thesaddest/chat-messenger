@@ -16,13 +16,13 @@ import { useAppDispatch, useAppSelector } from "../../../../shared/lib/hooks";
 import { FileUpload } from "../../../../features/file-upload";
 import { SendMessage } from "../../../../features/send-message";
 import { COLORS } from "../../../../shared/const";
-
 import { HideMessage } from "../../../../features/hide-message";
 
 import { ChatInput } from "./chat-input";
 
 interface ChatInputBoxProps {
     chatId: string;
+    isChatIsRoom: boolean;
 }
 
 const StyledWrapper = styled.div`
@@ -43,7 +43,7 @@ const StyledForm = styled(Form)`
     margin: 0 1rem 0 1rem;
 `;
 
-export const ChatInputBox: FC<ChatInputBoxProps> = ({ chatId }) => {
+export const ChatInputBox: FC<ChatInputBoxProps> = ({ chatId, isChatIsRoom }) => {
     const [message, setMessage] = useState<string>("");
     const [isMessageHidden, setIsMessageHidden] = useState<boolean>(false);
     const [form] = Form.useForm();
@@ -102,7 +102,7 @@ export const ChatInputBox: FC<ChatInputBoxProps> = ({ chatId }) => {
                     setMessage={setMessage}
                 />
 
-                {message && <HideMessage setIsMessageHidden={setIsMessageHidden} />}
+                {message && !isChatIsRoom && <HideMessage setIsMessageHidden={setIsMessageHidden} />}
                 <SendMessage pendingFiles={pendingFiles} chatId={chatId} />
             </StyledForm>
         </StyledWrapper>

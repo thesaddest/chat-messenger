@@ -271,7 +271,7 @@ class MessageService {
         const messageRepository = AppDataSource.getRepository(Message);
         const dbMessage = await this.createMessage(messageDto, user);
         const embeddedMessage = await steganographyService.embedMessage(dbMessage.content);
-        //We use the .update method instead of the .save method as the latter generates a new entity, a behavior that is not required in our current implementation.
+        //We use the .update method instead of the .save method as the .save generates a new entity, a behavior that is not required in our current implementation.
         await messageRepository.update(
             { messageId: dbMessage.messageId },
             {

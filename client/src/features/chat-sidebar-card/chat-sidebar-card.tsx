@@ -44,7 +44,7 @@ export const ChatSidebarCard: FC<FriendSidebarCardProps> = ({ chat, messages }) 
             </MessagesCountBadge>
             <StyledChatNameConnectedMessageContainer>
                 <ChatNameConnected chat={chat} />
-                <ChatSidebarLastMessage messageContent={memoizedLastMessage && memoizedLastMessage.content} />
+                {memoizedLastMessage && <ChatSidebarLastMessage messageContent={memoizedLastMessage.content} />}
             </StyledChatNameConnectedMessageContainer>
         </StyledChatsCardDiv>
     );

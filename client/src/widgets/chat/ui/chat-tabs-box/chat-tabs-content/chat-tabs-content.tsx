@@ -21,17 +21,14 @@ const StyledChatTabsContent = styled.div`
 
 export const ChatTabsContent: FC<IChatTabsContentProps> = ({ chat, messages }) => {
     const selectedMessageToReply = useAppSelector((state) => state.message.selectedMessageToReply);
+    const chatId = "roomId" in chat ? chat.roomId : chat.userBehindFriend;
 
     return (
         <StyledChatTabsContent>
             <ChatInfo chat={chat} />
             <MessagesList chat={chat} messages={messages} selectedMessageToReply={selectedMessageToReply} />
             <RepliedMessage selectedMessageToReply={selectedMessageToReply} />
-            {isChatIsRoom(chat) ? (
-                <ChatInputBox chatId={chat.roomId} />
-            ) : (
-                <ChatInputBox chatId={chat.userBehindFriend} />
-            )}
+            <ChatInputBox chatId={chatId} isChatIsRoom={isChatIsRoom(chat)} />
         </StyledChatTabsContent>
     );
 };

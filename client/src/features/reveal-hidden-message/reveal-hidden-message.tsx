@@ -19,6 +19,7 @@ interface IRevealHiddenMessageProps {
 
 export const RevealHiddenMessage = memo<IRevealHiddenMessageProps>(({ messageToReveal }) => {
     const [isMessageRevealed, setIsMessageRevealed] = useState<boolean>(false);
+
     const dispatch = useAppDispatch();
     const { isModalOpen, modalError, setModalError, setIsModalOpen } = useModal();
 
