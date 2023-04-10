@@ -296,6 +296,7 @@ class MessageService {
             prevMessageFrom: updatedMessage.prevMessageFrom,
             isGroupMessage: updatedMessage.isGroupMessage,
             isHiddenMessage: updatedMessage.isHiddenMessage,
+            hiddenS3Location: updatedMessage.hiddenS3Location,
             attachedFilesAfterUpload: updatedMessage.files,
         };
     }
@@ -303,18 +304,14 @@ class MessageService {
     async revealHiddenMessage(messageDto: MessageDto): Promise<MessageDto> {
         const messageContent = await steganographyService.revealMessage(messageDto.hiddenS3Location);
         const messageRepository = AppDataSource.getRepository(Message);
-
         const dbMessage = await messageRepository.findOne({ where: { messageId: messageDto.messageId } });
-        dbMessage.content = messageContent;
-        dbMessage.isHiddenMessage = false;
-        await messageRepository.save(dbMessage);
 
         return {
             messageId: dbMessage.messageId,
             to: dbMessage.to,
             from: dbMessage.from,
             fromUsername: dbMessage.fromUsername,
-            content: dbMessage.content,
+            content: messageContent,
             isMessageSelected: false,
             isMessageRead: dbMessage.isMessageRead,
             isMessageForwarded: dbMessage.isMessageForwarded,

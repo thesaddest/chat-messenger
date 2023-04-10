@@ -1,8 +1,8 @@
-import { memo, MouseEventHandler, useCallback, useMemo } from "react";
+import { memo, MouseEventHandler, useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
-import { Dropdown, MenuProps } from "antd";
+import { Dropdown, MenuProps, Skeleton } from "antd";
 
-import { deselectMessage, IMessage, selectMessage } from "../../model";
+import { deselectMessage, IMessage, revealHiddenMessage, selectMessage } from "../../model";
 import { IFriend } from "../../../friend";
 import { IRoom, isChatIsRoom } from "../../../room";
 import { ForwardMessages } from "../../../../features/forward-messages";
@@ -37,7 +37,7 @@ const StyledFriendMessageContainer = styled.div<{ friend: IFriend; message: IMes
     padding: 0.5rem 1rem;
     max-width: 50%;
     word-break: break-word;
-    filter: ${({ message }) => (message.isMessageSelected || message.isHiddenMessage) && "blur(2px)"};
+    filter: ${({ message }) => message.isMessageSelected && "blur(2px)"};
     cursor: pointer;
 `;
 
@@ -53,11 +53,14 @@ const StyledRoomMessageContainer = styled.div<{ room: IRoom; message: IMessage; 
     padding: 0.5rem 1rem;
     max-width: 50%;
     word-break: break-word;
-    filter: ${({ message }) => (message.isMessageSelected || message.isHiddenMessage) && "blur(2px)"};
+    filter: ${({ message }) => message.isMessageSelected && "blur(2px)"};
     cursor: pointer;
 `;
 
 export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) => {
+    const [revealedMessage, setRevealedMessage] = useState<string>("");
+    const [revealedMessageError, setRevealedMessageError] = useState<string>("");
+    const [isRevealedMessageLoading, setIsRevealedMessageLoading] = useState<boolean>(true);
     const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
     const {
         isMessageForwarded,
@@ -73,6 +76,7 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
         fromUsername,
         isGroupMessage,
         isHiddenMessage,
+        hiddenS3Location,
     } = message;
 
     const dispatch = useAppDispatch();
@@ -86,35 +90,68 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
         }
     }, [dispatch, isMessageSelected, message, selectedMessages.length]);
 
-    const items: MenuProps["items"] | undefined = useMemo(
-        () => [
-            {
-                label: <ReplyToMessage selectedMessage={message} />,
-                key: 1,
-            },
-            {
-                label: <ForwardMessages selectedMessages={[message]} />,
-                key: 2,
-            },
+    const getRevealedMessage = useCallback(async () => {
+        if (isHiddenMessage && !revealedMessage && !revealedMessageError) {
+            const { payload } = await dispatch(revealHiddenMessage(message));
+            if (typeof payload === "undefined") {
+                setRevealedMessageError("Unexpected error.");
+                return setIsRevealedMessageLoading(false);
+            }
 
-            {
-                label: <CopyMessage selectedMessage={message} />,
-                key: 3,
-            },
-            {
-                label: <SelectMessage selectedMessage={message} />,
-                key: 4,
-            },
-            {
-                label: isHiddenMessage && <RevealHiddenMessage messageToReveal={message} />,
-                key: 5,
-            },
-            {
-                label: <DeleteMessages selectedMessages={[message]} />,
-                key: 6,
-            },
-        ],
-        [isHiddenMessage, message],
+            if (typeof payload === "string") {
+                setRevealedMessageError(payload);
+                return setIsRevealedMessageLoading(false);
+            }
+
+            setRevealedMessage(payload.content);
+            setIsRevealedMessageLoading(false);
+        }
+    }, [isHiddenMessage, revealedMessage, revealedMessageError, dispatch, message]);
+
+    const items: MenuProps["items"] | undefined = useMemo(
+        () =>
+            isHiddenMessage
+                ? [
+                      {
+                          label: isRevealedMessageLoading ? (
+                              <Skeleton.Input active size="default" />
+                          ) : (
+                              <RevealHiddenMessage
+                                  revealedMessage={revealedMessage}
+                                  revealedMessageError={revealedMessageError}
+                              />
+                          ),
+                          key: 1,
+                      },
+                      {
+                          label: <DeleteMessages selectedMessages={[message]} />,
+                          key: 2,
+                      },
+                  ]
+                : [
+                      {
+                          label: <ReplyToMessage selectedMessage={message} />,
+                          key: 1,
+                      },
+                      {
+                          label: <ForwardMessages selectedMessages={[message]} />,
+                          key: 2,
+                      },
+
+                      {
+                          label: <CopyMessage selectedMessage={message} />,
+                          key: 3,
+                      },
+                      {
+                          label: <SelectMessage selectedMessage={message} />,
+                          key: 4,
+                      },
+                      {
+                          label: <DeleteMessages selectedMessages={[message]} />,
+                          key: 6,
+                      },
+                  ],
+        [isHiddenMessage, isRevealedMessageLoading, revealedMessage, revealedMessageError, message],
     );
 
     if (isChatIsRoom(chat)) {
@@ -133,13 +170,20 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
                         attachedFilesAfterUpload={attachedFilesAfterUpload}
                         fromUsername={fromUsername}
                         isGroupMessage={isGroupMessage}
+                        isHiddenMessage={isHiddenMessage}
+                        hiddenS3Location={hiddenS3Location}
                     />
                 </StyledRoomMessageContainer>
             </Dropdown>
         );
     } else {
         return (
-            <Dropdown menu={{ items }} trigger={["contextMenu"]} disabled={selectedMessages.length > 0}>
+            <Dropdown
+                menu={{ items }}
+                trigger={["contextMenu"]}
+                disabled={selectedMessages.length > 0}
+                onOpenChange={getRevealedMessage}
+            >
                 <StyledFriendMessageContainer friend={chat} message={message} onClick={handleClick}>
                     <MessageItemContent
                         to={to}
@@ -153,6 +197,8 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
                         attachedFilesAfterUpload={attachedFilesAfterUpload}
                         fromUsername={fromUsername}
                         isGroupMessage={isGroupMessage}
+                        isHiddenMessage={isHiddenMessage}
+                        hiddenS3Location={hiddenS3Location}
                     />
                 </StyledFriendMessageContainer>
             </Dropdown>

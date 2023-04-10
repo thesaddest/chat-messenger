@@ -32,15 +32,16 @@ const StyledWrapper = styled.div<IStyledWrapperProps>`
 `;
 
 export const MessagesList: FC<IMessagesListProps> = ({ chat, messages, selectedMessageToReply }) => {
+    const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
     const dispatch = useAppDispatch();
+
     const user = useAppSelector((state) => state.auth.user);
+    const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
+    const roomIdActiveKey = useAppSelector((state) => state.room.roomIdActiveKey);
+
     const memoizedFilteredMessages = useMemo(() => getFilteredMessageByChatType(messages, chat), [messages, chat]);
     const bottomDiv = useRef<HTMLDivElement>(null);
     const isInViewport = useIsInViewport(bottomDiv);
-    const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
-
-    const friendIdActiveKey = useAppSelector((state) => state.friend.friendIdActiveKey);
-    const roomIdActiveKey = useAppSelector((state) => state.room.roomIdActiveKey);
 
     useEffect(() => {
         if (!isInViewport) {

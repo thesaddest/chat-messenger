@@ -62,7 +62,7 @@ export const createMessage = (message: IMessage): IMessage => {
         prevMessageFrom: message.prevMessageFrom !== undefined ? message.prevMessageFrom : undefined,
         isGroupMessage: message.isGroupMessage !== undefined ? message.isGroupMessage : undefined,
         isHiddenMessage: message.isHiddenMessage !== undefined ? message.isHiddenMessage : undefined,
-        friendDeviceId: message.friendDeviceId !== undefined ? message.friendDeviceId : undefined,
+        hiddenS3Location: message.hiddenS3Location !== undefined ? message.hiddenS3Location : undefined,
         attachedFilesToUpload: message.attachedFilesToUpload !== undefined ? message.attachedFilesToUpload : undefined,
         attachedFilesAfterUpload:
             message.attachedFilesAfterUpload !== undefined ? message.attachedFilesAfterUpload : undefined,
