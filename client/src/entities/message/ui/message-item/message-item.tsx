@@ -1,6 +1,6 @@
 import { memo, MouseEventHandler, useCallback, useMemo, useState } from "react";
+import { Dropdown, MenuProps } from "antd";
 import styled from "styled-components";
-import { Dropdown, MenuProps, Skeleton } from "antd";
 
 import { deselectMessage, IMessage, revealHiddenMessage, selectMessage } from "../../model";
 import { IFriend } from "../../../friend";
@@ -60,7 +60,7 @@ const StyledRoomMessageContainer = styled.div<{ room: IRoom; message: IMessage; 
 export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) => {
     const [revealedMessage, setRevealedMessage] = useState<string>("");
     const [revealedMessageError, setRevealedMessageError] = useState<string>("");
-    const [isRevealedMessageLoading, setIsRevealedMessageLoading] = useState<boolean>(true);
+    const [isMessageRevealedSuccessfully, setIsMessageRevealedSuccessfully] = useState<boolean>(false);
     const selectedMessages = useAppSelector((state) => state.message.selectedMessages);
     const {
         isMessageForwarded,
@@ -94,64 +94,51 @@ export const MessageItem = memo<MessageItemProps>(({ chat, message, userId }) =>
         if (isHiddenMessage && !revealedMessage && !revealedMessageError) {
             const { payload } = await dispatch(revealHiddenMessage(message));
             if (typeof payload === "undefined") {
-                setRevealedMessageError("Unexpected error.");
-                return setIsRevealedMessageLoading(false);
+                return setRevealedMessageError("Unexpected error.");
             }
 
             if (typeof payload === "string") {
-                setRevealedMessageError(payload);
-                return setIsRevealedMessageLoading(false);
+                return setRevealedMessageError(payload);
             }
-
+            setIsMessageRevealedSuccessfully(true);
             setRevealedMessage(payload.content);
-            setIsRevealedMessageLoading(false);
         }
     }, [isHiddenMessage, revealedMessage, revealedMessageError, dispatch, message]);
 
     const items: MenuProps["items"] | undefined = useMemo(
-        () =>
-            isHiddenMessage
-                ? [
-                      {
-                          label: isRevealedMessageLoading ? (
-                              <Skeleton.Input active size="default" />
-                          ) : (
-                              <RevealHiddenMessage
-                                  revealedMessage={revealedMessage}
-                                  revealedMessageError={revealedMessageError}
-                              />
-                          ),
-                          key: 1,
-                      },
-                      {
-                          label: <DeleteMessages selectedMessages={[message]} />,
-                          key: 2,
-                      },
-                  ]
-                : [
-                      {
-                          label: <ReplyToMessage selectedMessage={message} />,
-                          key: 1,
-                      },
-                      {
-                          label: <ForwardMessages selectedMessages={[message]} />,
-                          key: 2,
-                      },
+        () => [
+            {
+                label: isMessageRevealedSuccessfully && (
+                    <RevealHiddenMessage
+                        revealedMessage={revealedMessage}
+                        revealedMessageError={revealedMessageError}
+                    />
+                ),
+                key: 1,
+            },
+            {
+                label: <ReplyToMessage selectedMessage={message} />,
+                key: 2,
+            },
+            {
+                label: <ForwardMessages selectedMessages={[message]} />,
+                key: 3,
+            },
 
-                      {
-                          label: <CopyMessage selectedMessage={message} />,
-                          key: 3,
-                      },
-                      {
-                          label: <SelectMessage selectedMessage={message} />,
-                          key: 4,
-                      },
-                      {
-                          label: <DeleteMessages selectedMessages={[message]} />,
-                          key: 6,
-                      },
-                  ],
-        [isHiddenMessage, isRevealedMessageLoading, revealedMessage, revealedMessageError, message],
+            {
+                label: <CopyMessage selectedMessage={message} />,
+                key: 4,
+            },
+            {
+                label: <SelectMessage selectedMessage={message} />,
+                key: 5,
+            },
+            {
+                label: <DeleteMessages selectedMessages={[message]} />,
+                key: 6,
+            },
+        ],
+        [isMessageRevealedSuccessfully, revealedMessage, revealedMessageError, message],
     );
 
     if (isChatIsRoom(chat)) {
