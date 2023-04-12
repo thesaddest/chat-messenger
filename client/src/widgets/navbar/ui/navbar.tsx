@@ -2,7 +2,7 @@ import { Dispatch, FC, SetStateAction, useCallback } from "react";
 import styled from "styled-components";
 
 import { useWindowSize } from "../../../shared/lib/hooks";
-import { CancelButton, BackButton, BurgerMenu } from "../../../shared/ui";
+import { CancelButton, BackButton } from "../../../shared/ui";
 import { DEFAULT_ACTIVE_KEY, MAX_MOBILE_WIDTH_HOOK, SIZES } from "../../../shared/const";
 import { useAppDispatch, useAppSelector } from "../../../shared/lib/hooks";
 import { setFriendIdActiveKey } from "../../../entities/friend";
@@ -13,6 +13,8 @@ import { ChatSwitch } from "../../chat-switch";
 import { setRoomIdActiveKey } from "../../../entities/room";
 import { Notification } from "../../../features/notification";
 import { ChatType } from "../../../pages/home";
+
+import { BurgerMenu } from "./burger-menu";
 
 interface IStyledDivProps {
     selectedMessages: IMessage[];

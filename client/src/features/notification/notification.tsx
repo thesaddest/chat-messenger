@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { memo, useEffect } from "react";
 import { Badge, Modal } from "antd";
 import { BellOutlined } from "@ant-design/icons";
 
@@ -8,7 +8,7 @@ import { SIZES } from "../../shared/const";
 
 import { NotificationPopupContent } from "./notification-popup-content";
 
-export const Notification: FC = () => {
+export const Notification = memo(() => {
     const notifications = useAppSelector((state) => state.notification.notifications);
     const notificationLength = useAppSelector((state) => state.notification.notificationLength);
 
@@ -36,4 +36,4 @@ export const Notification: FC = () => {
             </Modal>
         </Badge>
     );
-};
+});
