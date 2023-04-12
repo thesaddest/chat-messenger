@@ -10,9 +10,13 @@ import { SearchFriend } from "../../../features/search-friend";
 
 const StyledNavbarMenu = styled(Menu)`
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
+
+    .ant-menu-item {
+        background-color: transparent !important;
+    }
 `;
 
 const StyledMenuIcon = styled(MenuOutlined)`
@@ -26,15 +30,15 @@ const NavbarMenu = memo(() => (
         style={{ borderInlineEnd: 0 }}
         items={[
             {
-                label: <AddFriend />,
+                label: <SearchFriend />,
                 key: "1",
             },
             {
-                label: <CreateRoom />,
+                label: <AddFriend />,
                 key: "2",
             },
             {
-                label: <SearchFriend />,
+                label: <CreateRoom />,
                 key: "3",
             },
         ]}

@@ -42,9 +42,8 @@ const StyledDivider = styled(Divider)`
 `;
 
 export const HomePage: FC = () => {
-    const [chatType, setChatType] = useState<ChatType>(ChatType.FRIEND);
-
     useSocket();
+    const [chatType, setChatType] = useState<ChatType>(ChatType.FRIEND);
     const { width } = useWindowSize();
 
     const isFriendsLoading = useAppSelector((state) => state.friend.isLoading);
@@ -56,7 +55,7 @@ export const HomePage: FC = () => {
     return (
         <StyledHomeContainer>
             <StyledHome>
-                {!isFriendsLoading ? (
+                {isFriendsLoading ? (
                     <SkeletonChat />
                 ) : (
                     <>
