@@ -56,7 +56,7 @@ export const HomePage: FC = () => {
     return (
         <StyledHomeContainer>
             <StyledHome>
-                {isFriendsLoading ? (
+                {!isFriendsLoading ? (
                     <SkeletonChat />
                 ) : (
                     <>

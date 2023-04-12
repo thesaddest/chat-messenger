@@ -7,36 +7,22 @@ import { SIZES } from "../../const";
 const StyledNavbarContainer = styled.div`
     display: flex;
     align-items: center;
-    justify-content: start;
-    gap: 0.5rem;
-    padding: 0.5rem 0 0 0.5rem;
+    justify-content: space-between;
+    padding-top: 0.5rem;
     width: 100%;
-
-    @media only screen and (max-width: ${SIZES.MOBILE}) {
-        justify-content: space-evenly;
-    }
 `;
 
 const StyledButtonsContainer = styled.div`
     display: flex;
+    align-items: center;
     gap: 0.5rem;
-    padding: 0 2rem 0 2rem;
-
-    @media only screen and (max-width: ${SIZES.TABLET}) {
-        padding-right: 2rem;
-    }
-
-    @media only screen and (min-width: ${SIZES.TABLET}) {
-        padding: 0;
-    }
-
-    @media only screen and (min-width: ${SIZES.DESKTOP}) {
-        padding-left: 9rem;
-    }
+    padding-right: 1rem;
 `;
 
 const StyledInputContainer = styled.div`
     display: flex;
+    align-items: start;
+    justify-content: center;
     padding-left: 1rem;
 
     @media only screen and (max-width: ${SIZES.MOBILE}) {
@@ -48,13 +34,11 @@ export const SkeletonNavbar: FC = () => {
     return (
         <StyledNavbarContainer>
             <StyledInputContainer>
-                <Skeleton.Input active size="default" style={{ height: "26px", minWidth: "10px", width: "70px" }} />
+                <Skeleton.Button active size="default" style={{ minWidth: "42px", width: "42px" }} />
             </StyledInputContainer>
             <StyledButtonsContainer>
-                <Skeleton.Button active style={{ minWidth: "42px", width: "46px", height: "32px" }} />
-                <Skeleton.Button active style={{ minWidth: "42px", width: "46px", height: "32px" }} />
-                <Skeleton.Button active style={{ minWidth: "42px", width: "46px", height: "32px" }} />
-                <Skeleton.Button active style={{ minWidth: "42px", width: "46px", height: "32px" }} />
+                <Skeleton.Button active style={{ minWidth: "42px", width: "42px", height: "24px" }} />
+                <Skeleton.Button shape={"circle"} active style={{ minWidth: "32px", width: "32px" }} />
             </StyledButtonsContainer>
         </StyledNavbarContainer>
     );
