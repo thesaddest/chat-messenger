@@ -16,8 +16,7 @@ class SteganographyService {
     async revealMessage(s3Link: string): Promise<string> {
         const image = await Jimp.read(s3Link);
         const binaryMessage = this.extractBinaryMessage(image);
-        const message = this.decoder.decode(this.decodeMessage(binaryMessage));
-        return message.slice(0, -1);
+        return this.decoder.decode(this.decodeMessage(binaryMessage));
     }
 
     private encodeMessage(message: string): string {
