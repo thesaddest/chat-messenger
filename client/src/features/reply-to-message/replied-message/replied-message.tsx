@@ -2,10 +2,10 @@ import { memo, useCallback } from "react";
 import styled from "styled-components";
 import { Button } from "antd";
 
-import { deselectMessageToReply, IMessage } from "../../../../entities/message";
-import { Close, Reply } from "../../../../shared/ui";
-import { useAppDispatch } from "../../../../shared/lib/hooks";
-import { COLORS } from "../../../../shared/const";
+import { deselectMessageToReply, IMessage } from "../../../entities/message";
+import { Close, Reply } from "../../../shared/ui";
+import { useAppDispatch } from "../../../shared/lib/hooks";
+import { COLORS } from "../../../shared/const";
 
 interface IRepliedMessageProps {
     selectedMessageToReply: IMessage | null;

@@ -6,7 +6,7 @@ import { MessagesList } from "../../../../../entities/message/ui";
 import { ChatInfo } from "../../chat-info";
 import { IMessage } from "../../../../../entities/message";
 import { useAppSelector } from "../../../../../shared/lib/hooks";
-import { RepliedMessage } from "../../replied-message";
+import { RepliedMessage } from "../../../../../features/reply-to-message";
 import { ChatInputBox } from "../../chat-input-box";
 import { IRoom, isChatIsRoom } from "../../../../../entities/room";
 
