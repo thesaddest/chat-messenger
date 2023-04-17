@@ -6,20 +6,20 @@ import { SearchFriend } from "../../../features/search-friend";
 import { AddFriend } from "../../../features/add-friend";
 import { CreateRoom } from "../../../features/create-room";
 
-const StyledNavbarMenu = styled(Menu)`
+const StyledSidebarMenu = styled(Menu)`
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    border-inline-end: 0 !important;
 
     .ant-menu-item {
         background-color: transparent !important;
     }
 `;
 
-export const NavbarMenu = memo(() => (
-    <StyledNavbarMenu
-        style={{ borderInlineEnd: 0 }}
+export const SidebarMenu = memo(() => (
+    <StyledSidebarMenu
         items={[
             {
                 label: <SearchFriend />,
@@ -36,5 +36,3 @@ export const NavbarMenu = memo(() => (
         ]}
     />
 ));
-
-export default NavbarMenu;

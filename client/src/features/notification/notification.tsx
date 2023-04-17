@@ -1,9 +1,8 @@
 import { memo, useEffect } from "react";
-import { Badge, Modal } from "antd";
+import { Badge, Button, Modal } from "antd";
 import { BellOutlined } from "@ant-design/icons";
 
 import { useAppSelector, useModal, useWindowSize } from "../../shared/lib/hooks";
-import { MenuButton } from "../../shared/ui";
 import { SIZES } from "../../shared/const";
 
 import { NotificationPopupContent } from "./notification-popup-content";
@@ -23,14 +22,14 @@ export const Notification = memo(() => {
 
     return (
         <Badge count={notificationLength}>
-            <MenuButton
+            <Button
                 type={"primary"}
                 onClick={showModal}
                 shape={"circle"}
                 size={width > Number(SIZES.MOBILE) ? "large" : "middle"}
             >
                 <BellOutlined />
-            </MenuButton>
+            </Button>
             <Modal title="Notifications" open={isModalOpen} onCancel={handleCancel} centered={true} footer={null}>
                 <NotificationPopupContent notifications={notifications} />
             </Modal>

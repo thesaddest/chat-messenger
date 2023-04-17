@@ -1,19 +1,27 @@
-import { memo } from "react";
+import { memo, ReactNode } from "react";
 import styled from "styled-components";
 import { Avatar } from "antd";
 
 interface IStyledAvatarProps {
     width?: string;
     height?: string;
+    children?: ReactNode;
 }
 
 const StyledAvatar = styled(Avatar)<IStyledAvatarProps>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: ${(props) => (props.width ? props.width : "54px")};
     height: ${(props) => (props.height ? props.height : "54px")};
     line-height: 1;
     margin-right: 0.3rem;
 `;
 
-export const SharedAvatar = memo<IStyledAvatarProps>(({ height, width }) => {
-    return <StyledAvatar height={height} width={width} />;
+export const SharedAvatar = memo<IStyledAvatarProps>(({ height, width, children }) => {
+    return (
+        <StyledAvatar height={height} width={width}>
+            {children}
+        </StyledAvatar>
+    );
 });

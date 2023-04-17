@@ -6,7 +6,7 @@ export const COLORS = {
     MAIN_RED: "#f5222d",
     MAIN_GREEN: "#52c41a",
     MAIN_WHITE: "#F5F5F5",
-    MAIN_BLACK: "#080808",
+    MAIN_BLACK: "#252525",
 };
 
 export const SIZES = {

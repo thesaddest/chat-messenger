@@ -4,7 +4,8 @@ import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 
 import { IFriend } from "../../../entities/friend";
 import { IRoom, isChatIsRoom } from "../../../entities/room";
-import { COLORS, SIZES } from "../../const";
+import { COLORS } from "../../const";
+import { Username } from "../Username/Username";
 
 interface IChatNameConnectedProps {
     chat: IRoom | IFriend;
@@ -12,21 +13,6 @@ interface IChatNameConnectedProps {
 
 const StyledChatNameConnectedContainer = styled.div`
     display: flex;
-
-    p {
-        font-size: 18px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-
-        @media only screen and (max-width: ${SIZES.TABLET}) {
-            font-size: 16px;
-        }
-
-        @media only screen and (max-width: ${SIZES.MOBILE}) {
-            font-size: 18px;
-        }
-    }
 `;
 
 const StyledConnected = styled.div`
@@ -48,14 +34,14 @@ export const ChatNameConnected = memo<IChatNameConnectedProps>(({ chat }) => {
     if (isChatIsRoom(chat)) {
         return (
             <StyledChatNameConnectedContainer>
-                <p>{chat.roomName}</p>
+                <Username>{chat.roomName}</Username>
             </StyledChatNameConnectedContainer>
         );
     } else {
         return (
             <>
                 <StyledChatNameConnectedContainer>
-                    <p>{chat.username}</p>
+                    <Username>{chat.username}</Username>
                     <StyledConnected>
                         {chat.connected ? <CheckCircleOutlined /> : <MinusCircleOutlined />}
                     </StyledConnected>

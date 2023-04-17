@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { MenuOutlined } from "@ant-design/icons";
 
 import { COLORS } from "../../../../shared/const";
-import { NavbarMenu } from "../../../../shared/ui";
+import { Sidebar } from "../../../sidebar/ui/sidebar";
 
 const StyledMenuIcon = styled(MenuOutlined)`
     color: ${COLORS.MAIN_BLUE};
@@ -23,7 +23,7 @@ export const BurgerMenu = memo(() => {
         <>
             <StyledMenuIcon onClick={handleOpenMenu} />
             <Drawer width={300} placement={"left"} open={openMenu} closable={false} onClose={handleOpenMenu}>
-                <NavbarMenu />
+                <Sidebar />
             </Drawer>
         </>
     );

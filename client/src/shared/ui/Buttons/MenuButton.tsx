@@ -16,7 +16,7 @@ interface IMenuButtonProps {
 
 const StyledButton = styled(Button)`
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     width: 100%;
 `;
