@@ -1,16 +1,17 @@
 import { FC, useMemo } from "react";
 import styled from "styled-components";
 
-import { IFriend } from "../../entities/friend";
-import { IRoom } from "../../entities/room";
+import { getChatName } from "../../entities/room";
 import { getLastMessageByChatType, getUnreadMessageAmount, IMessage } from "../../entities/message";
-import { MessagesCountBadge, SharedAvatar, ChatNameConnected } from "../../shared/ui";
+import { MessagesCountBadge, SharedAvatar, ChatNameConnected, ChatNameFirstLetter } from "../../shared/ui";
 import { useAppSelector } from "../../shared/lib/hooks";
+
+import { Chat } from "../../shared/const";
 
 import { ChatSidebarLastMessage } from "./chat-sidebar-last-message";
 
 interface FriendSidebarCardProps {
-    chat: IFriend | IRoom;
+    chat: Chat;
     messages: IMessage[];
 }
 
@@ -29,18 +30,20 @@ const StyledChatsCardDiv = styled.div`
 
 export const ChatSidebarCard: FC<FriendSidebarCardProps> = ({ chat, messages }) => {
     const userId = useAppSelector((state) => state.auth.user?.userId);
-
     const readMessages = useAppSelector((state) => state.message.readMessages);
     const memoizedLastMessage = useMemo(() => getLastMessageByChatType(messages, chat), [messages, chat]);
     const memoizedUnreadMessageAmount = useMemo(
         () => getUnreadMessageAmount(readMessages, messages, chat, userId),
         [userId, readMessages, messages, chat],
     );
+    const chatName = useMemo(() => getChatName(chat), [chat]);
 
     return (
         <StyledChatsCardDiv>
             <MessagesCountBadge count={memoizedUnreadMessageAmount}>
-                <SharedAvatar />
+                <SharedAvatar>
+                    <ChatNameFirstLetter username={chatName} size={"18px"} />
+                </SharedAvatar>
             </MessagesCountBadge>
             <StyledChatNameConnectedMessageContainer>
                 <ChatNameConnected chat={chat} />

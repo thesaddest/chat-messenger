@@ -1,17 +1,17 @@
 import { FC } from "react";
 import styled from "styled-components";
 
-import { IFriend } from "../../../../../entities/friend";
 import { MessagesList } from "../../../../../entities/message/ui";
 import { ChatInfo } from "../../chat-info";
 import { IMessage } from "../../../../../entities/message";
 import { useAppSelector } from "../../../../../shared/lib/hooks";
 import { RepliedMessage } from "../../../../../features/reply-to-message";
 import { ChatInputBox } from "../../chat-input-box";
-import { IRoom, isChatIsRoom } from "../../../../../entities/room";
+import { isChatIsRoom } from "../../../../../entities/room";
+import { Chat } from "../../../../../shared/const";
 
 interface IChatTabsContentProps {
-    chat: IFriend | IRoom;
+    chat: Chat;
     messages: IMessage[];
 }
 

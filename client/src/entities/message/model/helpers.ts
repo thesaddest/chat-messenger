@@ -1,9 +1,9 @@
-import { IFriend } from "../../friend";
-import { IRoom, isChatIsRoom } from "../../room";
+import { isChatIsRoom } from "../../room";
+import { Chat } from "../../../shared/const";
 
 import { IMessage } from "./interfaces";
 
-export const getFilteredMessageByChatType = (messages: IMessage[], chat: IFriend | IRoom): IMessage[] => {
+export const getFilteredMessageByChatType = (messages: IMessage[], chat: Chat): IMessage[] => {
     if (isChatIsRoom(chat)) {
         return messages.filter(
             (message) => message.to === (chat.roomId || message.from === chat.roomId) && message.isGroupMessage,
@@ -17,7 +17,7 @@ export const getFilteredMessageByChatType = (messages: IMessage[], chat: IFriend
     }
 };
 
-export const getLastMessageByChatType = (messages: IMessage[], chat: IFriend | IRoom): IMessage => {
+export const getLastMessageByChatType = (messages: IMessage[], chat: Chat): IMessage => {
     const filteredMessages = getFilteredMessageByChatType(messages, chat);
     return filteredMessages[filteredMessages.length - 1];
 };
@@ -25,7 +25,7 @@ export const getLastMessageByChatType = (messages: IMessage[], chat: IFriend | I
 export const getUnreadMessageAmount = (
     readMessages: IMessage[],
     messages: IMessage[],
-    chat: IFriend | IRoom,
+    chat: Chat,
     userId?: string,
 ): number => {
     if (!userId) {

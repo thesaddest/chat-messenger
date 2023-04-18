@@ -2,9 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import RoomService from "../api/room.service";
 import { socket } from "../../../shared/socket-io";
-import { DEFAULT_ACTIVE_KEY, SOCKET_EVENTS, STATE_STATUSES } from "../../../shared/const";
+import { Chat, Chats, DEFAULT_ACTIVE_KEY, SOCKET_EVENTS, STATE_STATUSES } from "../../../shared/const";
 import { IRoomNotification } from "../../notification";
-import { IFriend } from "../../friend";
 import { ROOM_API } from "../api/api.constants";
 
 import { IAcceptInviteToJoinRoom, ICreateRoomValues, IRoom } from "./interfaces";
@@ -21,12 +20,13 @@ const initialState: RoomState = {
     roomIdActiveKey: DEFAULT_ACTIVE_KEY,
 };
 
-export const isChatCreatedByCurrentUser = (chat: IRoom, username: string): boolean => chat.createdBy === username;
+export const isRoomCreatedByCurrentUser = (room: IRoom, username: string): boolean => room.createdBy === username;
 
-export const isChatsAreRoom = (chats: IRoom[] | IFriend[]): chats is IRoom[] =>
-    chats.some((item) => isChatIsRoom(item));
+export const isChatsAreRoom = (chats: Chats): chats is IRoom[] => chats.some((item) => isChatIsRoom(item));
 
-export const isChatIsRoom = (chat: IRoom | IFriend): chat is IRoom => "roomId" in chat;
+export const isChatIsRoom = (chat: Chat): chat is IRoom => "roomId" in chat;
+
+export const getChatName = (chat: Chat) => (isChatIsRoom(chat) ? chat.roomName : chat.username);
 
 export const getRooms = createAsyncThunk<IRoom[], undefined, { rejectValue: string }>(
     `${ROOM_API.ENTITY}/${ROOM_API.ALL_ROOMS}`,

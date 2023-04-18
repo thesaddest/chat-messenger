@@ -2,13 +2,12 @@ import { memo } from "react";
 import styled from "styled-components";
 import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 
-import { IFriend } from "../../../entities/friend";
-import { IRoom, isChatIsRoom } from "../../../entities/room";
-import { COLORS } from "../../const";
-import { Username } from "../Username/Username";
+import { isChatIsRoom } from "../../../entities/room";
+import { Chat, COLORS } from "../../const";
+import { Username } from "../Username";
 
 interface IChatNameConnectedProps {
-    chat: IRoom | IFriend;
+    chat: Chat;
 }
 
 const StyledChatNameConnectedContainer = styled.div`

@@ -2,11 +2,11 @@ import { Tabs } from "antd";
 import { FC, useCallback, useState } from "react";
 import styled from "styled-components";
 
-import { getFriendsWithLimit, IFriend, setFriendIdActiveKey } from "../../../../entities/friend";
-import { COLORS, DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM, SIZES } from "../../../../shared/const";
+import { getFriendsWithLimit, setFriendIdActiveKey } from "../../../../entities/friend";
+import { Chats, COLORS, DEFAULT_ACTIVE_KEY, DEFAULT_TAB_ITEM, SIZES } from "../../../../shared/const";
 import { useAppDispatch, useAppSelector, useDebounce } from "../../../../shared/lib/hooks";
 import { deselectAllSelectedMessages, deselectMessageToReply } from "../../../../entities/message";
-import { IRoom, isChatsAreRoom, setRoomIdActiveKey } from "../../../../entities/room";
+import { isChatsAreRoom, setRoomIdActiveKey } from "../../../../entities/room";
 import { ChatSidebarCard } from "../../../../features/chat-sidebar-card";
 import { ScrollToSeeMore } from "../../../../shared/ui";
 
@@ -19,7 +19,7 @@ interface ITabsSrcollDirection {
 }
 
 interface IChatTabsBoxProps {
-    chats: IFriend[] | IRoom[];
+    chats: Chats;
 }
 
 const StyledChatBoxTabs = styled(Tabs)`
@@ -101,7 +101,7 @@ export const ChatTabsBox: FC<IChatTabsBoxProps> = ({ chats }) => {
     const dispatch = useAppDispatch();
 
     const onTabChange = useCallback(
-        (activeKey: string, chats: IRoom[] | IFriend[]) => {
+        (activeKey: string, chats: Chats) => {
             const setActiveKey = isChatsAreRoom(chats) ? setRoomIdActiveKey : setFriendIdActiveKey;
 
             const clearSelectedMessages = () => {
@@ -149,7 +149,7 @@ export const ChatTabsBox: FC<IChatTabsBoxProps> = ({ chats }) => {
                 items={chats.map((chat) => {
                     return {
                         label: messages && <ChatSidebarCard chat={chat} messages={messages} />,
-                        key: chat.userBehindFriend,
+                        key: chat.username,
                         children: messages && <ChatTabsContent messages={messages} chat={chat} />,
                     };
                 })}

@@ -2,7 +2,7 @@ import { memo } from "react";
 import styled from "styled-components";
 
 import { useAppSelector } from "../../shared/lib/hooks";
-import { SharedAvatar, UsernameFirstLetter } from "../../shared/ui";
+import { SharedAvatar, ChatNameFirstLetter } from "../../shared/ui";
 import { Username } from "../../shared/ui";
 
 const StyledContainer = styled.div`
@@ -26,7 +26,7 @@ export const SidebarProfile = memo(() => {
 
     return (
         <StyledContainer>
-            <SharedAvatar>{username && <UsernameFirstLetter firstLetter={username?.charAt(0)} />}</SharedAvatar>
+            <SharedAvatar>{username && <ChatNameFirstLetter username={username} />}</SharedAvatar>
             <StyledUsernameContainer>
                 <Username>{username}</Username>
             </StyledUsernameContainer>

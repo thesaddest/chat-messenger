@@ -13,4 +13,4 @@ export { SearchFriendInput } from "./SearchFriendInput";
 export { RoomNotificationItem } from "./RoomNotificationItem";
 export { SidebarMenu } from "./SidebarMenu";
 export { Username } from "./Username";
-export { UsernameFirstLetter } from "./UsernameFirstLetter";
+export { ChatNameFirstLetter } from "./ChatNameFirstLetter";

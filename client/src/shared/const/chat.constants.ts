@@ -1,5 +1,11 @@
 import { Rule } from "antd/es/form";
 
+import { IRoom } from "../../entities/room";
+import { IFriend } from "../../entities/friend";
+
+export type Chat = IRoom | IFriend;
+export type Chats = IRoom[] | IFriend[];
+
 interface IChatRules {
     MESSAGE: Rule[];
     ROOM_NAME: Rule[];
