@@ -4,7 +4,7 @@ export { Loader } from "./Loader";
 export { SharedAvatar } from "./Avatar";
 export { ChatNameConnected } from "./UsernameConnected";
 export { SkeletonNavbar, SkeletonFriendSidebarCard } from "./Skeleton";
-export { MessageReadCheck, Reply, VerticalPipe, Close } from "./Icons";
+export { MessageReadCheck, Reply, VerticalPipe, Close, Edit } from "./Icons";
 export { MemoTitle } from "./Title";
 export { ScrollToSeeMore } from "./ScrollToSeeMore";
 export { SelectChatToStartMessaging } from "./SelectChatToStartMessaging";

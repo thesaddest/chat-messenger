@@ -1,8 +1,8 @@
-import { memo, useMemo } from "react";
+import { memo } from "react";
 import styled from "styled-components";
 
-import { SharedAvatar, ChatNameConnected, ChatNameFirstLetter } from "../../../../shared/ui";
-import { getChatName, isRoomCreatedByCurrentUser, isChatIsRoom } from "../../../../entities/room";
+import { ChatNameConnected } from "../../../../shared/ui";
+import { isRoomCreatedByCurrentUser, isChatIsRoom } from "../../../../entities/room";
 import { InviteFriendToRoom } from "../../../../features/invite-friend-to-room";
 import { Chat, COLORS } from "../../../../shared/const";
 import { useAppSelector } from "../../../../shared/lib/hooks";
@@ -20,7 +20,7 @@ const ChatInfoContainer = styled.div`
     border-bottom: 1px solid ${COLORS.LIGHTGREY};
 `;
 
-const AvatarChatNameContainer = styled.div`
+const ChatNameContainer = styled.div`
     width: 100%;
     display: flex;
     padding: 0 1rem;
@@ -37,15 +37,11 @@ const InviteFriendToRoomContainer = styled.div`
 
 export const ChatInfo = memo<IChatInfoProps>(({ chat }) => {
     const username = useAppSelector((state) => state.auth.user?.username);
-    const chatName = useMemo(() => getChatName(chat), [chat]);
     return (
         <ChatInfoContainer>
-            <AvatarChatNameContainer>
-                <SharedAvatar height={"40px"} width={"40px"}>
-                    {<ChatNameFirstLetter username={chatName} size={"14px"} />}
-                </SharedAvatar>
+            <ChatNameContainer>
                 <ChatNameConnected chat={chat} />
-            </AvatarChatNameContainer>
+            </ChatNameContainer>
             <InviteFriendToRoomContainer>
                 {username && isChatIsRoom(chat) && isRoomCreatedByCurrentUser(chat, username) && (
                     <InviteFriendToRoom roomName={chat.roomName} />

@@ -1,12 +1,27 @@
 {
-    "extends": [
+  "extends": [
     "react-app"
   ],
+  "plugins": [
+    "react-hooks"
+  ],
   "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
     "import/order": [
-      "warn", {
-      "newlines-between": "always-and-inside-groups",
-      "groups" : ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"]
+      "warn",
+      {
+        "newlines-between": "always-and-inside-groups",
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type"
+        ]
       }
     ]
   }

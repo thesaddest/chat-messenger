@@ -2,11 +2,11 @@ import { memo, useCallback } from "react";
 import { Form, message, Upload } from "antd";
 import styled from "styled-components";
 import { UploadRequestOption } from "rc-upload/lib/interface";
-import { UploadChangeParam, RcFile } from "antd/es/upload";
+import { RcFile } from "antd/es/upload";
 import { FileAddOutlined } from "@ant-design/icons";
 
 import { InputButton } from "../../shared/ui";
-import { useAppDispatch } from "../../shared/lib/hooks";
+import { useAppDispatch, useFileLoadingMessage } from "../../shared/lib/hooks";
 import { addPendingFile, uploadSingleFile } from "../../entities/file";
 import { SIZES } from "../../shared/const";
 
@@ -32,6 +32,7 @@ const StyledFormItemButtonContainer = styled(Form.Item)`
 
 export const FileUpload = memo<IFileUploadProps>(({ username, chatId }) => {
     const dispatch = useAppDispatch();
+    const handleChange = useFileLoadingMessage();
 
     const customRequest = useCallback(
         async (options: UploadRequestOption) => {
@@ -54,18 +55,6 @@ export const FileUpload = memo<IFileUploadProps>(({ username, chatId }) => {
         },
         [dispatch, chatId, username],
     );
-
-    const handleChange = useCallback((info: UploadChangeParam) => {
-        if (info.file.status === "uploading") {
-            message.loading({ key: `${info.file.uid}`, content: `${info.file.name} file is loading`, duration: 0 });
-        }
-        if (info.file.status === "done") {
-            message.destroy(`${info.file.uid}`);
-            message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === "error") {
-            message.error(`${info.file.name} file upload failed.`);
-        }
-    }, []);
 
     return (
         <StyledFormItemButtonContainer
