@@ -23,7 +23,7 @@ const s3storage = multerS3({
     key: (req, file, cb) => {
         //get username from headers to pass it as a folder in S3 bucket
         // @ts-ignore
-        cb(null, `${req.get("username")}/` + v4() + file.originalname);
+        cb(null, `${req.get("filepath")}/` + v4() + file.originalname);
     },
 });
 

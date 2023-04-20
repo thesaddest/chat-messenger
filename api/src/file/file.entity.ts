@@ -33,7 +33,7 @@ export class File extends BaseEntity {
     @Column({ nullable: true })
     attachedBy: string;
 
-    @Column({ nullable: false })
+    @Column({ nullable: true })
     sentTo: string;
 
     @Column({ nullable: true })

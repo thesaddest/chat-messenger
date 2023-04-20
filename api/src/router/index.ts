@@ -12,6 +12,8 @@ export const router = Router();
 router.post("/auth/register", userController.register);
 router.post("/auth/login", userController.login);
 
+router.post("/user/change-avatar", multerUploadMiddleware.single("file"), userController.changeAvatar);
+
 router.get("/friend/friends", friendController.getFriends);
 router.post("/friend/friend", friendController.addFriend);
 router.get("/friend/search", friendController.getFriendsBySearchQuery);

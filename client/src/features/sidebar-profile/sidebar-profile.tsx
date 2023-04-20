@@ -23,14 +23,12 @@ const StyledUsernameContainer = styled.div`
 `;
 
 export const SidebarProfile = memo(() => {
-    const username = useAppSelector((state) => state.auth.user?.username);
+    const user = useAppSelector((state) => state.auth.user);
 
     return (
         <StyledContainer>
-            {username && <SidebarAvatar username={username} />}
-            <StyledUsernameContainer>
-                <Username>{username}</Username>
-            </StyledUsernameContainer>
+            {user && <SidebarAvatar username={user.username} avatarPath={user.avatarPath} />}
+            <StyledUsernameContainer>{user && <Username>{user.username}</Username>}</StyledUsernameContainer>
         </StyledContainer>
     );
 });

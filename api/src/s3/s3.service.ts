@@ -29,15 +29,21 @@ class S3Service {
         return await this.s3.send(deleteCommand);
     }
 
-    async uploadImageWithHiddenMessage(username: string, fileBuffer: Buffer): Promise<string> {
-        const fileKey = `${username}/${AWS_STEGANOGRAPHY_FOLDER_NAME}/${uuidv4()}.png`;
-
-        const uploadCommand = new PutObjectCommand({
+    async uploadObjectViaBuffer(fileKey: string, fileBuffer: Buffer) {
+        const uploadObjectCommand = new PutObjectCommand({
             Bucket: this.bucketName,
-            Key: fileKey,
+            Key: `${fileKey}`,
             Body: fileBuffer,
         });
-        await this.s3.send(uploadCommand);
+
+        await this.s3.send(uploadObjectCommand);
+
+        return await this.getUploadedObjectUrl(fileKey);
+    }
+
+    async uploadImageWithHiddenMessage(username: string, fileBuffer: Buffer): Promise<string> {
+        const fileKey = `${username}/${AWS_STEGANOGRAPHY_FOLDER_NAME}/${uuidv4()}.png`;
+        await this.uploadObjectViaBuffer(fileKey, fileBuffer);
 
         return await this.getUploadedObjectUrl(fileKey);
     }

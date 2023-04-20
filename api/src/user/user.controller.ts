@@ -4,6 +4,7 @@ import { authService } from "../auth/auth.service.js";
 import { NextFunction, Request, Response } from "express";
 import { validate } from "class-validator";
 import { ErrorException } from "../error-handler/error-exception.js";
+import { userService } from "./user.service.js";
 
 interface IAuthRequest<T> extends Request {
     body: T;
@@ -43,6 +44,22 @@ class UserController {
 
             const loggedUser = await authService.login(userData);
             return res.json(loggedUser);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    async changeAvatar(req: IAuthRequest<IAuthValues>, res: Response, next: NextFunction) {
+        try {
+            const user = await userService.getUserFromAuthHeaders(req.headers.authorization);
+            if (!user) {
+                return next(ErrorException.UnauthorizedError());
+            }
+
+            const avatarFile = req.file as Express.MulterS3.File;
+            const userWithChangedAvatar = await userService.changeAvatar(user, avatarFile);
+
+            return res.json(userWithChangedAvatar.avtarPath);
         } catch (e) {
             next(e);
         }

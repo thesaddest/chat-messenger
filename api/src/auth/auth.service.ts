@@ -63,6 +63,7 @@ class AuthService {
             email: user.email,
             username: user.username,
             token: token,
+            avatarPath: user.avtarPath,
         };
     }
 

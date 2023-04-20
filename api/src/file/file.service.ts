@@ -9,7 +9,7 @@ import { s3Service } from "../s3/s3.service.js";
 import { FileType } from "../common/enums/file-type.enum.js";
 
 class FileService {
-    async uploadSingleFile(file: Express.MulterS3.File, user: User, sentTo: string): Promise<FileDto> {
+    async uploadSingleFile(file: Express.MulterS3.File, user: User, sentTo?: string): Promise<FileDto> {
         const convertedFile = await this.convertMulterFilesIntoBaseFile(file, user, sentTo);
         const uploadedFile = await this.createFileInDb(convertedFile);
 

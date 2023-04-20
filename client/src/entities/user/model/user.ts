@@ -22,7 +22,7 @@ const initialState: AuthState = {
 };
 
 export const login = createAsyncThunk<IUser, ILoginValues, { rejectValue: string }>(
-    `${USER_API.ENTITY}/${USER_API.LOGIN}`,
+    `${USER_API.AUTH_ENTITY}/${USER_API.LOGIN}`,
     async function (userData, { rejectWithValue }) {
         try {
             const { data } = await UserService.login(userData);
@@ -37,7 +37,7 @@ export const login = createAsyncThunk<IUser, ILoginValues, { rejectValue: string
 );
 
 export const register = createAsyncThunk<IUser, IRegisterValues, { rejectValue: string }>(
-    `${USER_API.ENTITY}/${USER_API.REGISTER}`,
+    `${USER_API.AUTH_ENTITY}/${USER_API.REGISTER}`,
     async function (userData, { rejectWithValue }) {
         try {
             const { data } = await UserService.register(userData);
@@ -52,7 +52,7 @@ export const register = createAsyncThunk<IUser, IRegisterValues, { rejectValue: 
 );
 
 export const userModel = createSlice({
-    name: `${USER_API.ENTITY}`,
+    name: `${USER_API.AUTH_ENTITY}`,
     initialState,
     reducers: {
         socketError(state, action: PayloadAction<string>) {

@@ -9,4 +9,5 @@ export interface IRegisteredUser {
     email: string;
     username: string;
     token: string;
+    avatarPath?: string;
 }
