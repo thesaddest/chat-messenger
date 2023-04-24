@@ -4,9 +4,9 @@ import { message, Upload } from "antd";
 import { RcFile } from "antd/es/upload";
 import { UploadRequestOption } from "rc-upload/lib/interface";
 
-import { useFileLoadingMessage } from "../../../shared/lib/hooks";
+import { useAppDispatch, useFileLoadingMessage } from "../../../shared/lib/hooks";
 import { ChatNameFirstLetter, Edit, SharedAvatar } from "../../../shared/ui";
-import UserService from "../../../entities/user/api/user.service";
+import { changeAvatar } from "../../../entities/user";
 
 interface ISidebarAvatarProps {
     username: string;
@@ -21,6 +21,7 @@ const StyledAvatarContainer = styled.div<{ isHover: boolean }>`
 
 export const SidebarAvatar = memo<ISidebarAvatarProps>(({ username, avatarPath }) => {
     const handleChange = useFileLoadingMessage();
+    const dispatch = useAppDispatch();
     const [isHover, setIsHover] = useState<boolean>(false);
     const customRequest = useCallback(
         async (options: UploadRequestOption) => {
@@ -29,14 +30,14 @@ export const SidebarAvatar = memo<ISidebarAvatarProps>(({ username, avatarPath }
                     const file = options.file as RcFile;
                     const formData = new FormData();
                     formData.append("file", file);
-                    const { data } = await UserService.changeAvatar(formData, username);
-                    options.onSuccess(data);
+                    await dispatch(changeAvatar({ formData: formData, username: username }));
+                    options.onSuccess(file.name);
                 }
             } catch (error) {
                 message.error(`${error}, file upload failed.`);
             }
         },
-        [username],
+        [dispatch, username],
     );
 
     const onHover = useCallback(() => {
@@ -50,15 +51,17 @@ export const SidebarAvatar = memo<ISidebarAvatarProps>(({ username, avatarPath }
     return (
         <StyledAvatarContainer onMouseEnter={onHover} isHover={isHover} onMouseLeave={onMouseLeave}>
             <Upload customRequest={customRequest} onChange={handleChange} showUploadList={false} accept={FILE_TYPES}>
-                <SharedAvatar>
-                    {isHover ? (
-                        <Edit fontSize={"22px"} />
-                    ) : avatarPath ? (
-                        <img src={avatarPath} alt={username} />
-                    ) : (
+                {isHover ? (
+                    <SharedAvatar width={"54px"} height={"54px"}>
+                        <Edit />
+                    </SharedAvatar>
+                ) : avatarPath ? (
+                    <SharedAvatar width={"54px"} height={"54px"} src={avatarPath} />
+                ) : (
+                    <SharedAvatar>
                         <ChatNameFirstLetter username={username} />
-                    )}
-                </SharedAvatar>
+                    </SharedAvatar>
+                )}
             </Upload>
         </StyledAvatarContainer>
     );

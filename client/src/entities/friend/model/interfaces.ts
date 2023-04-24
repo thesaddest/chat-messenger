@@ -3,6 +3,7 @@ export interface IFriend {
     username: string;
     addedBy: string;
     connected: boolean;
+    avatarPath: string;
 }
 
 export interface IFriendStatus {

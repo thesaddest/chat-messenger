@@ -5,6 +5,7 @@ import { NextFunction, Request, Response } from "express";
 import { validate } from "class-validator";
 import { ErrorException } from "../error-handler/error-exception.js";
 import { userService } from "./user.service.js";
+import { fileService } from "../file/file.service.js";
 
 interface IAuthRequest<T> extends Request {
     body: T;
@@ -57,8 +58,12 @@ class UserController {
             }
 
             const avatarFile = req.file as Express.MulterS3.File;
-            const userWithChangedAvatar = await userService.changeAvatar(user, avatarFile);
+            const isImage = await fileService.isFileImage(avatarFile);
+            if (!isImage) {
+                return next(ErrorException.BadRequest("Wrong image format"));
+            }
 
+            const userWithChangedAvatar = await userService.changeAvatar(user, avatarFile);
             return res.json(userWithChangedAvatar.avtarPath);
         } catch (e) {
             next(e);

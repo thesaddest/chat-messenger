@@ -6,6 +6,7 @@ interface IStyledAvatarProps {
     width?: string;
     height?: string;
     children?: ReactNode;
+    src?: string;
 }
 
 const StyledAvatar = styled(Avatar)<IStyledAvatarProps>`
@@ -18,9 +19,9 @@ const StyledAvatar = styled(Avatar)<IStyledAvatarProps>`
     margin-right: 0.3rem;
 `;
 
-export const SharedAvatar = memo<IStyledAvatarProps>(({ height, width, children }) => {
+export const SharedAvatar = memo<IStyledAvatarProps>(({ height, width, children, src }) => {
     return (
-        <StyledAvatar height={height} width={width}>
+        <StyledAvatar height={height} width={width} src={src}>
             {children}
         </StyledAvatar>
     );

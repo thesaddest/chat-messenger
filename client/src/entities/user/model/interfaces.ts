@@ -5,3 +5,8 @@ export interface IUser {
     token: string;
     avatarPath: string;
 }
+
+export interface IChangeAvatarPayload {
+    username: string;
+    formData: FormData;
+}

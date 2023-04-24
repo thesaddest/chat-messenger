@@ -16,4 +16,8 @@ export class FriendDto {
     @IsBoolean()
     @IsNotEmpty()
     connected: boolean;
+
+    @IsString()
+    @IsNotEmpty()
+    avatarPath: string;
 }

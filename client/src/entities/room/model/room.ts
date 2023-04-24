@@ -21,12 +21,10 @@ const initialState: RoomState = {
 };
 
 export const isRoomCreatedByCurrentUser = (room: IRoom, username: string): boolean => room.createdBy === username;
-
 export const isChatsAreRoom = (chats: Chats): chats is IRoom[] => chats.some((item) => isChatIsRoom(item));
-
 export const isChatIsRoom = (chat: Chat): chat is IRoom => "roomId" in chat;
-
 export const getChatName = (chat: Chat) => (isChatIsRoom(chat) ? chat.roomName : chat.username);
+export const getChatAvatarPath = (chat: Chat) => (isChatIsRoom(chat) ? null : chat.avatarPath);
 
 export const getRooms = createAsyncThunk<IRoom[], undefined, { rejectValue: string }>(
     `${ROOM_API.ENTITY}/${ROOM_API.ALL_ROOMS}`,
@@ -34,7 +32,7 @@ export const getRooms = createAsyncThunk<IRoom[], undefined, { rejectValue: stri
         const { data } = await RoomService.getRooms();
 
         if (!data) {
-            return rejectWithValue("Error while creating room");
+            return rejectWithValue("Error while getting rooms");
         }
 
         return data;

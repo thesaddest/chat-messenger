@@ -1,7 +1,7 @@
 import { User } from "./user.entity.js";
 import { AppDataSource } from "../db/database.js";
 import { jwtService } from "../auth/jwt.service.js";
-import { fileService } from "../file/file.service.js";
+import { friendService } from "../friend/friend.service.js";
 
 class UserService {
     async createUser(
@@ -59,9 +59,10 @@ class UserService {
 
     async changeAvatar(user: User, avatarFile: Express.MulterS3.File): Promise<User> {
         const userRepository = AppDataSource.getRepository(User);
-        const uploadedFile = await fileService.uploadSingleFile(avatarFile, user);
 
-        await userRepository.update({ userId: user.userId }, { avtarPath: uploadedFile.location });
+        await userRepository.update({ userId: user.userId }, { avtarPath: avatarFile.location });
+        await friendService.setFriendsAvatarPathByUser(user, avatarFile.location);
+
         return await userRepository.findOne({ where: { userId: user.userId } });
     }
 }

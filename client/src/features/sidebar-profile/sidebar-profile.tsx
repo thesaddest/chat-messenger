@@ -28,7 +28,11 @@ export const SidebarProfile = memo(() => {
     return (
         <StyledContainer>
             {user && <SidebarAvatar username={user.username} avatarPath={user.avatarPath} />}
-            <StyledUsernameContainer>{user && <Username>{user.username}</Username>}</StyledUsernameContainer>
+            {user && (
+                <StyledUsernameContainer>
+                    <Username>{user.username}</Username>
+                </StyledUsernameContainer>
+            )}
         </StyledContainer>
     );
 });

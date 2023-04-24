@@ -3,7 +3,6 @@ import { BaseEntity } from "../common/entities/base.entity.js";
 import { User } from "../user/user.entity.js";
 import { Message } from "../message/message.entity.js";
 import { FileType } from "../common/enums/file-type.enum.js";
-import { Room } from "../room/room.entity.js";
 
 @Entity()
 export class File extends BaseEntity {

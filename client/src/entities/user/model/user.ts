@@ -5,7 +5,7 @@ import { ILoginValues } from "../../../pages/login/interfaces";
 import { IRegisterValues } from "../../../pages/register/interfaces";
 import { USER_API } from "../api/api.constants";
 
-import { IUser } from "./interfaces";
+import { IChangeAvatarPayload, IUser } from "./interfaces";
 
 interface AuthState {
     user: IUser | null;
@@ -51,6 +51,20 @@ export const register = createAsyncThunk<IUser, IRegisterValues, { rejectValue: 
     },
 );
 
+export const changeAvatar = createAsyncThunk<string, IChangeAvatarPayload, { rejectValue: string }>(
+    `${USER_API.USER_ENTITY}/${USER_API.CHANGE_AVATAR}`,
+    async function ({ username, formData }, { rejectWithValue }) {
+        try {
+            const filePath = `${username}/AVATAR`;
+            const { data } = await UserService.changeAvatar(formData, filePath);
+
+            return data;
+        } catch (e: any) {
+            return rejectWithValue(e.response.data.message);
+        }
+    },
+);
+
 export const userModel = createSlice({
     name: `${USER_API.AUTH_ENTITY}`,
     initialState,
@@ -87,6 +101,12 @@ export const userModel = createSlice({
                 state.isLoading = true;
                 state.error = null;
                 state.isAuth = false;
+            })
+            .addCase(changeAvatar.fulfilled, (state, action) => {
+                if (!state.user) {
+                    return;
+                }
+                state.user.avatarPath = action.payload;
             });
     },
 });

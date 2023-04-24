@@ -10,7 +10,7 @@ import { FileType } from "../common/enums/file-type.enum.js";
 
 class FileService {
     async uploadSingleFile(file: Express.MulterS3.File, user: User, sentTo?: string): Promise<FileDto> {
-        const convertedFile = await this.convertMulterFilesIntoBaseFile(file, user, sentTo);
+        const convertedFile = await this.convertMulterFilesIntoBaseFile(file, user);
         const uploadedFile = await this.createFileInDb(convertedFile);
 
         return {
@@ -26,7 +26,7 @@ class FileService {
         };
     }
 
-    async convertMulterFilesIntoBaseFile(file: Express.MulterS3.File, user: User, sentTo: string): Promise<BaseFile> {
+    async convertMulterFilesIntoBaseFile(file: Express.MulterS3.File, user: User, sentTo?: string): Promise<BaseFile> {
         return {
             name: getFileNameAfterMulterMiddleware(file.key),
             originalName: file.originalname,
@@ -66,6 +66,11 @@ class FileService {
         }
 
         return await fileRepository.remove(files);
+    }
+
+    async isFileImage(file: Express.MulterS3.File): Promise<boolean> {
+        const mimetype = getFileTypeEnum(file.originalname);
+        return mimetype === FileType.IMAGE;
     }
 }
 

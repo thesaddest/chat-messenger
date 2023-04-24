@@ -12,7 +12,7 @@ export default class FileService {
         filepath: string,
         friendIdActiveKey: string,
     ): Promise<AxiosResponse<IFile>> {
-        //modify req.headers to pass the username to multer middleware, so we can have <usernameFolder>/<file> in our s3 bucket
+        //modify req.headers to pass the username to multer middleware, so we can have <filepath>/<file> in our s3 bucket
         api.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig => {
             if (config.headers) {
                 config.headers.filepath = filepath;

@@ -23,6 +23,7 @@ class FriendService {
             username: friend.username,
             addedBy: friend.addedBy,
             connected: await redisService.getFriendConnectedStatusByUsername(friend.username),
+            avatarPath: friend.avatarPath,
         };
     }
 
@@ -52,6 +53,7 @@ class FriendService {
                 username: friend.username,
                 addedBy: friend.addedBy,
                 connected: false,
+                avatarPath: friend.avatarPath,
             };
         });
     }
@@ -66,6 +68,7 @@ class FriendService {
                 username: friend.username,
                 addedBy: friend.addedBy,
                 connected: false,
+                avatarPath: friend.avatarPath,
             };
         });
     }
@@ -78,6 +81,7 @@ class FriendService {
                 username: friend.username,
                 addedBy: friend.addedBy,
                 connected: await redisService.getFriendConnectedStatusByUsername(friend.username),
+                avatarPath: friend.avatarPath,
             });
         }
         return connectedFriends;
@@ -95,13 +99,14 @@ class FriendService {
                 username: friend.username,
                 addedBy: friend.addedBy,
                 connected: false,
+                avatarPath: friend.avatarPath,
             };
         });
     }
 
-    async getFriendByUsername(username: string, user: User): Promise<Friend> {
+    async setFriendsAvatarPathByUser(user: User, avatarPath: string): Promise<void> {
         const friendRepository = AppDataSource.getRepository(Friend);
-        return await friendRepository.findOne({ where: { addedBy: user.username, username: username } });
+        await friendRepository.update({ username: user.username }, { avatarPath: avatarPath });
     }
 }
 
